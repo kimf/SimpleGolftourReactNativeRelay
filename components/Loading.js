@@ -1,26 +1,28 @@
-import React, { Component, View, StyleSheet, Text } from 'react-native';
+import React, {
+  Component,
+  Dimensions,
+  View,
+  StatusBar,
+  Image
+} from 'react-native';
+
+const width = Dimensions.get('window').width;
+const height = Dimensions.get('window').height;
 
 export default class Loading extends Component {
   render() {
     return(
-      <View style={styles.container}>
-        <Text style={styles.header}>Loading...</Text>
+      <View style={{
+        flexDirection: 'column',
+        paddingTop: 250,
+        backgroundColor: '#477dca',
+        alignItems: 'center',
+        width: width,
+        height: height
+      }}>
+        <StatusBar barStyle="light-content" />
+        <Image source={require('../images/logo.png')} />
       </View>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#faf8e0',
-    flex: 1,
-    paddingTop: 100,
-  },
-  header: {
-    alignSelf: 'center',
-    color: '#00b3cc',
-    fontFamily: 'Helvetica Neue',
-    fontSize: 80,
-    fontWeight: '100',
-  },
-});

@@ -13,17 +13,20 @@ import NavigationBar from 'react-native-navbar';
 
 export default class Profile extends Component {
   render() {
-    const { currentUser, onClose, onLogout } = this.props;
-    const titleConfig = { title: currentUser.name };
+    const { currentUser, onLogout } = this.props;
+    const titleConfig = { title: currentUser.name, tintColor: 'white'  };
     const leftButtonConfig = {
       title: 'Close',
-      handler: onClose
+      handler: () => this.props.navigator.pop(),
+      tintColor: 'white'
     };
     return(
       <Modal visible={this.props.visible} animated>
         <View style={styles.container}>
           <NavigationBar
+            style={styles.header}
             title={titleConfig}
+            statusBar={{style: 'light-content', tintColor: '#477dca'}}
             leftButton={leftButtonConfig} />
 
             <TouchableOpacity onPress={onLogout} style={styles.btn}>
@@ -42,9 +45,11 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: 'black',
-    borderRadius: 25,
+    borderRadius: 5,
     marginTop: 200,
     padding: 10,
+    marginLeft: 20,
+    marginRight: 20
   },
   btnLabel: {
     textAlign: 'center',
@@ -52,5 +57,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     paddingLeft: 40,
     paddingRight: 40,
+  },
+  header: {
+    height: 60,
+    backgroundColor: '#477dca'
   }
 });

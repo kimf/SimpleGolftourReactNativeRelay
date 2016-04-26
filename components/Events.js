@@ -11,11 +11,15 @@ import NavigationBar from 'react-native-navbar';
 
 export default class Events extends Component {
   render() {
-    const titleConfig = { title: 'Events' };
-    const { currentUser } = this.props;
+    const { currentUser, onClose, onLogout } = this.props;
+    const titleConfig = { title: 'Events', tintColor: 'white'  };
     return(
       <View style={styles.container}>
-        <NavigationBar title={titleConfig} />
+        <NavigationBar
+          style={styles.header}
+          title={titleConfig}
+          statusBar={{style: 'light-content', tintColor: '#477dca'}}
+        />
       </View>
     )
   }
@@ -27,10 +31,7 @@ const styles = StyleSheet.create({
     flex: 1
   },
   header: {
-    alignSelf: 'center',
-    color: '#00b3cc',
-    fontFamily: 'Helvetica Neue',
-    fontSize: 80,
-    fontWeight: '100',
-  },
+    height: 60,
+    backgroundColor: '#477dca'
+  }
 });

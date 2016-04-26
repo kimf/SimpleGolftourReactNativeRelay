@@ -76,8 +76,9 @@ export default class Login extends Component {
 
     return(
       <View style={{
+        flex: 1,
         flexDirection: 'column',
-        paddingTop: 40,
+        paddingTop: 80,
         backgroundColor: '#477dca',
         alignItems: 'center',
         width: width,
@@ -87,7 +88,6 @@ export default class Login extends Component {
         <Image source={require('../images/logo.png')} />
 
         {showError}
-
 
         <Text style={styles.label}>E-post</Text>
         <TextInput
@@ -128,21 +128,21 @@ let styles = StyleSheet.create({
     fontSize: 20,
   },
   inputField: {
-    paddingLeft: 5,
+    padding: 5,
     margin: 10,
     height: 40,
-    width: 300,
     backgroundColor: 'white',
     borderRadius: 5,
+    fontSize: 20,
+    textAlign: 'center'
   },
   btn: {
-    marginTop: 15,
-    padding: 10,
-    paddingLeft: 55,
-    paddingRight: 55,
-    borderColor: 'white',
-    borderWidth: 3,
-    borderRadius: 25,
+    marginTop: 25,
+    padding: 15,
+    paddingLeft: 60,
+    paddingRight: 60,
+    borderRadius: 10,
+    backgroundColor: 'black'
   },
   btnLabel: {
     color: 'white',
