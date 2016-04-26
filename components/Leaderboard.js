@@ -6,11 +6,12 @@ import React, {
   Text,
   TouchableHighlight,
   View,
-  Modal,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
 import Icon from 'react-native-vector-icons/Ionicons';
+
+import Tour from './Tour';
 
 export default class Leaderboard extends Component {
   constructor(props) {
@@ -26,7 +27,7 @@ export default class Leaderboard extends Component {
         <Icon
           style={[styles.headerBtn, styles.leftBtn]}
           name="person"
-          size={26}
+          size={20}
           onPress={() => dispatch({ type: 'openProfile' })}
         />
     );
@@ -34,7 +35,7 @@ export default class Leaderboard extends Component {
       <Icon
         style={[styles.headerBtn, styles.rightBtn]}
         name="calendar"
-        size={26}
+        size={20}
         onPress={() => dispatch({ type: 'openEvents' })}
       />
     );
@@ -47,6 +48,8 @@ export default class Leaderboard extends Component {
           title={titleConfig}
           leftButton={leftButton}
           rightButton={rightButton} />
+
+          <Tour tour={currentUser.tours[0]} />
       </View>
     )
   }
@@ -54,7 +57,7 @@ export default class Leaderboard extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#faf8e0',
+    backgroundColor: '#fff',
     flex: 1
   },
   headerBtn: {

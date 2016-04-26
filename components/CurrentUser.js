@@ -18,6 +18,7 @@ import AppReducer from '../lib/AppReducer';
 class CurrentUser extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
     this.state = AppReducer(null, { type: 'init' });
   }
 
@@ -65,9 +66,44 @@ export default Relay.createContainer(CurrentUser, {
       fragment on User {
         id,
         name,
-        email
+        email,
+        tours {
+          id,
+          name,
+          seasons {
+            id
+          }
+          currentSeason {
+            id
+            aggregate_count
+            points_ladder
+            use_reversed_points
+            closed_at
+            created_at
+            updated_at,
+            leaderboard {
+              id,
+              position,
+              name,
+              num_events,
+              average,
+              total_points
+            }
+            events {
+              id,
+              starts_at,
+              scoring_type,
+              team_event,
+              status,
+              gametype,
+              course,
+              created_at,
+              updated_at,
+            }
+          }
+        }
       }
-    `
+    `,
   }
 });
 
