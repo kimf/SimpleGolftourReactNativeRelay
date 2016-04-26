@@ -4,49 +4,58 @@ import Relay from 'react-relay';
 
 import React, {
   Component,
-  Navigator,
+  NavigationExperimental,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 
-import NavigationBar from 'react-native-navbar';
 import Leaderboard from './Leaderboard';
+import Profile from './Profile';
+import Events from './Events';
+import AppReducer from '../lib/AppReducer';
 
 class CurrentUser extends Component {
-  renderScene(route, navigator) {
-    return React.createElement(
-      route.component,
-      { ...this.props, ...route.passProps, route, navigator }
-    )
+  constructor(props) {
+    super(props);
+    this.state = AppReducer(null, { type: 'init' });
   }
 
-  configureScene(route, routeStack){
-    if(route.type === 'Modal') {
-      return Navigator.SceneConfigs.FloatFromBottom
-    }
-    return Navigator.SceneConfigs.FloatFromRight
+  dispatch(action) {
+    this.setState(AppReducer(this.state, action));
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, onLogout } = this.props;
+    const scene = this.state.scenes[this.state.scenes.length - 1];
 
-    const initialRoute = {
-      component: Leaderboard,
-      passProps: {
-        currentUser: currentUser
-      }
+    if (scene.key === 'leaderboard') {
+      return (
+        <Leaderboard currentUser={currentUser} dispatch={this.dispatch.bind(this)} />
+      );
+    }
+    if (scene.type === 'profile') {
+      return (
+        <Profile
+          currentUser={currentUser}
+          id={scene.key}
+          dispatch={this.dispatch.bind(this)}
+          onLogout={onLogout}
+        />
+      );
     }
 
-    return (
-      <View style={styles.container}>
-        <Navigator
-          configureScene={ this.configureScene }
-          initialRoute={initialRoute}
-          renderScene={this.renderScene}
+    if (scene.type === 'events') {
+      return (
+        <Events
+          currentUser={currentUser}
+          id={scene.key}
+          dispatch={this.dispatch.bind(this)}
         />
-      </View>
-    )
+      );
+    }
+
+    return null;
   }
 }
 

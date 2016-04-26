@@ -11,11 +11,11 @@ import NavigationBar from 'react-native-navbar';
 
 export default class Events extends Component {
   render() {
-    const { currentUser, onClose, onLogout } = this.props;
+    const { currentUser, dispatch } = this.props;
     const titleConfig = { title: 'Events', tintColor: 'white'  };
     const leftButtonConfig = {
       title: '< Back',
-      handler: () => this.props.navigator.pop(),
+      handler: () => dispatch({ type: 'back' }),
       tintColor: 'white'
     };
     return(

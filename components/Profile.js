@@ -12,11 +12,11 @@ import NavigationBar from 'react-native-navbar';
 
 export default class Profile extends Component {
   render() {
-    const { currentUser, onLogout } = this.props;
+    const { currentUser, onLogout, dispatch } = this.props;
     const titleConfig = { title: currentUser.name, tintColor: 'white'  };
     const leftButtonConfig = {
       title: 'Close',
-      handler: () => this.props.navigator.pop(),
+      handler: () => dispatch({ type: 'back' }),
       tintColor: 'white'
     };
     return(

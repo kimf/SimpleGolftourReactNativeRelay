@@ -4,48 +4,39 @@ import React, {
   Component,
   StyleSheet,
   Text,
+  TouchableHighlight,
   View,
   Modal,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
-import Profile from './Profile';
-import Events from './Events';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Leaderboard extends Component {
   constructor(props) {
     super(props);
-    this.state = { profileVisible: false };
     this.onLogout = this.props.onLogout;
   }
 
-  toggleProfile(visible) {
-    this.setState({profileVisible: visible});
-  }
-
   render() {
-    const { currentUser } = this.props;
-    const { profileVisible } = this.state;
+    const { currentUser, dispatch } = this.props;
+
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
     const leftButton = (
-      <Icon style={[styles.headerBtn, styles.leftBtn]}
-            name="person" size={26}
-            onPress={() => this.props.navigator.push({
-              component: Profile,
-              passProps: {
-                currentUser: currentUser,
-                onLogout: this.onLogout
-              },
-              type: 'Modal'
-            })}/>
+        <Icon
+          style={[styles.headerBtn, styles.leftBtn]}
+          name="person"
+          size={26}
+          onPress={() => dispatch({ type: 'openProfile' })}
+        />
     );
     const rightButton = (
-      <Icon style={[styles.headerBtn, styles.rightBtn]}
-            name="calendar" size={26}
-            onPress={() => this.props.navigator.push({
-              component: Events
-            })}/>
+      <Icon
+        style={[styles.headerBtn, styles.rightBtn]}
+        name="calendar"
+        size={26}
+        onPress={() => dispatch({ type: 'openEvents' })}
+      />
     );
 
     return(
