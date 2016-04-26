@@ -22,10 +22,10 @@ class CurrentUser extends Component {
   }
 
   configureScene(route, routeStack){
-    if(route.type == 'Modal') {
+    if(route.type === 'Modal') {
       return Navigator.SceneConfigs.FloatFromBottom
     }
-    return Navigator.SceneConfigs.PushFromRight
+    return Navigator.SceneConfigs.FloatFromRight
   }
 
   render() {
@@ -69,3 +69,5 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
+

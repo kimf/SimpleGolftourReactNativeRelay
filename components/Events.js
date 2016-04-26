@@ -13,12 +13,18 @@ export default class Events extends Component {
   render() {
     const { currentUser, onClose, onLogout } = this.props;
     const titleConfig = { title: 'Events', tintColor: 'white'  };
+    const leftButtonConfig = {
+      title: '< Back',
+      handler: () => this.props.navigator.pop(),
+      tintColor: 'white'
+    };
     return(
       <View style={styles.container}>
         <NavigationBar
           style={styles.header}
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          leftButton={leftButtonConfig}
         />
       </View>
     )
@@ -27,7 +33,7 @@ export default class Events extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#faf8e0',
+    backgroundColor: '#ccc',
     flex: 1
   },
   header: {

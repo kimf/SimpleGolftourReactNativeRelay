@@ -6,7 +6,6 @@ import React, {
   Text,
   TouchableOpacity,
   View,
-  Modal,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
@@ -21,26 +20,24 @@ export default class Profile extends Component {
       tintColor: 'white'
     };
     return(
-      <Modal visible={this.props.visible} animated>
-        <View style={styles.container}>
-          <NavigationBar
-            style={styles.header}
-            title={titleConfig}
-            statusBar={{style: 'light-content', tintColor: '#477dca'}}
-            leftButton={leftButtonConfig} />
+      <View style={styles.container}>
+        <NavigationBar
+          style={styles.header}
+          title={titleConfig}
+          statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          leftButton={leftButtonConfig} />
 
-            <TouchableOpacity onPress={onLogout} style={styles.btn}>
-              <Text style={styles.btnLabel}> LOGGA UT </Text>
-            </TouchableOpacity>
-        </View>
-      </Modal>
+          <TouchableOpacity onPress={onLogout} style={styles.btn}>
+            <Text style={styles.btnLabel}> LOGGA UT </Text>
+          </TouchableOpacity>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#faf8e0',
+    backgroundColor: '#fff',
     flex: 1
   },
   btn: {
