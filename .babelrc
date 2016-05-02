@@ -3,14 +3,12 @@
     "development": {
       "passPerPreset": true,
       "presets": [
-        {"plugins": ["./plugins/babelRelayPlugin"]},
         "react-native"
       ]
     },
     "production": {
       "passPerPreset": true,
       "presets": [
-        {"plugins": ["./plugins/babelRelayPlugin"]},
         "react-native"
       ]
     }

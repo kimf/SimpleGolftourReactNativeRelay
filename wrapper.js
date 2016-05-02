@@ -1,26 +1,14 @@
 'use strict';
-
-import NetworkLayer from './lib/NetworkLayer';
-import { apiUrl } from './lib/AuthService';
-
-import CurrentUser from './components/CurrentUser';
-import CurrentUserRoute from './routes/CurrentUserRoute';
-import Login from './components/Login';
-import Loading from './components/Loading';
-
 import React, {
   AsyncStorage,
   Component,
-  Text,
-  View,
 } from 'react-native';
 
-import Relay, {
-  RootContainer,
-} from 'react-relay';
+import Default from './containers/Default';
+import Login from './containers/Login';
+import Loading from './components/Loading';
 
-
-export default class SimpleGolftour extends Component {
+export default class Wrapper extends Component {
   constructor(props){
     super(props);
     this.state = { component: 'Loading' }
@@ -51,12 +39,11 @@ export default class SimpleGolftour extends Component {
       let userData = JSON.parse(result);
 
       if(userData && userData.isLoggedIn && userData.session_token) {
-        this.setNetworkLayer(userData.session_token);
 
         AsyncStorage.getItem('currentNavState', (err, result) => {
           const currentNavState = JSON.parse(result);
           this.setState({
-            component: 'CurrentUser',
+            component: 'Default',
             userData: userData,
             navState: currentNavState
           });
@@ -69,21 +56,12 @@ export default class SimpleGolftour extends Component {
 
   render() {
     const { component, userData, navState } = this.state;
-    if(component === 'CurrentUser') {
+    if(component === 'Default') {
       return (
-        <RootContainer
-          Component={CurrentUser}
-          route={new CurrentUserRoute()}
-          renderLoading={() => <Loading /> }
-          renderFetched={(data) => {
-            return (
-              <CurrentUser
-                onLogout={this.onLogout}
-                currentUser={data.currentUser}
-                currentNavState={navState}
-              />
-            );
-          }}
+        <Default
+          onLogout={this.onLogout}
+          currentNavState={navState}
+          currentUser={userData}
         />
       );
     } else if(component === 'Login') {
@@ -91,16 +69,5 @@ export default class SimpleGolftour extends Component {
     } else {
       return null;
     }
-  }
-
-  setNetworkLayer(token) {
-    const url = apiUrl + '/queries';
-    Relay.injectNetworkLayer(
-      new NetworkLayer(url, {
-        headers: {
-          Authorization: `Token ${token}`
-        }
-      })
-    )
   }
 }

@@ -1,6 +1,7 @@
 'use strict';
 
 import React, {
+  AsyncStorage,
   Component,
   SegmentedControlIOS,
   StyleSheet,
@@ -12,14 +13,16 @@ import NavigationBar from 'react-native-navbar';
 
 import EventList from './EventList';
 
+import { apiUrl } from '../lib/ApiService';
+
 export default class Events extends Component {
   constructor(props) {
     super(props);
-    this.state = { selectedIndex: 0 };
+    this.state = { selectedIndex: 0};
   }
 
   render() {
-    const { currentUser, dispatch } = this.props;
+    const { events, dispatch } = this.props;
     const { selectedIndex } = this.state;
 
     const titleConfig = { title: 'Events', tintColor: 'white'  };
@@ -34,13 +37,11 @@ export default class Events extends Component {
       tintColor: 'white'
     };
 
-    console.log(selectedIndex);
-
-    let events = currentUser.tours[0].currentSeason.events;
+    let visibleEvents;
     if (selectedIndex === 0) {
-      events = events.filter(event => event.status !== 'finished');
+      visibleEvents = events.filter(event => event.status !== 'finished');
     } else {
-      events = events.filter(event => event.status === 'finished');
+      visibleEvents = events.filter(event => event.status === 'finished');
     }
 
     return(
@@ -64,7 +65,7 @@ export default class Events extends Component {
         />
 
         <EventList
-          events={events}
+          events={visibleEvents}
           dispatch={dispatch}
         />
       </View>

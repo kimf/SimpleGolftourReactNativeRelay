@@ -1,7 +1,5 @@
 'use strict';
 
-import Relay from 'react-relay';
-
 import React, {
   AsyncStorage,
   Component,
@@ -11,17 +9,17 @@ import React, {
   View,
 } from 'react-native';
 
-import Leaderboard from './Leaderboard';
-import Profile from './Profile';
-import Event from './Event';
-import Events from './Events';
-import ScoreEvent from './ScoreEvent';
-import NewEvent from './NewEvent';
-import Loading from './Loading';
+import Leaderboard from '../components/Leaderboard';
+import Profile from '../components/Profile';
+import Event from '../components/Event';
+import Events from '../components/Events';
+import ScoreEvent from '../components/ScoreEvent';
+import NewEvent from '../components/NewEvent';
+import Loading from '../components/Loading';
 
 import AppReducer from '../lib/AppReducer';
 
-class CurrentUser extends Component {
+export default class Default extends Component {
   constructor(props) {
     super(props);
     this.state = AppReducer(props.currentNavState, { type: 'rehydrate' });
@@ -37,7 +35,7 @@ class CurrentUser extends Component {
 
     if (scene.key === 'leaderboard') {
       return (
-        <Leaderboard currentUser={currentUser} dispatch={this.dispatch.bind(this)} />
+        <Leaderboard leaderboard={currentUser.leaderboard} dispatch={this.dispatch.bind(this)} />
       );
     }
     if (scene.type === 'profile') {
@@ -54,7 +52,7 @@ class CurrentUser extends Component {
     if (scene.type === 'events') {
       return (
         <Events
-          currentUser={currentUser}
+          events={currentUser.current_season_events}
           id={scene.key}
           dispatch={this.dispatch.bind(this)}
         />
@@ -96,53 +94,6 @@ class CurrentUser extends Component {
     return null;
   }
 }
-
-export default Relay.createContainer(CurrentUser, {
-  fragments: {
-    currentUser: () => Relay.QL`
-      fragment on User {
-        id,
-        name,
-        email,
-        tours {
-          id,
-          name,
-          seasons {
-            id
-          }
-          currentSeason {
-            id
-            aggregate_count
-            points_ladder
-            use_reversed_points
-            closed_at
-            created_at
-            updated_at,
-            leaderboard {
-              id,
-              position,
-              name,
-              num_events,
-              average,
-              total_points
-            }
-            events {
-              id,
-              starts_at,
-              scoring_type,
-              team_event,
-              status,
-              gametype,
-              course,
-              created_at,
-              updated_at,
-            }
-          }
-        }
-      }
-    `,
-  }
-});
 
 
 const styles = StyleSheet.create({

@@ -11,7 +11,7 @@ import React, {
   Image
 } from 'react-native';
 
-import { apiUrl } from '../lib/AuthService';
+import { apiUrl } from '../lib/ApiService';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -55,7 +55,7 @@ export default class Login extends Component {
         this.setState({ loginError: true });
       } else if (user.session_token && user.session_token !== '') {
         user.isLoggedIn = true;
-        user.email = email;
+        console.log(user);
         AsyncStorage.setItem('userData', JSON.stringify(user));
         this.props.onLogin();
       }

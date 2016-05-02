@@ -1,6 +1,7 @@
 'use strict';
 
 import React, {
+  AsyncStorage,
   Component,
   StyleSheet,
   Text,
@@ -10,7 +11,10 @@ import React, {
 import NavigationBar from 'react-native-navbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import { apiUrl } from '../lib/ApiService';
+
 import Tour from './Tour';
+import Loading from './Loading';
 
 export default class Leaderboard extends Component {
   constructor(props) {
@@ -19,7 +23,12 @@ export default class Leaderboard extends Component {
   }
 
   render() {
-    const { currentUser, dispatch } = this.props;
+    const { dispatch, leaderboard } = this.props;
+
+    let content;
+    if ( leaderboard.length > 0 ) {
+      content = <Tour leaderboard={leaderboard} />;
+    }
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
     const leftButton = (
@@ -48,7 +57,7 @@ export default class Leaderboard extends Component {
           leftButton={leftButton}
           rightButton={rightButton} />
 
-          <Tour tour={currentUser.tours[0]} />
+          {content}
       </View>
     )
   }

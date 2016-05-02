@@ -8,7 +8,7 @@ import React, {
 
 export default class Tour extends Component {
   render() {
-    const { tour } = this.props;
+    const { leaderboard } = this.props;
     return(
       <View>
         <View key='leaderboard-header' style={styles.tableheader}>
@@ -19,7 +19,7 @@ export default class Tour extends Component {
           <Text style={[styles.cell, styles.th, styles.points]}>Points</Text>
         </View>
         <ScrollView>
-           {tour.currentSeason.leaderboard.map(user =>
+           {leaderboard.map(user =>
              <View key={user.id} style={styles.tablerow}>
                <Text style={[styles.cell, styles.td, styles.id]}>{user.position}</Text>
                <Text style={[styles.cell, styles.td, styles.name]}>{user.name}</Text>

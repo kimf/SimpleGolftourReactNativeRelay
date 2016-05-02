@@ -5,7 +5,7 @@
 
 import React, { AppRegistry } from 'react-native';
 
-import SimpleGolftour from './SimpleGolftour'
+import wrapper from './wrapper'
 
-AppRegistry.registerComponent('SimpleGolftour', () => SimpleGolftour);
+AppRegistry.registerComponent('SimpleGolftour', () => wrapper);
 

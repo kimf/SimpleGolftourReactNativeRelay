@@ -29,20 +29,7 @@ export default class NewEvent extends Component {
 
   onSubmit(){
     const { starts_at, course, scoring_type, gametype, selectedIndex } = this.state;
-
     const team_event = selectedIndex === 1;
-
-    Relay.Store.commitUpdate(
-      new CreateEventMutation({
-        text: text,
-      }), {
-       onFailure: () => {
-         console.error('error!');
-       },
-       onSuccess: (response) => {
-         console.log('success!')
-       }
-    });
   }
 
   render() {
@@ -72,64 +59,65 @@ export default class NewEvent extends Component {
     }
 
     return(
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <NavigationBar
           style={styles.header}
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
         />
-
-        <SegmentedControlIOS
-          style={styles.segmentedcontrol}
-          values={['Individual', 'Team']}
-          selectedIndex={selectedIndex}
-          tintColor="#477dca"
-          onChange={(event) => {
-            this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
-          }}
-        />
-
-        <Text style={styles.label}>Course</Text>
-        <TextInput
-          style={styles.inputField}
-          autoCapitalize="none"
-          ref= "course"
-          onChangeText={(course) => this.setState({course})}
-          value={course}
-        />
-
-        <Text style={styles.label}>Starts at</Text>
-
-        <DatePickerIOS
-          date={starts_at}
-          mode="datetime"
-          timeZoneOffsetInMinutes={timeZoneOffsetInHours * 60}
-          onDateChange={(starts_at) => this.setState({starts_at})}
-          minuteInterval={10}
-          style={styles.row}
-        />
-
-        {teamGameType}
-
-        <View style={styles.row}>
-          <Text style={styles.label}>{selectedIndex === 0 ? 'Gametype' : 'Scoring Type'}</Text>
-          <Radio
-            style={styles.radio}
-            radio_props={[
-              {label: 'Stableford', value: 'points' },
-              {label: 'Strokes', value: 'strokes' }
-            ]}
-            initial={0}
-            formHorizontal={true}
-            onPress={(scoring_type) => {this.setState({scoring_type})}}
+        <ScrollView>
+          <SegmentedControlIOS
+            style={styles.segmentedcontrol}
+            values={['Individual', 'Team']}
+            selectedIndex={selectedIndex}
+            tintColor="#477dca"
+            onChange={(event) => {
+              this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
+            }}
           />
-        </View>
 
-        <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
-          <Text style={styles.btnLabel}> CREATE EVENT </Text>
-        </TouchableOpacity>
-      </ScrollView>
+          <Text style={styles.label}>Course</Text>
+          <TextInput
+            style={styles.inputField}
+            autoCapitalize="none"
+            ref= "course"
+            onChangeText={(course) => this.setState({course})}
+            value={course}
+          />
+
+          <Text style={styles.label}>Starts at</Text>
+
+          <DatePickerIOS
+            date={starts_at}
+            mode="datetime"
+            timeZoneOffsetInMinutes={timeZoneOffsetInHours * 60}
+            onDateChange={(starts_at) => this.setState({starts_at})}
+            minuteInterval={10}
+            style={styles.row}
+          />
+
+          {teamGameType}
+
+          <View style={styles.row}>
+            <Text style={styles.label}>{selectedIndex === 0 ? 'Gametype' : 'Scoring Type'}</Text>
+            <Radio
+              style={styles.radio}
+              radio_props={[
+                {label: 'Stableford', value: 'points' },
+                {label: 'Strokes', value: 'strokes' }
+              ]}
+              initial={0}
+              formHorizontal={true}
+              onPress={(scoring_type) => {this.setState({scoring_type})}}
+            />
+          </View>
+
+          <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
+            <Text style={styles.btnLabel}> CREATE EVENT </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
     );
   }
 }
