@@ -4,7 +4,6 @@ import React, {
   Component,
   StyleSheet,
   Text,
-  TouchableHighlight,
   View,
 } from 'react-native';
 

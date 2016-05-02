@@ -3,6 +3,7 @@
 import Relay from 'react-relay';
 
 import React, {
+  AsyncStorage,
   Component,
   NavigationExperimental,
   StyleSheet,
@@ -12,14 +13,18 @@ import React, {
 
 import Leaderboard from './Leaderboard';
 import Profile from './Profile';
+import Event from './Event';
 import Events from './Events';
+import ScoreEvent from './ScoreEvent';
+import NewEvent from './NewEvent';
+import Loading from './Loading';
+
 import AppReducer from '../lib/AppReducer';
 
 class CurrentUser extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
-    this.state = AppReducer(null, { type: 'init' });
+    this.state = AppReducer(props.currentNavState, { type: 'rehydrate' });
   }
 
   dispatch(action) {
@@ -51,6 +56,38 @@ class CurrentUser extends Component {
         <Events
           currentUser={currentUser}
           id={scene.key}
+          dispatch={this.dispatch.bind(this)}
+        />
+      );
+    }
+
+    if (scene.type === 'newEvent') {
+      return (
+        <NewEvent
+          currentUser={currentUser}
+          id={scene.key}
+          dispatch={this.dispatch.bind(this)}
+        />
+      );
+    }
+
+    if (scene.type === 'showEvent') {
+      return (
+        <Event
+          currentUser={currentUser}
+          id={scene.key}
+          event={scene.event}
+          dispatch={this.dispatch.bind(this)}
+        />
+      );
+    }
+
+    if (scene.type === 'scoreEvent') {
+      return (
+        <ScoreEvent
+          currentUser={currentUser}
+          id={scene.key}
+          event={scene.event}
           dispatch={this.dispatch.bind(this)}
         />
       );

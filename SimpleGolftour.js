@@ -33,6 +33,7 @@ export default class SimpleGolftour extends Component {
   }
 
   onLogout() {
+    AsyncStorage.removeItem('currentNavState');
     AsyncStorage.getItem('userData', (err, result) => {
       let userData = JSON.parse(result);
       AsyncStorage.setItem('userData', JSON.stringify({ email: userData.email }));
@@ -48,17 +49,26 @@ export default class SimpleGolftour extends Component {
     //AsyncStorage.removeItem('userData');
     AsyncStorage.getItem('userData', (err, result) => {
       let userData = JSON.parse(result);
+
       if(userData && userData.isLoggedIn && userData.session_token) {
         this.setNetworkLayer(userData.session_token);
-        this.setState({ component: 'CurrentUser', userData: userData});
+
+        AsyncStorage.getItem('currentNavState', (err, result) => {
+          const currentNavState = JSON.parse(result);
+          this.setState({
+            component: 'CurrentUser',
+            userData: userData,
+            navState: currentNavState
+          });
+        });
       } else {
-        this.setState({ component: 'Login', userData: userData});
+        this.setState({ component: 'Login', userData: userData, navState: null });
       }
     });
   }
 
   render() {
-    const { component, userData } = this.state;
+    const { component, userData, navState } = this.state;
     if(component === 'CurrentUser') {
       return (
         <RootContainer
@@ -67,7 +77,11 @@ export default class SimpleGolftour extends Component {
           renderLoading={() => <Loading /> }
           renderFetched={(data) => {
             return (
-              <CurrentUser onLogout={this.onLogout} currentUser={data.currentUser} />
+              <CurrentUser
+                onLogout={this.onLogout}
+                currentUser={data.currentUser}
+                currentNavState={navState}
+              />
             );
           }}
         />

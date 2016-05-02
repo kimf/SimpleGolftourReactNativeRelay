@@ -2,6 +2,7 @@
 
 import React, {
   Component,
+  SegmentedControlIOS,
   StyleSheet,
   Text,
   View,
@@ -9,15 +10,39 @@ import React, {
 
 import NavigationBar from 'react-native-navbar';
 
+import EventList from './EventList';
+
 export default class Events extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { selectedIndex: 0 };
+  }
+
   render() {
     const { currentUser, dispatch } = this.props;
+    const { selectedIndex } = this.state;
+
     const titleConfig = { title: 'Events', tintColor: 'white'  };
     const leftButtonConfig = {
       title: '< Back',
       handler: () => dispatch({ type: 'back' }),
       tintColor: 'white'
     };
+    const rightButtonConfig = {
+      title: '+ New',
+      handler: () => dispatch({ type: 'newEvent' }),
+      tintColor: 'white'
+    };
+
+    console.log(selectedIndex);
+
+    let events = currentUser.tours[0].currentSeason.events;
+    if (selectedIndex === 0) {
+      events = events.filter(event => event.status !== 'finished');
+    } else {
+      events = events.filter(event => event.status === 'finished');
+    }
+
     return(
       <View style={styles.container}>
         <NavigationBar
@@ -25,6 +50,22 @@ export default class Events extends Component {
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
+          rightButton={rightButtonConfig}
+        />
+
+        <SegmentedControlIOS
+          style={styles.segmentedcontrol}
+          values={['Upcoming', 'Played']}
+          selectedIndex={selectedIndex}
+          tintColor="#477dca"
+          onChange={(event) => {
+            this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
+          }}
+        />
+
+        <EventList
+          events={events}
+          dispatch={dispatch}
         />
       </View>
     )
@@ -39,5 +80,8 @@ const styles = StyleSheet.create({
   header: {
     height: 60,
     backgroundColor: '#477dca'
+  },
+  segmentedcontrol: {
+    margin: 10,
   }
 });
