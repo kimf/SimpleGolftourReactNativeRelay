@@ -14,9 +14,9 @@ export default class Event extends Component {
 
   render() {
     const { currentUser, event, dispatch } = this.props;
-    const titleConfig = { title: `Event @ ${event.course}`, tintColor: 'white'  };
+    const titleConfig = { title: `${event.course}`, tintColor: 'white'  };
     const leftButtonConfig = {
-      title: '< Back',
+      title: '< Bakåt',
       handler: () => dispatch({ type: 'back' }),
       tintColor: 'white'
     };
@@ -24,8 +24,8 @@ export default class Event extends Component {
     let scoreButton;
     if(event.status !== 'finished') {
       scoreButton = (
-        <TouchableOpacity onPress={() => dispatch({ type: 'scoreEvent', event: event })} style={styles.btn}>
-          <Text style={styles.btnLabel}> SCORE EVENT </Text>
+        <TouchableOpacity onPress={() => dispatch({ type: 'selectPlayers', event: event })} style={styles.btn}>
+          <Text style={styles.btnLabel}> STARTA RUNDA </Text>
         </TouchableOpacity>
       );
     }

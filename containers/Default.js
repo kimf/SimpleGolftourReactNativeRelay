@@ -13,9 +13,10 @@ import Leaderboard from '../components/Leaderboard';
 import Profile from '../components/Profile';
 import Event from '../components/Event';
 import Events from '../components/Events';
-import ScoreEvent from '../components/ScoreEvent';
+import SelectPlayers from '../components/SelectPlayers';
 import NewEvent from '../components/NewEvent';
 import Loading from '../components/Loading';
+import ScoreEvent from '../components/ScoreEvent';
 
 import AppReducer from '../lib/AppReducer';
 
@@ -75,6 +76,17 @@ export default class Default extends Component {
     if (scene.type === 'showEvent') {
       return (
         <Event
+          currentUser={currentUser}
+          id={scene.key}
+          event={scene.event}
+          dispatch={this.dispatch.bind(this)}
+        />
+      );
+    }
+
+    if (scene.type === 'selectPlayers') {
+      return (
+        <SelectPlayers
           currentUser={currentUser}
           id={scene.key}
           event={scene.event}

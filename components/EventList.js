@@ -9,13 +9,22 @@ import React, {
   View,
 } from 'react-native';
 
+import moment from 'moment';
+
 class EventCard extends Component {
   render() {
     const { event, dispatch } = this.props;
+    let today;
+    if(moment(event.starts_at).isSame(Date.now(), 'day')){
+      today = (
+        <Text style={{fontSize: 16, fontWeight: 'bold', color: 'green'}}>IDAG</Text>
+      );
+    }
 
     return(
       <TouchableOpacity onPress={() => dispatch({ type: 'showEvent', event: event})}>
         <View style={styles.card}>
+          {today}
           <Text>{event.status}</Text>
           <Text>Starts at: {event.starts_at}</Text>
           <Text>Gametype: {event.gametype}</Text>

@@ -67,7 +67,7 @@ export default class Leaderboard extends Component {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => dispatch({ type: 'showEvent', event: todayEvents[0] })}>
-          <Text style={styles.btnLabel}>EVENT TODAY</Text>
+          <Text style={styles.btnLabel}>RUNDA IDAG - SCORA NU</Text>
         </TouchableOpacity>
       );
     }
