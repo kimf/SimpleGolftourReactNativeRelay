@@ -35,7 +35,10 @@ export default class Default extends Component {
 
     if (scene.key === 'leaderboard') {
       return (
-        <Leaderboard leaderboard={currentUser.leaderboard} dispatch={this.dispatch.bind(this)} />
+        <Leaderboard
+          currentUser={currentUser}
+          dispatch={this.dispatch.bind(this)}
+        />
       );
     }
     if (scene.type === 'profile') {

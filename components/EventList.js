@@ -47,14 +47,13 @@ export default class EventList extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#eee',
+    backgroundColor: '#fff',
     flex: 1
   },
 
   card: {
-    backgroundColor: '#eee',
-    borderWidth: 1,
-    borderColor: '#ccc',
+    borderBottomWidth: 1,
+    borderColor: '#eee',
     flexDirection: 'column',
     margin: 5,
     padding: 10,

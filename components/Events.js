@@ -25,14 +25,14 @@ export default class Events extends Component {
     const { events, dispatch } = this.props;
     const { selectedIndex } = this.state;
 
-    const titleConfig = { title: 'Events', tintColor: 'white'  };
+    const titleConfig = { title: 'Rundor', tintColor: 'white'  };
     const leftButtonConfig = {
-      title: '< Back',
+      title: '< Tillbaka',
       handler: () => dispatch({ type: 'back' }),
       tintColor: 'white'
     };
     const rightButtonConfig = {
-      title: '+ New',
+      title: '+ Ny',
       handler: () => dispatch({ type: 'newEvent' }),
       tintColor: 'white'
     };
@@ -56,7 +56,7 @@ export default class Events extends Component {
 
         <SegmentedControlIOS
           style={styles.segmentedcontrol}
-          values={['Upcoming', 'Played']}
+          values={['Kommande', 'Redan spelade']}
           selectedIndex={selectedIndex}
           tintColor="#477dca"
           onChange={(event) => {
@@ -75,7 +75,7 @@ export default class Events extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#fff',
     flex: 1
   },
   header: {

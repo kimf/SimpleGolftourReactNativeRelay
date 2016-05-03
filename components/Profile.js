@@ -15,7 +15,7 @@ export default class Profile extends Component {
     const { currentUser, onLogout, dispatch } = this.props;
     const titleConfig = { title: currentUser.name, tintColor: 'white'  };
     const leftButtonConfig = {
-      title: 'Close',
+      title: 'Stäng',
       handler: () => dispatch({ type: 'back' }),
       tintColor: 'white'
     };

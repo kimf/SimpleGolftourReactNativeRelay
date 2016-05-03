@@ -55,7 +55,6 @@ export default class Login extends Component {
         this.setState({ loginError: true });
       } else if (user.session_token && user.session_token !== '') {
         user.isLoggedIn = true;
-        console.log(user);
         AsyncStorage.setItem('userData', JSON.stringify(user));
         this.props.onLogin();
       }
