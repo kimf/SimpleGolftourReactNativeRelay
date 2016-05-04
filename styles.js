@@ -3,7 +3,7 @@
 
 module.exports = require('react-native').StyleSheet.create({
   container: {
-    backgroundColor: '#faf8e0',
+    backgroundColor: '#fff',
     flex: 1
   },
   header: {
@@ -148,5 +148,11 @@ module.exports = require('react-native').StyleSheet.create({
     borderStyle: 'dashed',
     borderWidth: 1,
     borderColor: '#ccc'
-  }
+  },
+  danger: {
+    backgroundColor: 'red'
+  },
+  eventCard: {
+    flexDirection: 'column',
+  },
 });

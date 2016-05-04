@@ -22,7 +22,7 @@ class EventCard extends Component {
     }
 
     return(
-      <View style={styles.card}>
+      <View style={[styles.card, styles.eventCard]}>
         {today}
         <Text>{event.status}</Text>
         <Text>Starts at: {event.starts_at}</Text>
