@@ -4,19 +4,19 @@ import React, {
   AsyncStorage,
   Component,
   NavigationExperimental,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 
 import Leaderboard from '../components/Leaderboard';
 import Profile from '../components/Profile';
-import Event from '../components/Event';
 import Events from '../components/Events';
 import SelectPlayers from '../components/SelectPlayers';
 import NewEvent from '../components/NewEvent';
 import Loading from '../components/Loading';
 import ScoreEvent from '../components/ScoreEvent';
+
+import styles from '../styles.js';
 
 import AppReducer from '../lib/AppReducer';
 
@@ -73,17 +73,6 @@ export default class Default extends Component {
       );
     }
 
-    if (scene.type === 'showEvent') {
-      return (
-        <Event
-          currentUser={currentUser}
-          id={scene.key}
-          event={scene.event}
-          dispatch={this.dispatch.bind(this)}
-        />
-      );
-    }
-
     if (scene.type === 'selectPlayers') {
       return (
         <SelectPlayers
@@ -101,6 +90,7 @@ export default class Default extends Component {
           currentUser={currentUser}
           id={scene.key}
           event={scene.event}
+          players={scene.players}
           dispatch={this.dispatch.bind(this)}
         />
       );
@@ -109,13 +99,3 @@ export default class Default extends Component {
     return null;
   }
 }
-
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#faf8e0',
-    flex: 1
-  }
-});
-
-

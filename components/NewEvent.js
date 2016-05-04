@@ -4,12 +4,13 @@ import React, {
   DatePickerIOS,
   ScrollView,
   SegmentedControlIOS,
-  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View
 } from 'react-native';
+
+const styles = require('../styles.js');
 
 import NavigationBar from 'react-native-navbar';
 import Radio, { RadioButton } from 'react-native-simple-radio-button';
@@ -175,74 +176,3 @@ export default class NewEvent extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#eee',
-    flex: 1
-  },
-  row: {
-    flex: 1
-  },
-  header: {
-    height: 60,
-    backgroundColor: '#477dca'
-  },
-  heading: {
-    fontSize: 40,
-    marginTop: 20,
-  },
-  segmentedcontrol: {
-    margin: 10,
-  },
-  label: {
-    marginTop: 10,
-    marginLeft: 10,
-    color: '#444',
-    fontSize: 16,
-  },
-  inputField: {
-    padding: 5,
-    margin: 10,
-    height: 40,
-    backgroundColor: 'white',
-    borderRadius: 4,
-    fontSize: 16,
-  },
-  btn: {
-    marginTop: 25,
-    margin: 10,
-    padding: 15,
-    borderRadius: 5,
-    backgroundColor: 'black'
-  },
-  btnLabel: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center'
-  },
-  datepicker: {
-    height: 50
-  },
-  radio: {
-    padding: 10
-  },
-  selectedDate: {
-    marginTop: 5,
-    marginLeft: 10,
-    color: '#222',
-    fontSize: 14,
-  },
-  datePickerContainer: {
-    backgroundColor: '#fff',
-    borderTopColor: '#ccc',
-    borderTopWidth: 1
-  },
-  toggleDatePicker: {
-    padding: 10,
-    paddingLeft: 0,
-    borderStyle: 'dashed',
-    borderWidth: 1,
-    borderColor: '#ccc'
-  }
-});

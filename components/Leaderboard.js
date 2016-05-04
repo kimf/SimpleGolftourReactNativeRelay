@@ -4,11 +4,12 @@ import React, {
   AsyncStorage,
   Component,
   ListView,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+
+const styles = require('../styles.js');
 
 import NavigationBar from 'react-native-navbar';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -66,7 +67,7 @@ export default class Leaderboard extends Component {
       eventBanner = (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => dispatch({ type: 'showEvent', event: todayEvents[0] })}>
+          onPress={() => dispatch({ type: 'selectPlayers', event: todayEvents[0] })}>
           <Text style={styles.btnLabel}>RUNDA IDAG - SCORA NU</Text>
         </TouchableOpacity>
       );
@@ -88,37 +89,3 @@ export default class Leaderboard extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    flex: 1
-  },
-  headerBtn: {
-    marginTop: 20,
-    color: '#eee'
-  },
-  leftBtn: {
-    marginLeft: 20,
-  },
-  rightBtn: {
-    marginRight: 20
-  },
-  header: {
-    height: 60,
-    backgroundColor: '#477dca'
-  },
-  btn: {
-    marginTop: 10,
-    padding: 20,
-    paddingLeft: 60,
-    paddingRight: 60,
-    backgroundColor: 'green',
-  },
-  btnLabel: {
-    textAlign: 'center',
-    flex: 1,
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});

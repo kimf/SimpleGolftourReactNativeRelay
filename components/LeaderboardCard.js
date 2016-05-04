@@ -2,11 +2,11 @@
 
 import React, {
   Component,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 
+const styles = require('../styles.js');
 
 export default class EventCard extends Component {
   render() {
@@ -39,43 +39,3 @@ export default class EventCard extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  usercard: {
-    borderBottomWidth: 1,
-    borderColor: '#cecece',
-    flexDirection: 'row',
-    padding: 5,
-    paddingRight: 10,
-    paddingLeft: 10,
-    paddingBottom: 10,
-    marginTop: 10,
-  },
-  points: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'right',
-    flex: 1
-  },
-  position: {
-    marginRight: 5,
-    width: 40,
-    flexDirection: 'column',
-  },
-
-  cardTitle: {
-    flex: 5,
-    flexDirection: 'column',
-  },
-  meta: {
-    color: '#777',
-    flex: 1,
-    fontSize: 12,
-    marginTop: 3,
-  },
-  name: {
-    fontWeight: 'bold',
-    flex: 1,
-    fontSize: 14,
-  }
-});

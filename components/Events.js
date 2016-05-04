@@ -4,16 +4,15 @@ import React, {
   AsyncStorage,
   Component,
   SegmentedControlIOS,
-  StyleSheet,
   Text,
   View,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
-
 import EventList from './EventList';
-
 import { apiUrl } from '../lib/ApiService';
+
+const styles = require('../styles.js');
 
 export default class Events extends Component {
   constructor(props) {
@@ -72,17 +71,3 @@ export default class Events extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    flex: 1
-  },
-  header: {
-    height: 60,
-    backgroundColor: '#477dca'
-  },
-  segmentedcontrol: {
-    margin: 10,
-  }
-});

@@ -2,7 +2,6 @@
 
 import React, {
   Component,
-  StyleSheet,
   Text,
   TouchableOpacity,
   ListView,
@@ -10,6 +9,8 @@ import React, {
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
+
+const styles = require('../styles.js');
 
 export default class SelectPlayers extends Component {
   constructor(props) {
@@ -108,41 +109,3 @@ export default class SelectPlayers extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#ccc',
-    flex: 1
-  },
-  header: {
-    height: 60,
-    backgroundColor: '#477dca'
-  },
-  card: {
-    borderBottomWidth: 1,
-    borderColor: '#cecece',
-    flexDirection: 'row',
-    padding: 5,
-    paddingRight: 10,
-    paddingLeft: 10,
-    paddingBottom: 10,
-    marginTop: 10,
-  },
-  btn: {
-    marginTop: 10,
-    padding: 20,
-    paddingLeft: 60,
-    paddingRight: 60,
-    backgroundColor: 'green',
-  },
-  btnLabel: {
-    textAlign: 'center',
-    flex: 1,
-    color: 'white',
-    fontWeight: 'bold',
-  },
-  selected: {
-    color: 'green',
-    fontWeight: 'bold'
-  }
-});

@@ -2,7 +2,6 @@
 
 import React, {
   Component,
-  StyleSheet,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -10,6 +9,7 @@ import React, {
 } from 'react-native';
 
 import moment from 'moment';
+const styles = require('../styles.js');
 
 class EventCard extends Component {
   render() {
@@ -17,22 +17,23 @@ class EventCard extends Component {
     let today;
     if(moment(event.starts_at).isSame(Date.now(), 'day')){
       today = (
-        <Text style={{fontSize: 16, fontWeight: 'bold', color: 'green'}}>IDAG</Text>
+        <Text style={styles.todayBanner}>IDAG</Text>
       );
     }
 
     return(
-      <TouchableOpacity onPress={() => dispatch({ type: 'showEvent', event: event})}>
-        <View style={styles.card}>
-          {today}
-          <Text>{event.status}</Text>
-          <Text>Starts at: {event.starts_at}</Text>
-          <Text>Gametype: {event.gametype}</Text>
-          <Text>Course: {event.course}</Text>
-          <Text>Scoring: {event.scoring_type}</Text>
-          <Text>{event.team_event ? 'Team Event' : 'Individual Event'}</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.card}>
+        {today}
+        <Text>{event.status}</Text>
+        <Text>Starts at: {event.starts_at}</Text>
+        <Text>Gametype: {event.gametype}</Text>
+        <Text>Course: {event.course}</Text>
+        <Text>Scoring: {event.scoring_type}</Text>
+        <Text>{event.team_event ? 'Team Event' : 'Individual Event'}</Text>
+        <TouchableOpacity onPress={() => dispatch({ type: 'selectPlayers', event: event})}>
+          <Text style={styles.inlineBtn}>SCORA</Text>
+        </TouchableOpacity>
+      </View>
     );
   }
 }
@@ -53,19 +54,3 @@ export default class EventList extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    flex: 1
-  },
-
-  card: {
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-    flexDirection: 'column',
-    margin: 5,
-    padding: 10,
-    marginTop: 10,
-  }
-});
