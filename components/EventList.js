@@ -31,7 +31,9 @@ class EventCard extends Component {
         <Text>Scoring: {event.scoring_type}</Text>
         <Text>{event.team_event ? 'Team Event' : 'Individual Event'}</Text>
         <TouchableOpacity onPress={() => dispatch({ type: 'selectPlayers', event: event})}>
-          <Text style={styles.inlineBtn}>SCORA</Text>
+          <Text style={styles.inlineBtn}>
+            {event.status === 'planned' ? 'SCORA' : 'REDIGERA'}
+          </Text>
         </TouchableOpacity>
       </View>
     );

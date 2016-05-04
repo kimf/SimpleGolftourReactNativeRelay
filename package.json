@@ -16,7 +16,6 @@
     "react-native-navbar": "^1.4.2",
     "react-native-progress-hud": "^1.0.4",
     "react-native-simple-radio-button": "^2.0.1",
-    "react-native-swiper": "^1.4.3",
     "react-native-vector-icons": "^1.3.4"
   },
   "devDependencies": {

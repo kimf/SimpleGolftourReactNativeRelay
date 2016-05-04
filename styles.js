@@ -67,16 +67,6 @@ module.exports = require('react-native').StyleSheet.create({
     color: 'green',
     fontWeight: 'bold'
   },
-  usercard: {
-    borderBottomWidth: 1,
-    borderColor: '#cecece',
-    flexDirection: 'row',
-    padding: 5,
-    paddingRight: 10,
-    paddingLeft: 10,
-    paddingBottom: 10,
-    marginTop: 10,
-  },
   points: {
     fontSize: 16,
     fontWeight: 'bold',
@@ -155,4 +145,40 @@ module.exports = require('react-native').StyleSheet.create({
   eventCard: {
     flexDirection: 'column',
   },
+  scoring: {
+    backgroundColor: '#feb'
+  },
+  playerRow: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start'
+  },
+  playerName: {
+    flex: 4,
+  },
+  playerHoleData: {
+    flex: 1,
+    fontSize: 16
+  },
+  scorebox: {
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingBottom: 20,
+    paddingTop: 20
+  },
+  scoreRow: {
+    borderBottomWidth: 0.5,
+    borderColor: '#cecece',
+    flexDirection: 'column',
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingBottom: 20,
+    paddingTop: 20
+  },
+  picker: {
+    flex: 1
+  },
+  needsScore: {
+    color: '#eee'
+  }
 });

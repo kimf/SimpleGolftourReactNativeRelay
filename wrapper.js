@@ -17,6 +17,7 @@ export default class Wrapper extends Component {
   }
 
   componentWillMount() {
+    //AsyncStorage.removeItem('currentNavState');
     this.checkUserCreds();
   }
 
