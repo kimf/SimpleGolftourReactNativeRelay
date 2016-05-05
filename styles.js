@@ -224,5 +224,8 @@ module.exports = require('react-native').StyleSheet.create({
   strokeInfo: {
     flex: 1,
     textAlign: 'right'
+  },
+  smallLabel: {
+    fontSize: 10
   }
 });

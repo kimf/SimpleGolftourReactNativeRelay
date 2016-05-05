@@ -7,32 +7,107 @@ import React, {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  Modal
 } from 'react-native';
 
 const styles = require('../styles.js');
+import realm from '../realm';
+//http://localhost:9292/tisdagsgolfendata
 
 import NavigationBar from 'react-native-navbar';
 import Radio, { RadioButton } from 'react-native-simple-radio-button';
 import moment from 'moment';
 import CustomActionSheet from 'react-native-custom-action-sheet';
+import Spinner from 'react-native-loading-spinner-overlay';
 
-import { apiUrl } from '../lib/ApiService';
+import SetCourse from './SetCourse';
+
+import { apiUrl, courseApiUrl } from '../lib/ApiService';
 
 export default class NewEvent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       selectedIndex: 0,
-      course: '',
       starts_at: new Date(),
       timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60,
       scoring_type: 'points',
-      showDatePicker: false
+      showDatePicker: false,
+      showClubPickerModal: false,
+      loadingClubs: false,
+      clubs: []
     };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleDatePicker = this.toggleDatePicker.bind(this);
+    this.selectClub = this.selectClub.bind(this);
+    this.setCourse = this._setCourse.bind(this);
+  }
+
+  componentWillMount() {
+    let clubs = realm.objects('Club').sorted('name');
+    // let courses = realm.objects('Course');
+    // let holes = realm.objects('Hole');
+    // realm.write(() => {
+    //   realm.delete(clubs);
+    //   realm.delete(courses);
+    //   realm.delete(holes);
+    // })
+
+    if (clubs.length > 1) {
+      this.setState({clubs});
+    } else {
+      this.setState({course: 'Laddar banor...', loadingClubs: true});
+
+      fetch(courseApiUrl, {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        json.clubs.map((club) => {
+          realm.write(() => {
+            const courses = [];
+            club.courses.map((course) => {
+              const holes = [];
+              course.holes.map((hole) => {
+                holes.push({
+                  id: hole.id,
+                  number: hole.number,
+                  index: hole.index,
+                  par: hole.par
+                });
+              });
+
+              courses.push({
+                id: course.id,
+                name: course.name,
+                holes_count: course.holes_count,
+                par: course.par,
+                holes: holes
+              });
+            })
+
+            realm.create('Club', {
+              id: club.id,
+              name: club.name,
+              courses: courses
+            });
+          });
+        });
+
+        this.setState({course: null, loadingClubs: false, clubs: clubs});
+      }).catch((error) => {
+        this.setState({course: 'Gick inte att ladda banor!', loadingClubs: false});
+        console.log('Error retreiving data', error);
+      })
+    }
   }
 
   onSubmit(){
@@ -71,10 +146,21 @@ export default class NewEvent extends Component {
     this.setState({showDatePicker: !this.state.showDatePicker});
   }
 
+  selectClub(){
+    this.setState({showClubPickerModal: true})
+  }
+
+  _setCourse(course) {
+    this.setState({course: course, showClubPickerModal: false})
+  }
+
   render() {
     const { currentUser, dispatch } = this.props;
-    const { selectedIndex, gametype, scoring_type, course, starts_at,
-            timeZoneOffsetInHours, showDatePicker } = this.state;
+    const { selectedIndex, gametype, scoring_type, course,
+            starts_at, timeZoneOffsetInHours, showDatePicker,
+            loadingClubs, showClubPickerModal, clubs
+          } = this.state;
+
     const titleConfig = { title: 'Ny Runda', tintColor: 'white'  };
     const leftButtonConfig = {
       title: '< Bakåt',
@@ -117,6 +203,7 @@ export default class NewEvent extends Component {
 
     return(
       <View style={styles.container}>
+        <Spinner visible={loadingClubs} />
         <NavigationBar
           style={styles.header}
           title={titleConfig}
@@ -134,14 +221,12 @@ export default class NewEvent extends Component {
             }}
           />
 
-          <Text style={styles.label}>Bana</Text>
-          <TextInput
-            style={styles.inputField}
-            autoCapitalize="none"
-            ref= "course"
-            onChangeText={(course) => this.setState({course})}
-            value={course}
-          />
+          <Text style={styles.label}>Vilken bana</Text>
+          <TouchableOpacity onPress={this.selectClub} style={styles.toggleDatePicker}>
+            <Text style={styles.selectedDate}>
+              { course ? course.name : 'Välj bana ->'}
+            </Text>
+          </TouchableOpacity>
 
           <Text style={styles.label}>Starttid</Text>
           <TouchableOpacity onPress={this.toggleDatePicker} style={styles.toggleDatePicker}>
@@ -172,6 +257,14 @@ export default class NewEvent extends Component {
 
           {datePicker}
         </ScrollView>
+
+        <Modal
+          animated={true}
+          transparent={false}
+          visible={showClubPickerModal}
+          >
+          <SetCourse clubs={clubs} setCourse={this.setCourse} />
+        </Modal>
       </View>
     );
   }

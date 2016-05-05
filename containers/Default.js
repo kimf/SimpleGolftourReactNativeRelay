@@ -17,8 +17,6 @@ import Loading from '../components/Loading';
 import ScoreEvent from '../components/ScoreEvent';
 import SetHcp from '../components/SetHcp';
 
-import styles from '../styles.js';
-
 import AppReducer from '../lib/AppReducer';
 
 export default class Default extends Component {
