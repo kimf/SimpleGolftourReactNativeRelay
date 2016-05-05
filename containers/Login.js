@@ -92,6 +92,8 @@ export default class Login extends Component {
         <TextInput
           style={styles.inputField}
           autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="email-address"
           ref= "email"
           onChangeText={(email) => this.setState({email})}
           value={this.state.email}

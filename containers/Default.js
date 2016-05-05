@@ -15,6 +15,7 @@ import SelectPlayers from '../components/SelectPlayers';
 import NewEvent from '../components/NewEvent';
 import Loading from '../components/Loading';
 import ScoreEvent from '../components/ScoreEvent';
+import SetHcp from '../components/SetHcp';
 
 import styles from '../styles.js';
 

@@ -18,43 +18,45 @@ export default class ScoreEvent extends Component {
       nr: props.hole === undefined ? 1 : props.hole.nr
     }
 
-    AsyncStorage.getItem('userData', (err, result) => {
-      let userData = JSON.parse(result);
-      AsyncStorage.setItem('userData', JSON.stringify({ email: userData.email }));
-      this.setState({
-        component: 'Login',
-        onLogin: this.onLogin,
-        userData: userData
-      });
-    });
-
-
-    const currentPlayers = []
-    for (let player of props.currentUser.leaderboard) {
-      if(props.players.indexOf(player.id) !== -1) {
-        currentPlayers.push({
-          id: player.id,
-          name: player.name,
-          isScoring: false,
-          holeData: {
-            strokes: hole.par,
-            putts: 2,
-            beers: 0,
-            isScored: false
-          }
-        });
-      }
-    }
-
-    this.state = {
-      players: currentPlayers,
-      hole: hole,
-      isScoring: false
-    };
+    this.state = {isScoring: false, hole: hole, players: []}
 
     this._showScoreForm = this._showScoreForm.bind(this);
     this._closeScoreForm = this._closeScoreForm.bind(this);
     this._setPlayerData = this._setPlayerData.bind(this);
+  }
+
+  componentWillMount() {
+    const { hole } = this.state;
+    let currentPlayers = [];
+
+    AsyncStorage.getItem('holeScoringData', (err, result) => {
+      let holeScoringData = JSON.parse(result);
+      const playerData = holeScoringData[hole.nr - 1]
+
+      if(playerData !== undefined){
+        currentPlayers = playerData
+      } else {
+        for (let player of props.currentUser.leaderboard) {
+          if(props.players.indexOf(player.id) !== -1) {
+            currentPlayers.push({
+              id: player.id,
+              name: player.name,
+              isScoring: false,
+              holeData: {
+                strokes: hole.par,
+                putts: 2,
+                beers: 0,
+                isScored: false
+              }
+            });
+          }
+        }
+      }
+
+      this.setState({
+        players: currentPlayers
+      });
+    });
   }
 
   _showScoreForm(playerId) {
@@ -78,7 +80,8 @@ export default class ScoreEvent extends Component {
       }
       players.push(player);
     }
-    const isScoring = false
+    const isScoring = false;
+    this._saveAway(players);
     this.setState({players, isScoring});
   }
 
@@ -128,7 +131,7 @@ export default class ScoreEvent extends Component {
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
         />
 
-        {this.state.players.map((player) => {
+        {players.map((player) => {
           return(
             <ScorecardPlayerRow
               player={player}

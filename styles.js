@@ -10,6 +10,11 @@ module.exports = require('react-native').StyleSheet.create({
     height: 60,
     backgroundColor: '#477dca'
   },
+  inlineHeader: {
+    paddingTop: 10,
+    paddingBottom:10,
+    backgroundColor: '#ccc'
+  },
   card: {
     borderBottomWidth: 1,
     borderColor: '#cecece',
@@ -25,6 +30,13 @@ module.exports = require('react-native').StyleSheet.create({
     padding: 5,
     backgroundColor: '#000',
     color: '#fff',
+    borderRadius: 4,
+    textAlign: 'center',
+  },
+  smallInlineBtn: {
+    padding: 2,
+    backgroundColor: '#ccc',
+    color: '#777',
     borderRadius: 4,
     textAlign: 'center',
   },
@@ -180,5 +192,37 @@ module.exports = require('react-native').StyleSheet.create({
   },
   needsScore: {
     color: '#eee'
+  },
+  centerText: {
+    textAlign: 'center'
+  },
+  boldText: {
+    fontWeight: 'bold'
+  },
+  flexOne: {
+    flex: 1
+  },
+  flexTwo: {
+    flex: 2
+  },
+  inlineInput: {
+    padding: 2,
+    margin: 5,
+    height: 30,
+    backgroundColor: 'white',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 2,
+    fontSize: 14,
+    flex: 1,
+  },
+  checkmark: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginRight: 10,
+  },
+  strokeInfo: {
+    flex: 1,
+    textAlign: 'right'
   }
 });
