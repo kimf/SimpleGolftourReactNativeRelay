@@ -18,7 +18,6 @@ export default class Wrapper extends Component {
 
   componentWillMount() {
     // AsyncStorage.removeItem('currentNavState');
-    // AsyncStorage.removeItem('holeScoringData');
     // AsyncStorage.removeItem('userData');
     this.checkUserCreds();
   }

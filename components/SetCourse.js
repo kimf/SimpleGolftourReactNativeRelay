@@ -10,7 +10,7 @@ import React, {
 import { ListView } from 'realm/react-native';
 import NavigationBar from 'react-native-navbar';
 
-const styles = require('../styles.js');
+import styles from '../styles';
 
 export default class SetCourse extends Component {
   constructor(props) {

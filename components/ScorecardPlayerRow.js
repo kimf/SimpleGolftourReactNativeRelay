@@ -6,7 +6,7 @@ import React, {
   PickerIOS
 } from 'react-native';
 
-const styles = require('../styles.js');
+import styles from '../styles';
 
 const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];

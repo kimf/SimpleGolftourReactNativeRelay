@@ -1,9 +1,18 @@
 'use strict';
 
+import {
+  Platform,
+  StyleSheet
+} from 'react-native';
 
-module.exports = require('react-native').StyleSheet.create({
+// const { NavBarHeight, TotalNavHeight } = Navigator.NavigationBar.Styles.General;
+// const iOS = (Platform.OS == 'ios');
+// fontSize: iOS ? 12 : 11,
+
+export default StyleSheet.create({
   container: {
     backgroundColor: '#fff',
+    alignItems: 'stretch',
     flex: 1
   },
   header: {
@@ -16,7 +25,7 @@ module.exports = require('react-native').StyleSheet.create({
     backgroundColor: '#ccc'
   },
   card: {
-    borderBottomWidth: 1,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#cecece',
     flexDirection: 'row',
     padding: 5,
@@ -142,13 +151,13 @@ module.exports = require('react-native').StyleSheet.create({
   datePickerContainer: {
     backgroundColor: '#fff',
     borderTopColor: '#ccc',
-    borderTopWidth: 1
+    borderTopWidth: StyleSheet.hairlineWidth
   },
   toggleDatePicker: {
     padding: 10,
     paddingLeft: 0,
     borderStyle: 'dashed',
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderColor: '#ccc'
   },
   danger: {
@@ -179,7 +188,7 @@ module.exports = require('react-native').StyleSheet.create({
     paddingTop: 20
   },
   scoreRow: {
-    borderBottomWidth: 0.5,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#cecece',
     flexDirection: 'column',
     paddingRight: 10,
@@ -211,7 +220,7 @@ module.exports = require('react-native').StyleSheet.create({
     height: 30,
     backgroundColor: 'white',
     borderColor: '#ccc',
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 2,
     fontSize: 14,
     flex: 1,
@@ -227,5 +236,21 @@ module.exports = require('react-native').StyleSheet.create({
   },
   smallLabel: {
     fontSize: 10
+  },
+  scoredEventBtn: {
+    backgroundColor: 'red',
+    marginTop: 10,
+    padding: 5,
+    color: '#fff',
+    borderRadius: 4,
+    textAlign: 'center'
+  },
+  todayBtn: {
+    backgroundColor: 'green',
+    marginTop: 10,
+    padding: 5,
+    color: '#fff',
+    borderRadius: 4,
+    textAlign: 'center',
   }
 });

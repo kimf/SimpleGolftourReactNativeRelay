@@ -1,28 +1,81 @@
 'use strict';
 
 import React, {
-  AsyncStorage,
   Component,
-  SegmentedControlIOS,
   Text,
   View,
 } from 'react-native';
 
-import NavigationBar from 'react-native-navbar';
-import EventList from './EventList';
-import { apiUrl } from '../lib/ApiService';
+import realm from '../realm';
 
-const styles = require('../styles.js');
+import NavigationBar from 'react-native-navbar';
+import { ListView } from 'realm/react-native';
+import EventCard from './EventCard';
+
+import moment from 'moment';
+
+import styles from '../styles';
+import { apiUrl } from '../lib/ApiService';
 
 export default class Events extends Component {
   constructor(props) {
     super(props);
-    this.state = { selectedIndex: 0};
+    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.state = { dataSource: ds.cloneWithRows([]) };
+  }
+
+  componentDidMount() {
+    const events = realm.objects('Event').sorted('startsAt', true);
+    this.setEvents(events, true);
+
+    if(events.length < 1) {
+      this.fetchEvents(events);
+    }
+  }
+
+  fetchEvents(events) {
+    fetch(apiUrl + '/events', {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Token token=${this.props.currentUser.session_token}`
+      }
+    })
+    .then((response) => {
+      return response.json()
+    })
+    .then((json) => {
+      json.events.map((event) => {
+        realm.write(() => {
+          realm.create('Event', {
+            id: event.id,
+            startsAt: moment(event.starts_at).toDate(),
+            status: event.status,
+            gametype: event.gametype,
+            scoringType: event.scoring_type,
+            teamEvent: event.team_event,
+            courseName: event.course,
+            courseId: event.course_id
+          }, true);
+        });
+      });
+
+      this.setEvents(events, false);
+    }).catch((error) => {
+      this.setState({loading: 'false'});
+      console.log('Error retreiving data', error);
+    })
+  }
+
+  setEvents(events, loading) {
+    const dataSource = this.state.dataSource.cloneWithRows(events);
+    this.setState({dataSource, loading});
   }
 
   render() {
-    const { events, dispatch } = this.props;
-    const { selectedIndex } = this.state;
+    const { dispatch } = this.props;
+    const { dataSource } = this.state;
 
     const titleConfig = { title: 'Rundor', tintColor: 'white'  };
     const leftButtonConfig = {
@@ -36,13 +89,6 @@ export default class Events extends Component {
       tintColor: 'white'
     };
 
-    let visibleEvents;
-    if (selectedIndex === 0) {
-      visibleEvents = events.filter(event => event.status !== 'finished');
-    } else {
-      visibleEvents = events.filter(event => event.status === 'finished');
-    }
-
     return(
       <View style={styles.container}>
         <NavigationBar
@@ -53,19 +99,10 @@ export default class Events extends Component {
           rightButton={rightButtonConfig}
         />
 
-        <SegmentedControlIOS
-          style={styles.segmentedcontrol}
-          values={['Kommande', 'Redan spelade']}
-          selectedIndex={selectedIndex}
-          tintColor="#477dca"
-          onChange={(event) => {
-            this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
-          }}
-        />
-
-        <EventList
-          events={visibleEvents}
-          dispatch={dispatch}
+        <ListView
+          enableEmptySections
+          dataSource={dataSource}
+          renderRow={(rowData) => <EventCard event={rowData} dispatch={dispatch} />}
         />
       </View>
     )

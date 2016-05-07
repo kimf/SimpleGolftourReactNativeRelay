@@ -5,20 +5,25 @@ import React, {
   Component,
   Text,
   TouchableOpacity,
-  ListView,
   View,
 } from 'react-native';
 
+import realm from '../realm';
+
+import { ListView } from 'realm/react-native';
 import NavigationBar from 'react-native-navbar';
 import SetHcp from './SetHcp';
 
-const styles = require('../styles.js');
+import styles from '../styles';
 
 export default class SelectPlayers extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     const selectedPlayers = [];
+
+    this.players = realm.objects('Player').sorted('name').snapshot();
+
     this.state = {
       selectedPlayers: selectedPlayers,
       dataSource: ds.cloneWithRows(this._genRows(selectedPlayers)),
@@ -29,9 +34,8 @@ export default class SelectPlayers extends Component {
   }
 
   _genRows(selectedPlayers) {
-    const { leaderboard } = this.props.currentUser;
     var rows = [];
-    for (var val of leaderboard) {
+    for (var val of this.players) {
       if(selectedPlayers.filter(sel => sel.playerId === val.id).length === 1) {
         val.selected = true;
       } else {
@@ -51,7 +55,7 @@ export default class SelectPlayers extends Component {
       this._reRenderSelections(selectedPlayers);
     } else {
       const { dispatch, currentUser } = this.props;
-      const selectedPlayer = currentUser.leaderboard.filter(player => player.id === playerId)[0];
+      const selectedPlayer = this.players.find((player) => player.id === playerId);
       this.setState({modalVisible: true, selectedPlayer: selectedPlayer});
     }
   }
@@ -122,9 +126,6 @@ export default class SelectPlayers extends Component {
           leftButton={leftButtonConfig}
           rightButton={rightButtonConfig}
         />
-        <View style={styles.inlineHeader}>
-          <Text style={[styles.centerText, styles.boldText]}>{event.course}</Text>
-        </View>
         <ListView
           dataSource={dataSource}
           renderRow={this._renderRow}

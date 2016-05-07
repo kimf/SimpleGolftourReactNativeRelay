@@ -11,7 +11,7 @@ import React, {
 
 import NavigationBar from 'react-native-navbar';
 
-const styles = require('../styles.js');
+import styles from '../styles';
 
 export default class SetHcp extends Component {
   constructor(props) {

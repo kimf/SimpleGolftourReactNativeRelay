@@ -7,7 +7,7 @@ import React, {
   View,
 } from 'react-native';
 
-const styles = require('../styles.js');
+import styles from '../styles';
 
 import NavigationBar from 'react-native-navbar';
 

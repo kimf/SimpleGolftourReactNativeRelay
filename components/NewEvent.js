@@ -11,9 +11,8 @@ import React, {
   Modal
 } from 'react-native';
 
-const styles = require('../styles.js');
+import styles from '../styles';
 import realm from '../realm';
-//http://localhost:9292/tisdagsgolfendata
 
 import NavigationBar from 'react-native-navbar';
 import Radio, { RadioButton } from 'react-native-simple-radio-button';
@@ -36,6 +35,7 @@ export default class NewEvent extends Component {
       showDatePicker: false,
       showClubPickerModal: false,
       loadingClubs: false,
+      gametype: 'Stableford',
       clubs: []
     };
 
@@ -111,11 +111,14 @@ export default class NewEvent extends Component {
   }
 
   onSubmit(){
-    const { starts_at, course, scoring_type, gametype, selectedIndex } = this.state;
+    const { starts_at, scoring_type, gametype, selectedIndex } = this.state;
     const { currentUser, dispatch } = this.props;
     const team_event = selectedIndex === 1;
 
     const url = apiUrl + '/events';
+
+    const course = this.state.course.name;
+    const course_id = this.state.course.id;
 
     fetch(url, {
       method: 'POST',
@@ -126,16 +129,27 @@ export default class NewEvent extends Component {
         Authorization: `Token token=${currentUser.session_token}`
       },
       body: JSON.stringify({
-        starts_at, course, scoring_type, gametype, team_event
+        starts_at, course, scoring_type, gametype, team_event, course_id
       })
     })
     .then((response) => {
       return response.json()
     })
     .then((event) => {
-      currentUser.current_season_events.push(event);
-      AsyncStorage.setItem('userData', JSON.stringify(currentUser));
-      this.props.dispatch({ type: 'openEvents' });
+      console.log(event);
+      realm.write(() => {
+        realm.create('Event', {
+          id: event.id,
+          startsAt: moment(event.starts_at).toDate(),
+          status: event.status,
+          gametype: event.gametype,
+          scoringType: event.scoring_type,
+          teamEvent: event.team_event,
+          courseName: event.course,
+          courseId: event.course_id
+        }, true);
+      });
+      this.props.dispatch({ type: 'eventWasCreated' });
     }).catch((error) => {
       alert('Kunde inte spara runda, Var god se över informationen');
       console.log('Error retreiving data', error);

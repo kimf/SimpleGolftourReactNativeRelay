@@ -7,11 +7,13 @@ import React, {
 import NavigationBar from 'react-native-navbar';
 import ScorecardPlayerRow from './ScorecardPlayerRow';
 
-const styles = require('../styles.js');
+import styles from '../styles';
 
 export default class ScoreEvent extends Component {
   constructor(props) {
     super(props);
+
+    console.log(props);
 
     const hole = {
       par: Math.floor(Math.random()*(6-3+1)+3),
@@ -29,6 +31,7 @@ export default class ScoreEvent extends Component {
     const { hole } = this.state;
     let currentPlayers = [];
 
+    realm.objects('Event').filtered('make = "Honda"');
     AsyncStorage.getItem('holeScoringData', (err, result) => {
       let holeScoringData = JSON.parse(result);
       const playerData = holeScoringData[hole.nr - 1]
@@ -114,7 +117,10 @@ export default class ScoreEvent extends Component {
     const { hole } = this.state;
     const holeSummaries = []
     holeSummaries[hole.nr - 1] = playerData;
-    AsyncStorage.setItem('holeScoringData', JSON.stringify(holeSummaries));
+
+    realm.write(() => {
+
+    });
   }
 
   render() {

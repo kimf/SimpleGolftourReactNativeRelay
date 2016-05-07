@@ -37,6 +37,7 @@ export default class Default extends Component {
       return (
         <Leaderboard
           currentUser={currentUser}
+          id={scene.key}
           dispatch={this.dispatch.bind(this)}
         />
       );
@@ -55,7 +56,7 @@ export default class Default extends Component {
     if (scene.type === 'events') {
       return (
         <Events
-          events={currentUser.current_season_events}
+          currentUser={currentUser}
           id={scene.key}
           dispatch={this.dispatch.bind(this)}
         />
