@@ -18,15 +18,15 @@ import NavigationBar from 'react-native-navbar';
 import Radio, { RadioButton } from 'react-native-simple-radio-button';
 import moment from 'moment';
 import CustomActionSheet from 'react-native-custom-action-sheet';
-import Spinner from 'react-native-loading-spinner-overlay';
 
 import SetCourse from './SetCourse';
 
-import { apiUrl, courseApiUrl } from '../lib/ApiService';
+import { apiUrl } from '../lib/ApiService';
 
 export default class NewEvent extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       selectedIndex: 0,
       starts_at: new Date(),
@@ -34,80 +34,13 @@ export default class NewEvent extends Component {
       scoring_type: 'points',
       showDatePicker: false,
       showClubPickerModal: false,
-      loadingClubs: false,
-      gametype: 'Stableford',
-      clubs: []
+      gametype: 'Stableford'
     };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.toggleDatePicker = this.toggleDatePicker.bind(this);
     this.selectClub = this.selectClub.bind(this);
     this.setCourse = this._setCourse.bind(this);
-  }
-
-  componentWillMount() {
-    let clubs = realm.objects('Club').sorted('name');
-    // let courses = realm.objects('Course');
-    // let holes = realm.objects('Hole');
-    // realm.write(() => {
-    //   realm.delete(clubs);
-    //   realm.delete(courses);
-    //   realm.delete(holes);
-    // })
-
-    if (clubs.length > 1) {
-      this.setState({clubs});
-    } else {
-      this.setState({course: 'Laddar banor...', loadingClubs: true});
-
-      fetch(courseApiUrl, {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      .then((response) => {
-        return response.json()
-      })
-      .then((json) => {
-        json.clubs.map((club) => {
-          realm.write(() => {
-            const courses = [];
-            club.courses.map((course) => {
-              const holes = [];
-              course.holes.map((hole) => {
-                holes.push({
-                  id: hole.id,
-                  number: hole.number,
-                  index: hole.index,
-                  par: hole.par
-                });
-              });
-
-              courses.push({
-                id: course.id,
-                name: course.name,
-                holes_count: course.holes_count,
-                par: course.par,
-                holes: holes
-              });
-            })
-
-            realm.create('Club', {
-              id: club.id,
-              name: club.name,
-              courses: courses
-            });
-          });
-        });
-
-        this.setState({course: null, loadingClubs: false, clubs: clubs});
-      }).catch((error) => {
-        this.setState({course: 'Gick inte att ladda banor!', loadingClubs: false});
-        console.log('Error retreiving data', error);
-      })
-    }
   }
 
   onSubmit(){
@@ -172,7 +105,7 @@ export default class NewEvent extends Component {
     const { currentUser, dispatch } = this.props;
     const { selectedIndex, gametype, scoring_type, course,
             starts_at, timeZoneOffsetInHours, showDatePicker,
-            loadingClubs, showClubPickerModal, clubs
+            showClubPickerModal
           } = this.state;
 
     const titleConfig = { title: 'Ny Runda', tintColor: 'white'  };
@@ -217,7 +150,6 @@ export default class NewEvent extends Component {
 
     return(
       <View style={styles.container}>
-        <Spinner visible={loadingClubs} />
         <NavigationBar
           style={styles.header}
           title={titleConfig}
@@ -277,7 +209,7 @@ export default class NewEvent extends Component {
           transparent={false}
           visible={showClubPickerModal}
           >
-          <SetCourse clubs={clubs} setCourse={this.setCourse} />
+          <SetCourse setCourse={this.setCourse} />
         </Modal>
       </View>
     );

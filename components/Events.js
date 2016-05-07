@@ -47,6 +47,7 @@ export default class Events extends Component {
     })
     .then((json) => {
       json.events.map((event) => {
+        const course = realm.objects('Course').filtered(`id == ${event.course_id}`)[0];
         realm.write(() => {
           realm.create('Event', {
             id: event.id,
@@ -55,8 +56,7 @@ export default class Events extends Component {
             gametype: event.gametype,
             scoringType: event.scoring_type,
             teamEvent: event.team_event,
-            courseName: event.course,
-            courseId: event.course_id
+            course: course,
           }, true);
         });
       });

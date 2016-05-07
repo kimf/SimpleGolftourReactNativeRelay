@@ -25,7 +25,7 @@ export default class EventCard extends Component {
         <Text>{event.status}</Text>
         <Text>Starts at: {moment(event.startsAt).format('MMMM Do, H:mm YYYY')}</Text>
         <Text>Gametype: {event.gametype}</Text>
-        <Text>Course: {event.courseName}</Text>
+        <Text>Course: {event.course ? event.course.name : 'No Course set'}</Text>
         <Text>Scoring: {event.scoringType}</Text>
         <Text>{event.teamEvent ? 'Team Event' : 'Individual Event'}</Text>
         <TouchableOpacity onPress={() => dispatch({ type: 'selectPlayers', event: event})}>

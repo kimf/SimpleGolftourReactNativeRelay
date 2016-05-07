@@ -11,13 +11,15 @@ import { ListView } from 'realm/react-native';
 import NavigationBar from 'react-native-navbar';
 
 import styles from '../styles';
+import realm from '../realm';
 
 export default class SetCourse extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this.clubs = realm.objects('Club').sorted('name');
     this.state = {
-      dataSource: ds.cloneWithRows(props.clubs)
+      dataSource: ds.cloneWithRows(this.clubs)
     };
     this._renderRow = this._renderRow.bind(this);
   }
@@ -41,7 +43,7 @@ export default class SetCourse extends Component {
   }
 
   render() {
-    const { clubs, setCourse } = this.props;
+    const { setCourse } = this.props;
     const { dataSource } = this.state;
 
     const titleConfig = { title: 'Välj Bana', tintColor: 'white'  };

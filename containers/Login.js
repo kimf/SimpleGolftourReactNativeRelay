@@ -79,7 +79,7 @@ export default class Login extends Component {
       <View style={{
         flex: 1,
         flexDirection: 'column',
-        paddingTop: 80,
+        paddingTop: 60,
         backgroundColor: '#477dca',
         alignItems: 'center',
         width: width,
@@ -140,10 +140,10 @@ let styles = StyleSheet.create({
     textAlign: 'center'
   },
   btn: {
-    marginTop: 25,
+    marginTop: 10,
     padding: 15,
-    paddingLeft: 60,
-    paddingRight: 60,
+    paddingLeft: 80,
+    paddingRight: 80,
     borderRadius: 10,
     backgroundColor: 'black'
   },

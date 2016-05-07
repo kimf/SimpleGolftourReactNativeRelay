@@ -83,5 +83,5 @@ Player.schema = {
 
 export default new Realm({
   schema: [Club, Course, Hole, Event, Player],
-  schemaVersion: 4
+  schemaVersion: 5
 });
