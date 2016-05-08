@@ -1,11 +1,5 @@
-import React, {
-  Component,
-  StatusBar,
-  Text,
-  View,
-} from 'react-native';
-
-import Spinner from 'react-native-loading-spinner-overlay';
+import React, {Component} from "react";
+import {StatusBar, Text, View} from "react-native";
 
 import realm from '../realm';
 import { courseApiUrl } from '../lib/ApiService';
@@ -65,8 +59,9 @@ export default class Login extends Component {
     return(
       <View style={styles.container}>
         <StatusBar barStyle="light-content" />
-        <Spinner visible />
-        <Text style={styles.label}>Laddar banor...</Text>
+        <Text style={{padding: 40, marginTop: 100, fontSize: 30, fontWeight: 'bold'}}>
+          Laddar banor...
+        </Text>
       </View>
     )
   }

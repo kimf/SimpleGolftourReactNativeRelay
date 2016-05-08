@@ -1,10 +1,5 @@
-import React, {
-  Component,
-  View,
-  TouchableOpacity,
-  Text,
-  PickerIOS
-} from 'react-native';
+import React, {Component} from "react";
+import {View, TouchableOpacity, Text, PickerIOS} from "react-native";
 
 import styles from '../styles';
 import realm from '../realm';

@@ -1,8 +1,6 @@
 'use strict';
-import React, {
-  AsyncStorage,
-  Component,
-} from 'react-native';
+import React, {Component} from "react";
+import {AsyncStorage} from "react-native";
 
 import Default from './containers/Default';
 import Login from './containers/Login';

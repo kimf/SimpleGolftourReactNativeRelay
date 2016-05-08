@@ -1,12 +1,7 @@
 'use strict';
 
-import React, {
-  AsyncStorage,
-  Component,
-  NavigationExperimental,
-  Text,
-  View,
-} from 'react-native';
+import React, {Component} from "react";
+import {AsyncStorage, NavigationExperimental, Text, View} from "react-native";
 
 import Leaderboard from '../components/Leaderboard';
 import Profile from '../components/Profile';

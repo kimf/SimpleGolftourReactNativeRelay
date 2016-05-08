@@ -1,10 +1,7 @@
 'use strict';
 
-import React, {
-  Component,
-  Text,
-  View,
-} from 'react-native';
+import React, {Component} from "react";
+import {Text, View} from "react-native";
 
 import realm from '../realm';
 

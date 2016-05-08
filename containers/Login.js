@@ -1,15 +1,5 @@
-import React, {
-  AsyncStorage,
-  Component,
-  Dimensions,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  Image
-} from 'react-native';
+import React, {Component} from "react";
+import {AsyncStorage, Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
 
 import { apiUrl } from '../lib/ApiService';
 

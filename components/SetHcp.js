@@ -1,13 +1,7 @@
 'use strict';
 
-import React, {
-  Component,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ListView,
-  View,
-} from 'react-native';
+import React, {Component} from "react";
+import {Text, TextInput, TouchableOpacity, ListView, View} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 

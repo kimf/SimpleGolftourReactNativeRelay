@@ -1,12 +1,5 @@
-import React, {
-  Component,
-  DatePickerIOS,
-  SegmentedControlIOS,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import React, {Component} from "react";
+import {DatePickerIOS, SegmentedControlIOS, Text, TextInput, TouchableOpacity, View} from "react-native";
 
 import styles from '../styles';
 import realm from '../realm';

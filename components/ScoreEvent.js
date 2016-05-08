@@ -1,12 +1,10 @@
-import React, {
-  Component,
-  View,
-  Text,
-  Modal,
-} from 'react-native';
+import React, {Component} from "react";
+import {View, Text, Modal} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
-import Swiper from 'react-native-swiper';
+import SwipeableViews from 'react-swipeable-views/lib/index.native.animated';
+// There is another version. I'm unsure which one give the best UX.
+// import SwipeableViews from 'react-swipeable-views/lib/index.native.scroll';
 
 import HoleView from './HoleView';
 import Scorecard from './Scorecard';
@@ -22,7 +20,7 @@ export default class ScoreEvent extends Component {
       currentHoleNr: props.event.currentHole,
       showingScorecard: false
     }
-    this.onMomentumScrollEnd = this._onMomentumScrollEnd.bind(this);
+    this.onChangeIndex = this._onChangeIndex.bind(this);
   }
 
   // componentWillMount() {
@@ -35,9 +33,9 @@ export default class ScoreEvent extends Component {
   //   realm.removeAllListeners();
   // }
 
-  _onMomentumScrollEnd(e, state, context) {
+  _onChangeIndex(index, fromIndex) {
     realm.write(() => {
-      this.props.event.currentHole = state.index + 1;
+      this.props.event.currentHole = index + 1;
     });
   }
 
@@ -60,21 +58,22 @@ export default class ScoreEvent extends Component {
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           rightButton={rightButtonConfig} />
-        <Swiper
+        <SwipeableViews
+          autoplay={false}
           style={styles.wrapper}
           showsButtons={true}
           loop={false}
           index={currentHoleNr-1}
-          bounces={true}
-          onMomentumScrollEnd={this.onMomentumScrollEnd}
+          resistance={true}
+          onChangeIndex={this.onChangeIndex}
         >
           {event.course.holes.sorted('number').map((hole) => {
             return(
               <HoleView key={`hole_view_${hole.id}`} hole={hole} event={event} />
             );
           })}
-        </Swiper>
-        <Modal animated={true} transparent={false} visible={showingScorecard}>
+        </SwipeableViews>
+        <Modal animationType='slide' transparent={false} visible={showingScorecard}>
           <Scorecard event={event} closeScorecard={() => this.setState({showingScorecard: false})} />
         </Modal>
       </View>

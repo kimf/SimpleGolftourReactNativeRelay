@@ -1,12 +1,7 @@
 'use strict';
 
-import React, {
-  Modal,
-  Component,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from "react";
+import {Modal, Text, TouchableOpacity, View} from "react-native";
 
 import realm from '../realm';
 
@@ -135,7 +130,7 @@ export default class SelectPlayers extends Component {
         </TouchableOpacity>
 
         <Modal
-          animated={true}
+          animationType='slide'
           transparent={false}
           visible={modalVisible}
           >

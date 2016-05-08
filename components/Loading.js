@@ -1,10 +1,5 @@
-import React, {
-  Component,
-  Dimensions,
-  View,
-  StatusBar,
-  Image
-} from 'react-native';
+import React, {Component} from "react";
+import {Dimensions, View, StatusBar, Image} from "react-native";
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
