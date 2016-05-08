@@ -46,7 +46,8 @@ EventScore.schema = {
     hole: 'int',
     strokes: 'int',
     putts: 'int',
-    beers: 'int'
+    beers: 'int',
+    isScored: { type: 'bool', default: false }
   }
 }
 
@@ -58,7 +59,7 @@ EventPlayer.schema = {
     id: 'int',
     name: 'string',
     strokes: 'int',
-    isScoring: 'bool',
+    isScoring: { type: 'bool', default: false },
     eventScores: { type: 'list', objectType: 'EventScore' }
   }
 }
@@ -75,8 +76,8 @@ Event.schema = {
     gametype: 'string',
     scoringType: 'string',
     teamEvent: 'bool',
-    isScoring: 'bool',
-    currentHole: 'int',
+    isScoring: { type: 'bool', default: false },
+    currentHole: { type: 'int', default: 1 },
     course: { type: 'Course'},
     eventPlayers: { type: 'list', objectType: 'EventPlayer' }
   }
@@ -108,5 +109,5 @@ Player.schema = {
 
 export default new Realm({
   schema: [Club, Course, Hole, Event, Player, EventPlayer, EventScore],
-  schemaVersion: 6
+  schemaVersion: 8
 });

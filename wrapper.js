@@ -20,13 +20,11 @@ export default class Wrapper extends Component {
   }
 
   componentWillMount() {
-    // AsyncStorage.removeItem('currentNavState');
     // AsyncStorage.removeItem('userData');
     this.checkUserCreds();
   }
 
   onLogout() {
-    AsyncStorage.removeItem('currentNavState');
     AsyncStorage.getItem('userData', (err, result) => {
       let userData = JSON.parse(result);
       AsyncStorage.setItem('userData', JSON.stringify({ email: userData.email }));
@@ -44,26 +42,11 @@ export default class Wrapper extends Component {
       let userData = JSON.parse(result);
 
       if(userData && userData.isLoggedIn && userData.session_token) {
-
         let clubs = realm.objects('Club');
-        // let courses = realm.objects('Course');
-        // let holes = realm.objects('Hole');
-        // realm.write(() => {
-        //   realm.delete(clubs);
-        //   realm.delete(courses);
-        //   realm.delete(holes);
-        // })
         if(clubs.length === 0) {
-          this.setState({component: 'LoadingClubs'});
+          this.setState({ component: 'LoadingClubs' });
         } else {
-          AsyncStorage.getItem('currentNavState', (err, result) => {
-            const currentNavState = JSON.parse(result);
-            this.setState({
-              component: 'Default',
-              userData: userData,
-              navState: currentNavState
-            });
-          });
+          this.setState({ component: 'Default', userData: userData });
         }
       } else {
         this.setState({ component: 'Login', userData: userData, navState: null });
@@ -82,7 +65,6 @@ export default class Wrapper extends Component {
       return (
         <Default
           onLogout={this.onLogout}
-          currentNavState={navState}
           currentUser={userData}
         />
       );

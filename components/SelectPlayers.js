@@ -20,12 +20,10 @@ export default class SelectPlayers extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    const selectedPlayers = [];
-
     this.players = realm.objects('Player').sorted('name').snapshot();
 
     this.state = {
-      selectedPlayers: selectedPlayers,
+      selectedPlayers: [],
       dataSource: ds.cloneWithRows(this._genRows(selectedPlayers)),
       modalVisible: false
     };
@@ -35,15 +33,15 @@ export default class SelectPlayers extends Component {
 
   _genRows(selectedPlayers) {
     var rows = [];
-    for (var val of this.players) {
-      if(selectedPlayers.filter(sel => sel.playerId === val.id).length === 1) {
+    for (let [index, val] of this.players.entries()) {
+      const selectedIndex = selectedPlayers.findIndex(sel => sel.playerId === val.id);
+      if(selectedIndex !== -1) {
         val.selected = true;
       } else {
         val.selected = false;
       }
-      rows.push(JSON.parse(JSON.stringify(val)));
+      rows.push(val);
     }
-
     return rows;
   }
 
@@ -116,6 +114,8 @@ export default class SelectPlayers extends Component {
       handler: () => dispatch({ type: 'newPlayer' }),
       tintColor: 'white'
     };
+
+    console.log(event);
 
     return(
       <View style={styles.container}>

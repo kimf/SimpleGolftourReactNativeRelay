@@ -16,9 +16,9 @@ export default class ScoreEvent extends Component {
 
     const currentHoleNr = props.event.currentHole;
 
-    this.state = { isScoring: false, currentHoleNr }
-
     console.log(props.event);
+
+    this.state = { isScoring: false, currentHoleNr }
 
     this._showScoreForm = this._showScoreForm.bind(this);
     this._closeScoreForm = this._closeScoreForm.bind(this);
@@ -78,8 +78,6 @@ export default class ScoreEvent extends Component {
 
   _saveAway(playerData) {
     const { hole } = this.state;
-    const holeSummaries = []
-    holeSummaries[hole.nr - 1] = playerData;
 
     realm.write(() => {
 
@@ -104,11 +102,11 @@ export default class ScoreEvent extends Component {
         {event.eventPlayers.map((player) => {
           return(
             <ScorecardPlayerRow
-              player={player}
+              playerId={player.id}
+              hole={hole}
               setPlayerData={this._setPlayerData}
               showScoreForm={this._showScoreForm}
               closeScoreForm={this._closeScoreForm}
-              hole={hole}
               key={`player_scorecard_row_${player.id}`}
             />
           )

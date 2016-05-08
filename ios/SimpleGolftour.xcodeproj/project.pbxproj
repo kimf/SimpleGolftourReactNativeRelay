@@ -32,6 +32,7 @@
 		D932628AD0DA427D9CB625B9 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3A677A09F3A447C5B8E5D0CF /* Octicons.ttf */; };
 		EA1104688CA447858AEEAD9B /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6A2A17B5A6334E96B294643D /* libRealmReact.a */; };
 		F92C46767C3B443C8A5CC729 /* libRNSearchBar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F618F4526CB346E69571496A /* libRNSearchBar.a */; };
+		736C388F2AAE479C85631574 /* libRNTableView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C3042F4CED0245C795738A42 /* libRNTableView.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -161,6 +162,8 @@
 		F618F4526CB346E69571496A /* libRNSearchBar.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNSearchBar.a; sourceTree = "<group>"; };
 		FA9D07B2FD9B431294610B67 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		FCE531EA28C747A2B9FADB2B /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
+		B54294E898764BD197C75801 /* RNTableView.xcodeproj */ = {isa = PBXFileReference; name = "RNTableView.xcodeproj"; path = "../node_modules/react-native-tableview/RNTableView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		C3042F4CED0245C795738A42 /* libRNTableView.a */ = {isa = PBXFileReference; name = "libRNTableView.a"; path = "libRNTableView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +186,7 @@
 				D7B40F371CD94773B91039BC /* libc++.tbd in Frameworks */,
 				A865CD70D8C849A8BD9ADC72 /* libz.tbd in Frameworks */,
 				F92C46767C3B443C8A5CC729 /* libRNSearchBar.a in Frameworks */,
+				736C388F2AAE479C85631574 /* libRNTableView.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +317,7 @@
 				CB75A4CDCB354CCF95EE8B0E /* RNVectorIcons.xcodeproj */,
 				E934670E965843ECB2CBB5DE /* RealmReact.xcodeproj */,
 				48512FA0848D44D78923DAB7 /* RNSearchBar.xcodeproj */,
+				B54294E898764BD197C75801 /* RNTableView.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -635,11 +640,13 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-search-bar/**",
+					"$(SRCROOT)/../node_modules/react-native-tableview/RNTableView",
 				);
 				INFOPLIST_FILE = SimpleGolftour/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/SimpleGolftour\"",
 					"\"$(SRCROOT)/SimpleGolftour\"",
 					"\"$(SRCROOT)/SimpleGolftour\"",
 				);
@@ -664,11 +671,13 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-search-bar/**",
+					"$(SRCROOT)/../node_modules/react-native-tableview/RNTableView",
 				);
 				INFOPLIST_FILE = SimpleGolftour/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/SimpleGolftour\"",
 					"\"$(SRCROOT)/SimpleGolftour\"",
 					"\"$(SRCROOT)/SimpleGolftour\"",
 				);
@@ -721,6 +730,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-search-bar/**",
+					"$(SRCROOT)/../node_modules/react-native-tableview/RNTableView",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
@@ -764,6 +774,7 @@
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-search-bar/**",
+					"$(SRCROOT)/../node_modules/react-native-tableview/RNTableView",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;

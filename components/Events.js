@@ -56,7 +56,7 @@ export default class Events extends Component {
             gametype: event.gametype,
             scoringType: event.scoring_type,
             teamEvent: event.team_event,
-            course: course,
+            course: course
           }, true);
         });
       });

@@ -22,7 +22,7 @@ import AppReducer from '../lib/AppReducer';
 export default class Default extends Component {
   constructor(props) {
     super(props);
-    this.state = AppReducer(props.currentNavState, { type: 'rehydrate' });
+    this.state = AppReducer();
   }
 
   dispatch(action) {
@@ -37,6 +37,7 @@ export default class Default extends Component {
       return (
         <Leaderboard
           id={scene.key}
+          sessionToken={currentUser.session_token}
           dispatch={this.dispatch.bind(this)}
         />
       );
