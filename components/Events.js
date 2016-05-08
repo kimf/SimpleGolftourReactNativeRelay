@@ -39,7 +39,7 @@ export default class Events extends Component {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Token token=${this.props.currentUser.session_token}`
+        Authorization: `Token token=${this.props.sessionToken}`
       }
     })
     .then((response) => {

@@ -16,17 +16,17 @@ import styles from '../styles';
 export default class SetHcp extends Component {
   constructor(props) {
     super(props);
-    this.state = {strokes: 10, hcp: 8,};
+    this.state = {strokes: 10};
   }
 
   render() {
     const { player, setHcp } = this.props;
-    const { hcp, strokes } = this.state;
+    const { strokes } = this.state;
 
     const titleConfig = { title: 'Kolla HCP', tintColor: 'white'  };
     const rightButtonConfig = {
       title: '✓ OK',
-      handler: () => setHcp(player.id, this.state.hcp, this.state.strokes),
+      handler: () => setHcp(player.id, this.state.strokes),
       tintColor: 'white'
     };
 
@@ -42,17 +42,7 @@ export default class SetHcp extends Component {
 
         <View style={styles.card} key={`hcp_row_for_player_${player.id}`}>
           <View style={styles.cardTitle}>
-            <Text style={[styles.label]}>Vilket HCP har {player.name}</Text>
-            <TextInput
-              style={styles.inputField}
-              autoCapitalize="none"
-              keyboardType="decimal-pad"
-              ref="hcp"
-              autoFocus={true}
-              onChangeText={(hcp) => this.setState({hcp})}
-              value={`${hcp}`}
-            />
-            <Text style={styles.label}>Och hur många slag?</Text>
+            <Text style={styles.label}>Hur många slag har {player.name}?</Text>
             <TextInput
               style={styles.inputField}
               autoCapitalize="none"

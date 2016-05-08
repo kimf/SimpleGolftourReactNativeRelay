@@ -25,13 +25,15 @@ export default class SetCourse extends Component {
   }
 
   _renderRow(club) {
-    const { setCourse } = this.props;
+    const { dispatch } = this.props;
     return(
       <View key={`club_row_${club.id}`} style={[styles.card, {flexDirection: 'column'}]}>
         <Text>{club.name}</Text>
         {club.courses.map((course) => {
           return(
-            <TouchableOpacity onPress={() => setCourse(course)} key={`course_row_${course.id}`}>
+            <TouchableOpacity
+              onPress={() => dispatch({ type: 'setCourse', course: course })}
+              key={`course_row_${course.id}`}>
               <View style={styles.card}>
                 <Text>{course.name} {course.par}</Text>
               </View>
@@ -43,14 +45,14 @@ export default class SetCourse extends Component {
   }
 
   render() {
-    const { setCourse } = this.props;
+    const { dispatch } = this.props;
     const { dataSource } = this.state;
 
     const titleConfig = { title: 'Välj Bana', tintColor: 'white'  };
 
     const leftButtonConfig = {
       title: '< Bakåt',
-      handler: () => setCourse(null),
+      handler: () => dispatch({ type: 'back' }),
       tintColor: 'white'
     };
 

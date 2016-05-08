@@ -60,9 +60,9 @@ export default class SelectPlayers extends Component {
     }
   }
 
-  _setHcp(playerId, hcp, strokes) {
+  _setHcp(playerId, strokes) {
     const { selectedPlayers } = this.state;
-    selectedPlayers.push({ playerId, hcp, strokes });
+    selectedPlayers.push({ playerId, strokes });
     this._reRenderSelections(selectedPlayers);
   }
 
@@ -87,7 +87,7 @@ export default class SelectPlayers extends Component {
 
     if(selIndex !== -1){
       const selPlayerData = selectedPlayers[selIndex];
-      hcpData = <Text style={styles.strokeInfo}>Hcp: {selPlayerData.hcp} • Slag: {selPlayerData.strokes}</Text>;
+      hcpData = <Text style={styles.strokeInfo}>Slag: {selPlayerData.strokes}</Text>;
       checkmark = <Text style={styles.checkmark}>✓</Text>;
     }
     return (
@@ -105,7 +105,7 @@ export default class SelectPlayers extends Component {
     const { event, dispatch } = this.props;
     const { selectedPlayers, dataSource, modalVisible, selectedPlayer } = this.state;
 
-    const titleConfig = { title: 'Välj Spelare/Lag', tintColor: 'white'  };
+    const titleConfig = { title: (event.teamEvent ? 'Välj Lag' : 'Välj Spelare'), tintColor: 'white'  };
     const leftButtonConfig = {
       title: '< Bakåt',
       handler: () => dispatch({ type: 'back' }),

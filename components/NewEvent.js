@@ -1,14 +1,11 @@
 import React, {
-  AsyncStorage,
   Component,
   DatePickerIOS,
-  ScrollView,
   SegmentedControlIOS,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-  Modal
+  View
 } from 'react-native';
 
 import styles from '../styles';
@@ -17,9 +14,6 @@ import realm from '../realm';
 import NavigationBar from 'react-native-navbar';
 import Radio, { RadioButton } from 'react-native-simple-radio-button';
 import moment from 'moment';
-import CustomActionSheet from 'react-native-custom-action-sheet';
-
-import SetCourse from './SetCourse';
 
 import { apiUrl } from '../lib/ApiService';
 
@@ -29,29 +23,23 @@ export default class NewEvent extends Component {
 
     this.state = {
       selectedIndex: 0,
-      starts_at: new Date(),
-      timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60,
       scoring_type: 'points',
-      showDatePicker: false,
-      showClubPickerModal: false,
-      gametype: 'Stableford'
+      gametype: 'Stableford',
+      date: new Date(),
+      timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60
     };
 
     this.onSubmit = this.onSubmit.bind(this);
-    this.toggleDatePicker = this.toggleDatePicker.bind(this);
-    this.selectClub = this.selectClub.bind(this);
-    this.setCourse = this._setCourse.bind(this);
+    this.onDateChange = this.onDateChange.bind(this);
   }
 
   onSubmit(){
-    const { starts_at, scoring_type, gametype, selectedIndex } = this.state;
-    const { currentUser, dispatch } = this.props;
+    const { scoring_type, gametype, selectedIndex, date } = this.state;
+    const { course, dispatch, sessionToken } = this.props;
     const team_event = selectedIndex === 1;
 
     const url = apiUrl + '/events';
-
-    const course = this.state.course.name;
-    const course_id = this.state.course.id;
+    const starts_at = date;
 
     fetch(url, {
       method: 'POST',
@@ -59,17 +47,17 @@ export default class NewEvent extends Component {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: `Token token=${currentUser.session_token}`
+        Authorization: `Token token=${sessionToken}`
       },
       body: JSON.stringify({
-        starts_at, course, scoring_type, gametype, team_event, course_id
+        course: course.name, course_id: course.id, starts_at, scoring_type, gametype, team_event
       })
     })
     .then((response) => {
       return response.json()
     })
     .then((event) => {
-      console.log(event);
+      const realmCourse = realm.objects('Course').filtered(`id == ${course.id}`)[0];
       realm.write(() => {
         realm.create('Event', {
           id: event.id,
@@ -78,35 +66,23 @@ export default class NewEvent extends Component {
           gametype: event.gametype,
           scoringType: event.scoring_type,
           teamEvent: event.team_event,
-          courseName: event.course,
-          courseId: event.course_id
-        }, true);
+          course: realmCourse
+        });
       });
-      this.props.dispatch({ type: 'eventWasCreated' });
+      dispatch({ type: 'eventWasCreated' });
     }).catch((error) => {
       alert('Kunde inte spara runda, Var god se över informationen');
       console.log('Error retreiving data', error);
     })
   }
 
-  toggleDatePicker(){
-    this.setState({showDatePicker: !this.state.showDatePicker});
-  }
-
-  selectClub(){
-    this.setState({showClubPickerModal: true})
-  }
-
-  _setCourse(course) {
-    this.setState({course: course, showClubPickerModal: false})
+  onDateChange(date) {
+    this.setState({date});
   }
 
   render() {
-    const { currentUser, dispatch } = this.props;
-    const { selectedIndex, gametype, scoring_type, course,
-            starts_at, timeZoneOffsetInHours, showDatePicker,
-            showClubPickerModal
-          } = this.state;
+    const { course, dispatch } = this.props;
+    const { selectedIndex, gametype, scoring_type, date, timeZoneOffsetInHours } = this.state;
 
     const titleConfig = { title: 'Ny Runda', tintColor: 'white'  };
     const leftButtonConfig = {
@@ -122,31 +98,15 @@ export default class NewEvent extends Component {
           <Text style={styles.label}>Spelsätt</Text>
           <TextInput
             style={styles.inputField}
-            autoCapitalize="none"
-            ref= "gametype"
+            autoCapitalize="words"
+            selectTextOnFocus={true}
+            ref="gametype"
             onChangeText={(gametype) => this.setState({gametype})}
             value={gametype}
           />
         </View>
       );
     }
-
-    const datePicker = showDatePicker ? (
-      <CustomActionSheet
-        modalVisible={showDatePicker}
-        onCancel={this.toggleDatePicker}
-        buttonText="Stäng"
-        backgroundColor="#eee">
-        <View style={styles.datePickerContainer}>
-          <DatePickerIOS
-            date={starts_at}
-            mode="datetime"
-            timeZoneOffsetInMinutes={timeZoneOffsetInHours * 60}
-            onDateChange={(starts_at) => this.setState({starts_at})}
-            minuteInterval={10} />
-        </View>
-      </CustomActionSheet>
-    ) : null;
 
     return(
       <View style={styles.container}>
@@ -156,61 +116,54 @@ export default class NewEvent extends Component {
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
         />
-        <ScrollView>
-          <SegmentedControlIOS
-            style={styles.segmentedcontrol}
-            values={['Individuellt', 'Lagtävling']}
-            selectedIndex={selectedIndex}
-            tintColor="#477dca"
-            onChange={(event) => {
-              this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
-            }}
+
+        <SegmentedControlIOS
+          style={styles.segmentedcontrol}
+          values={['Individuellt', 'Lagtävling']}
+          selectedIndex={selectedIndex}
+          tintColor="#477dca"
+          onChange={(event) => {
+            this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
+          }}
+        />
+
+        <Text style={styles.label}>Vilken bana</Text>
+        <TouchableOpacity onPress={() => dispatch({ type: 'selectCourse' })} style={styles.toggleDatePicker}>
+          <Text style={styles.selectedDate}>
+            { course ? course.name : 'Välj bana ->'}
+          </Text>
+        </TouchableOpacity>
+
+        <Text style={styles.label}>Starttid</Text>
+        <Text style={styles.selectedDate}>
+          { date ? moment(date).format('dddd Do MMMM, HH:mm') : 'Välj Starttid ->'}
+        </Text>
+        <DatePickerIOS
+          date={date}
+          mode="datetime"
+          timeZoneOffsetInMinutes={timeZoneOffsetInHours * 60}
+          onDateChange={this.onDateChange}
+        />
+
+        {teamGameType}
+
+        <View style={styles.row}>
+          <Text style={styles.label}>{selectedIndex === 0 ? 'Spelsätt' : 'Poängräkning'}</Text>
+          <Radio
+            style={styles.radio}
+            radio_props={[
+              {label: 'Poäng', value: 'points' },
+              {label: 'Slag', value: 'strokes' }
+            ]}
+            initial={0}
+            formHorizontal={true}
+            onPress={(scoring_type) => {this.setState({scoring_type})}}
           />
+        </View>
 
-          <Text style={styles.label}>Vilken bana</Text>
-          <TouchableOpacity onPress={this.selectClub} style={styles.toggleDatePicker}>
-            <Text style={styles.selectedDate}>
-              { course ? course.name : 'Välj bana ->'}
-            </Text>
-          </TouchableOpacity>
-
-          <Text style={styles.label}>Starttid</Text>
-          <TouchableOpacity onPress={this.toggleDatePicker} style={styles.toggleDatePicker}>
-            <Text style={styles.selectedDate}>
-              {moment(starts_at).format('dddd Do MMMM, HH:mm')}
-            </Text>
-          </TouchableOpacity>
-
-          {teamGameType}
-
-          <View style={styles.row}>
-            <Text style={styles.label}>{selectedIndex === 0 ? 'Spelsätt' : 'Poängräkning'}</Text>
-            <Radio
-              style={styles.radio}
-              radio_props={[
-                {label: 'Poäng', value: 'points' },
-                {label: 'Slag', value: 'strokes' }
-              ]}
-              initial={0}
-              formHorizontal={true}
-              onPress={(scoring_type) => {this.setState({scoring_type})}}
-            />
-          </View>
-
-          <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
-            <Text style={styles.btnLabel}> SKAPA RUNDA </Text>
-          </TouchableOpacity>
-
-          {datePicker}
-        </ScrollView>
-
-        <Modal
-          animated={true}
-          transparent={false}
-          visible={showClubPickerModal}
-          >
-          <SetCourse setCourse={this.setCourse} />
-        </Modal>
+        <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
+          <Text style={styles.btnLabel}> SKAPA RUNDA </Text>
+        </TouchableOpacity>
       </View>
     );
   }

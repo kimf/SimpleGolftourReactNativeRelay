@@ -15,7 +15,7 @@ import SelectPlayers from '../components/SelectPlayers';
 import NewEvent from '../components/NewEvent';
 import Loading from '../components/Loading';
 import ScoreEvent from '../components/ScoreEvent';
-import SetHcp from '../components/SetHcp';
+import SetCourse from '../components/SetCourse';
 
 import AppReducer from '../lib/AppReducer';
 
@@ -36,7 +36,6 @@ export default class Default extends Component {
     if (scene.key === 'leaderboard') {
       return (
         <Leaderboard
-          currentUser={currentUser}
           id={scene.key}
           dispatch={this.dispatch.bind(this)}
         />
@@ -56,8 +55,8 @@ export default class Default extends Component {
     if (scene.type === 'events') {
       return (
         <Events
-          currentUser={currentUser}
           id={scene.key}
+          sessionToken={currentUser.session_token}
           dispatch={this.dispatch.bind(this)}
         />
       );
@@ -66,8 +65,9 @@ export default class Default extends Component {
     if (scene.type === 'newEvent') {
       return (
         <NewEvent
-          currentUser={currentUser}
+          sessionToken={currentUser.session_token}
           id={scene.key}
+          course={scene.course}
           dispatch={this.dispatch.bind(this)}
         />
       );
@@ -76,7 +76,6 @@ export default class Default extends Component {
     if (scene.type === 'selectPlayers') {
       return (
         <SelectPlayers
-          currentUser={currentUser}
           id={scene.key}
           event={scene.event}
           dispatch={this.dispatch.bind(this)}
@@ -87,10 +86,18 @@ export default class Default extends Component {
     if (scene.type === 'scoreEvent') {
       return (
         <ScoreEvent
-          currentUser={currentUser}
           id={scene.key}
           event={scene.event}
           players={scene.players}
+          dispatch={this.dispatch.bind(this)}
+        />
+      );
+    }
+
+    if (scene.type === 'selectCourse') {
+      return (
+        <SetCourse
+          id={scene.key}
           dispatch={this.dispatch.bind(this)}
         />
       );
