@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, Text} from "react-native";
+import {Alert, View, Text, TouchableOpacity} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 
@@ -9,6 +9,19 @@ import realm from '../realm';
 export default class Scorecard extends Component {
   constructor(props) {
     super(props);
+    this.cancelScoring = this.cancelScoring.bind(this);
+  }
+
+  cancelScoring() {
+    const { event, dispatch } = this.props;
+    Alert.alert(
+      'Avsluta rundan?',
+      'Är du riktigt säker?',
+      [
+        {text: 'NEJ', onPress: () => console.log('Cancel'), style: 'cancel'},
+        {text: 'JARÅ', onPress: () => dispatch({type: 'cancelScoring', event: event})},
+      ]
+    )
   }
 
   render() {
@@ -28,6 +41,11 @@ export default class Scorecard extends Component {
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
         />
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={this.cancelScoring}>
+          <Text style={styles.btnLabel}>AVSLUTA RUNDA</Text>
+        </TouchableOpacity>
       </View>
     );
   }

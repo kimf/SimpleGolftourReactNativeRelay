@@ -9,7 +9,7 @@
     "moment": "^2.13.0",
     "react": "^15.0.2",
     "react-native": "0.26.0-rc",
-    "react-native-navbar": "^1.4.2",
+    "react-native-navbar": "gargamelius/react-native-navbar",
     "react-native-simple-radio-button": "kimf/react-native-simple-radio-button",
     "react-native-vector-icons": "kimf/react-native-vector-icons",
     "react-swipeable-views": "^0.6.0",

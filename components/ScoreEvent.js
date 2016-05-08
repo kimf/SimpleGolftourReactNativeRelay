@@ -74,7 +74,11 @@ export default class ScoreEvent extends Component {
           })}
         </SwipeableViews>
         <Modal animationType='slide' transparent={false} visible={showingScorecard}>
-          <Scorecard event={event} closeScorecard={() => this.setState({showingScorecard: false})} />
+          <Scorecard
+            event={event}
+            dispatch={dispatch}
+            closeScorecard={() => this.setState({showingScorecard: false})}
+          />
         </Modal>
       </View>
     );
