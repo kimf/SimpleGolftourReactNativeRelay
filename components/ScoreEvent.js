@@ -1,11 +1,16 @@
 import React, {
-  AsyncStorage,
   Component,
   View,
+  Text,
+  Modal,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
-import ScorecardPlayerRow from './ScorecardPlayerRow';
+import Swiper from 'react-native-swiper';
+
+import HoleView from './HoleView';
+import Scorecard from './Scorecard';
+import Loading from './Loading';
 
 import styles from '../styles';
 import realm from '../realm';
@@ -13,83 +18,40 @@ import realm from '../realm';
 export default class ScoreEvent extends Component {
   constructor(props) {
     super(props);
-
-    const currentHoleNr = props.event.currentHole;
-
-    console.log(props.event);
-
-    this.state = { isScoring: false, currentHoleNr }
-
-    this._showScoreForm = this._showScoreForm.bind(this);
-    this._closeScoreForm = this._closeScoreForm.bind(this);
-    this._setPlayerData = this._setPlayerData.bind(this);
-  }
-
-  _showScoreForm(playerId) {
-    const players = [];
-    for (let player of this.state.players) {
-      if(player.id === playerId) {
-        player.isScoring = true;
-      }
-      players.push(player);
+    this.state = {
+      currentHoleNr: props.event.currentHole,
+      showingScorecard: false
     }
-    const isScoring = true
-    this.setState({players, isScoring});
+    this.onMomentumScrollEnd = this._onMomentumScrollEnd.bind(this);
   }
 
-  _closeScoreForm(playerId) {
-    const players = [];
-    for (let player of this.state.players) {
-      if(player.id === playerId) {
-        player.isScoring = false;
-        player.holeData.isScored = true;
-      }
-      players.push(player);
-    }
-    const isScoring = false;
-    this._saveAway(players);
-    this.setState({players, isScoring});
-  }
+  // componentWillMount() {
+  //   realm.addListener('change', () => {
+  //     //this.forceUpdate();
+  //   });
+  // }
 
-  _setPlayerData(value, playerId, dataType) {
-    const players = [];
-    for (let player of this.state.players) {
-      if(player.id === playerId) {
-        if(dataType === 'strokes') {
-          player.holeData.strokes = value;
-        }
+  // componentWillUnMount() {
+  //   realm.removeAllListeners();
+  // }
 
-        if(dataType === 'putts') {
-           player.holeData.putts = value;
-        }
-
-        if(dataType === 'beers') {
-           player.holeData.beers = value;
-        }
-
-        player.holeData.isScored = true;
-      }
-      players.push(player);
-    }
-
-    this._saveAway(players);
-    this.setState({players});
-  }
-
-  _saveAway(playerData) {
-    const { hole } = this.state;
-
+  _onMomentumScrollEnd(e, state, context) {
     realm.write(() => {
-
+      this.props.event.currentHole = state.index + 1;
     });
   }
 
-  render() {
-    const { currentUser, event } = this.props;
-    const { currentHoleNr } = this.state;
-    const hole = event.course.holes[currentHoleNr - 1];
 
-    const titleConfig = { title: `Hål ${currentHoleNr}`, tintColor: 'white'  };
+  render() {
+    const { event, dispatch } = this.props;
+    const { currentHoleNr, showingScorecard } = this.state;
+
+    const titleConfig = { title: event.course.name, tintColor: 'white'  };
+    const rightButtonConfig = {
+      title: 'Scorekort',
+      handler: () => this.setState({showingScorecard: true}),
+      tintColor: 'white'
+    };
 
     return(
       <View style={styles.container}>
@@ -97,20 +59,24 @@ export default class ScoreEvent extends Component {
           style={styles.header}
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
-        />
-
-        {event.eventPlayers.map((player) => {
-          return(
-            <ScorecardPlayerRow
-              playerId={player.id}
-              hole={hole}
-              setPlayerData={this._setPlayerData}
-              showScoreForm={this._showScoreForm}
-              closeScoreForm={this._closeScoreForm}
-              key={`player_scorecard_row_${player.id}`}
-            />
-          )
-        })}
+          rightButton={rightButtonConfig} />
+        <Swiper
+          style={styles.wrapper}
+          showsButtons={true}
+          loop={false}
+          index={currentHoleNr-1}
+          bounces={true}
+          onMomentumScrollEnd={this.onMomentumScrollEnd}
+        >
+          {event.course.holes.sorted('number').map((hole) => {
+            return(
+              <HoleView key={`hole_view_${hole.id}`} hole={hole} event={event} />
+            );
+          })}
+        </Swiper>
+        <Modal animated={true} transparent={false} visible={showingScorecard}>
+          <Scorecard event={event} closeScorecard={() => this.setState({showingScorecard: false})} />
+        </Modal>
       </View>
     );
   }

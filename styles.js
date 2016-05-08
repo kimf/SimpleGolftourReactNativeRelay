@@ -62,14 +62,14 @@ export default StyleSheet.create({
     margin: 10,
   },
   headerBtn: {
-    marginTop: 20,
+    padding: 20,
     color: '#eee'
   },
   leftBtn: {
-    marginLeft: 20,
+    marginLeft: 0,
   },
   rightBtn: {
-    marginRight: 20
+    marginRight: 0
   },
   btn: {
     marginTop: 10,
@@ -252,5 +252,9 @@ export default StyleSheet.create({
     color: '#fff',
     borderRadius: 4,
     textAlign: 'center',
+  },
+  holeHeaderText: {
+    color: 'black',
+    textAlign: 'center'
   }
 });

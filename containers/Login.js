@@ -33,8 +33,6 @@ export default class Login extends Component {
     const { email, password } = this.state;
     const url = apiUrl + '/sessions';
 
-    console.log(apiUrl);
-
     fetch(url, {
       method: 'POST',
       crossOrigin: true,

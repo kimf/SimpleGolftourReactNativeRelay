@@ -24,7 +24,7 @@ export default class SelectPlayers extends Component {
 
     this.state = {
       selectedPlayers: [],
-      dataSource: ds.cloneWithRows(this._genRows(selectedPlayers)),
+      dataSource: ds.cloneWithRows(this._genRows([])),
       modalVisible: false
     };
     this._renderRow = this._renderRow.bind(this);
@@ -114,8 +114,6 @@ export default class SelectPlayers extends Component {
       handler: () => dispatch({ type: 'newPlayer' }),
       tintColor: 'white'
     };
-
-    console.log(event);
 
     return(
       <View style={styles.container}>

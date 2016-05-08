@@ -43,6 +43,7 @@ class EventScore {}
 EventScore.schema = {
   name: 'EventScore',
   properties: {
+    index: 'int',
     hole: 'int',
     strokes: 'int',
     putts: 'int',
@@ -109,5 +110,5 @@ Player.schema = {
 
 export default new Realm({
   schema: [Club, Course, Hole, Event, Player, EventPlayer, EventScore],
-  schemaVersion: 8
+  schemaVersion: 9
 });

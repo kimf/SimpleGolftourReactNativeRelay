@@ -87,9 +87,8 @@ export default class Default extends Component {
     if (scene.type === 'scoreEvent') {
       return (
         <ScoreEvent
-          id={scene.key}
+          id={`${scene.key}-${scene.event.id}-${scene.event.currentHole}`}
           event={scene.event}
-          players={scene.players}
           dispatch={this.dispatch.bind(this)}
         />
       );

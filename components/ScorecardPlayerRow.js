@@ -17,30 +17,59 @@ const BEER_VALUES = [0,1,2,3,4,5];
 export default class ScorecardPlayerRow extends Component {
   constructor(props) {
     super(props);
-    const player = realm.objects('EventPlayer').filtered(`id == ${props.playerId}`)[0];
-    const eventScore = player.eventScores.filter((es) => es.hole === props.hole.nr)[0];
-    this.props.player = player;
-    this.props.eventScore = eventScore;
+    this.player = props.player;
+    this.eventScore = props.player.eventScores.filtered(`hole == ${props.hole.number}`)[0];
   }
 
-  render() {
-    const { player, eventScore, showScoreForm, closeScoreForm, setPlayerData } = this.props;
+  showScoreForm() {
+    realm.write(() => {
+      this.player.isScoring = true;
+    });
+    this.forceUpdate();
+  }
 
-    const isScoredStyle = eventScore.isScored ? styles.isScored : styles.needsScore;
+  closeScoreForm() {
+    realm.write(() => {
+      this.player.isScoring = false;
+      this.eventScore.isScored = true;
+    });
+    this.forceUpdate();
+  }
+
+  setScoreData(value, dataType) {
+    realm.write(() => {
+      if(dataType === 'strokes') {
+        this.eventScore.strokes = value;
+      }
+
+      if(dataType === 'putts') {
+         this.eventScore.putts = value;
+      }
+
+      if(dataType === 'beers') {
+         this.eventScore.beers = value;
+      }
+    });
+    this.forceUpdate();
+  }
+
+
+  render() {
+    const isScoredStyle = this.eventScore.isScored ? styles.isScored : styles.needsScore;
     let rowView = (
       <View style={styles.playerRow}>
-        <Text style={styles.playerName}>{player.name}</Text>
-        <Text style={[styles.playerHoleData, isScoredStyle]}>{eventScore.strokes}</Text>
-        <Text style={[styles.playerHoleData, isScoredStyle]}>{eventScore.putts}</Text>
-        <Text style={[styles.playerHoleData, isScoredStyle]}>{eventScore.beers}</Text>
+        <Text style={styles.playerName}>{this.player.name}</Text>
+        <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.strokes}</Text>
+        <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.putts}</Text>
+        <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.beers}</Text>
       </View>
     );
 
     const strokePicker = (
       <PickerIOS
         style={styles.picker}
-        selectedValue={eventScore.strokes}
-        onValueChange={(strokes) => setPlayerData(strokes, player.id, 'strokes')}>
+        selectedValue={this.eventScore.strokes}
+        onValueChange={(strokes) => this.setScoreData(strokes, 'strokes')}>
         {STROKE_VALUES.map((val) => (
           <PickerIOS.Item
             key={val}
@@ -54,8 +83,8 @@ export default class ScorecardPlayerRow extends Component {
     const puttPicker = (
       <PickerIOS
         style={styles.picker}
-        selectedValue={eventScore.putts}
-        onValueChange={(putts) => setPlayerData(putts, player.id, 'putts')}>
+        selectedValue={this.eventScore.putts}
+        onValueChange={(putts) => this.setScoreData(putts, 'putts')}>
         {PUTT_VALUES.map((val) => (
           <PickerIOS.Item
             key={val}
@@ -69,8 +98,8 @@ export default class ScorecardPlayerRow extends Component {
     const beerPicker = (
       <PickerIOS
         style={styles.picker}
-        selectedValue={eventScore.beers}
-        onValueChange={(beers) => setPlayerData(beers, player.id, 'beers')}>
+        selectedValue={this.eventScore.beers}
+        onValueChange={(beers) => this.setScoreData(beers, 'beers')}>
         {BEER_VALUES.map((val) => (
           <PickerIOS.Item
             key={val}
@@ -82,7 +111,7 @@ export default class ScorecardPlayerRow extends Component {
     );
 
     let scoring;
-    if(player.isScoring){
+    if(this.player.isScoring){
       scoring = (
         <View style={styles.scorebox}>
           <View style={{flexDirection: 'row'}}>
@@ -90,21 +119,21 @@ export default class ScorecardPlayerRow extends Component {
             {puttPicker}
             {beerPicker}
           </View>
-          <TouchableOpacity onPress={() => closeScoreForm(player.id)}>
+          <TouchableOpacity onPress={() => this.closeScoreForm()}>
             <Text style={styles.inlineBtn}>DONE</Text>
           </TouchableOpacity>
         </View>
       );
     } else {
       rowView = (
-        <TouchableOpacity style={styles.scoreRow} onPress={() => showScoreForm(player.id)}>
+        <TouchableOpacity style={styles.scoreRow} onPress={() => this.showScoreForm()}>
           {rowView}
         </TouchableOpacity>
       );
     }
 
     return(
-      <View style={(player.isScoring ? styles.scoring : styles.blank)} key={`player_row_${player.id}`}>
+      <View style={(this.player.isScoring ? styles.scoring : styles.blank)} key={`player_row_${this.player.id}`}>
         {rowView}
         {scoring}
       </View>
