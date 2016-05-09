@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from "react";
-import {Text, TouchableOpacity, View} from "react-native";
+import {Text, TextInput, TouchableOpacity, View} from "react-native";
 
 import { ListView } from 'realm/react-native';
 import NavigationBar from 'react-native-navbar';
@@ -15,9 +15,11 @@ export default class SetCourse extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.clubs = realm.objects('Club').sorted('name');
     this.state = {
-      dataSource: ds.cloneWithRows(this.clubs)
+      dataSource: ds.cloneWithRows(this.clubs),
+      query: null
     };
     this._renderRow = this._renderRow.bind(this);
+    this.setSearchQuery = this.setSearchQuery.bind(this);
   }
 
   _renderRow(club) {
@@ -40,9 +42,20 @@ export default class SetCourse extends Component {
     )
   }
 
+  setSearchQuery(query) {
+    let { dataSource } = this.state
+    if(query !== null && query.length > 1) {
+      const filtered = this.clubs.filtered(`name CONTAINS "${query}"`);
+      dataSource = dataSource.cloneWithRows(filtered);
+      this.setState({dataSource, query});
+    } else {
+      this.setState({query, dataSource});
+    }
+  }
+
   render() {
     const { dispatch } = this.props;
-    const { dataSource } = this.state;
+    const { dataSource, query } = this.state;
 
     const titleConfig = { title: 'Välj Bana', tintColor: 'white'  };
 
@@ -59,6 +72,14 @@ export default class SetCourse extends Component {
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
+        />
+        <TextInput
+          style={styles.inputField}
+          autoCapitalize="words"
+          autoCorrect={false}
+          ref= "query"
+          onChangeText={(query) => this.setSearchQuery(query)}
+          value={this.state.email}
         />
         <ListView
           dataSource={dataSource}

@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {View, Text} from "react-native";
-import ScorecardPlayerRow from './ScorecardPlayerRow';
+import ScoringRow from './ScoringRow';
 import styles from '../styles';
 import realm from '../realm';
 
@@ -11,13 +11,13 @@ export default class HoleView extends Component {
     return(
       <View style={styles.hole} >
         <View style={styles.inlineHeader}>
-          <Text style={styles.holeHeaderText}>Hål {hole.number}</Text>
+          <Text style={styles.holeHeaderText}>Hål {hole.number} - Index: {hole.index}</Text>
         </View>
         {event.eventPlayers.map((player) => {
           return(
-            <ScorecardPlayerRow
+            <ScoringRow
               player={player}
-              hole={hole}
+              holeNr={hole.number}
               key={`player_scorecard_row_${player.id}`}
             />
           )

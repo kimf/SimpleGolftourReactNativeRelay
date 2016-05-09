@@ -9,7 +9,7 @@ Hole.schema = {
   primaryKey: 'id',
   properties: {
     id: 'int',
-    number: 'int',
+    number: { type: 'int', indexed: true },
     index: 'int',
     par: 'int'
   }
@@ -24,7 +24,7 @@ Course.schema = {
     name: 'string',
     holes_count: 'int',
     par: 'int',
-    holes: { type: 'list', objectType: 'Hole' },
+    holes: { type: 'list', objectType: 'Hole' }
   }
 };
 
@@ -34,8 +34,8 @@ Club.schema = {
   primaryKey: 'id',
   properties: {
     id: 'int',
-    name: 'string',
-    courses: { type: 'list', objectType: 'Course' },
+    name: { type: 'string', indexed: true },
+    courses: { type: 'list', objectType: 'Course' }
   }
 };
 
@@ -44,13 +44,22 @@ EventScore.schema = {
   name: 'EventScore',
   properties: {
     index: 'int',
-    hole: 'int',
+    hole: { type: 'int', indexed: true },
+    par: 'int',
     strokes: 'int',
     putts: 'int',
     beers: 'int',
+    extraStrokes: 'int',
+    points: 'int',
     isScored: { type: 'bool', default: false }
   }
 }
+EventScore.prototype = {
+  calculatePoints(playingHcp) {
+
+  }
+}
+
 
 class EventPlayer {}
 EventPlayer.schema = {
@@ -58,10 +67,21 @@ EventPlayer.schema = {
   primaryKey: 'id',
   properties: {
     id: 'int',
-    name: 'string',
+    name: { type: 'string', indexed: true },
     strokes: 'int',
     isScoring: { type: 'bool', default: false },
     eventScores: { type: 'list', objectType: 'EventScore' }
+  }
+}
+
+class EventTeam {}
+EventTeam.schema = {
+  name: 'EventTeam',
+  primaryKey: 'id',
+  properties: {
+    id: 'int',
+    isScoring: { type: 'bool', default: false },
+    eventPlayers: { type: 'list', objectType: 'EventPlayer' }
   }
 }
 
@@ -72,15 +92,16 @@ Event.schema = {
   primaryKey: 'id',
   properties: {
     id: 'int',
-    startsAt: 'date',
-    status: 'string',
+    startsAt: { type: 'date', indexed: true },
+    status: { type: 'string', indexed: true },
     gametype: 'string',
     scoringType: 'string',
     teamEvent: 'bool',
     isScoring: { type: 'bool', default: false },
     currentHole: { type: 'int', default: 1 },
     course: { type: 'Course'},
-    eventPlayers: { type: 'list', objectType: 'EventPlayer' }
+    eventPlayers: { type: 'list', objectType: 'EventPlayer' },
+    eventTeams: { type: 'list', objectType: 'EventTeam' }
   }
 }
 
@@ -91,7 +112,7 @@ Player.schema = {
   properties: {
     id: 'int',
     name: 'string',
-    position: 'int',
+    position: { type: 'int', indexed: true },
     eventCount: 'int',
     average: 'float',
     totalPoints: 'float',
@@ -109,6 +130,6 @@ Player.schema = {
 // };
 
 export default new Realm({
-  schema: [Club, Course, Hole, Event, Player, EventPlayer, EventScore],
-  schemaVersion: 9
+  schema: [Club, Course, Hole, Event, Player, EventPlayer, EventTeam, EventScore],
+  schemaVersion: 12
 });

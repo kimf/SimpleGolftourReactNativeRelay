@@ -1,10 +1,8 @@
 import React, {Component} from "react";
-import {Alert, View, Text, TouchableOpacity} from "react-native";
+import { Alert, View, ScrollView, Text, TouchableOpacity } from "react-native";
 
-import NavigationBar from 'react-native-navbar';
-
+import ScorecardRow from './ScorecardRow';
 import styles from '../styles';
-import realm from '../realm';
 
 export default class Scorecard extends Component {
   constructor(props) {
@@ -25,22 +23,21 @@ export default class Scorecard extends Component {
   }
 
   render() {
-    const { event, closeScorecard } = this.props;
-    const titleConfig = { title: 'Scorekort', tintColor: 'white'  };
-    const leftButtonConfig = {
-      title: '< Tillbaka',
-      handler: () => closeScorecard(),
-      tintColor: 'white'
-    };
+    const { event, dispatch } = this.props;
 
     return(
       <View style={styles.container}>
-        <NavigationBar
-          style={styles.header}
-          title={titleConfig}
-          statusBar={{style: 'light-content', tintColor: '#477dca'}}
-          leftButton={leftButtonConfig}
-        />
+        <ScrollView>
+          {event.eventPlayers.map((player) => {
+            return(
+              <ScorecardRow
+                player={player}
+                key={`player_scorecard_scores_row_${player.id}`}
+              />
+            )
+          })}
+        </ScrollView>
+
         <TouchableOpacity
           style={styles.btn}
           onPress={this.cancelScoring}>

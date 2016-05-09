@@ -7,69 +7,73 @@ import realm from '../realm';
 const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];
 const BEER_VALUES = [0,1,2,3,4,5];
+const pointsArray = []
+pointsArray[-4] = 6;
+pointsArray[-3] = 5;
+pointsArray[-2] = 4;
+pointsArray[-1] = 3;
+pointsArray[0] = 2;
+pointsArray[1] = 1;
+pointsArray[2] = 0;
+pointsArray[3] = 0;
+pointsArray[4] = 0;
 
-
-export default class ScorecardPlayerRow extends Component {
+export default class ScoringRow extends Component {
   constructor(props) {
     super(props);
-    this.player = props.player;
-    this.eventScore = props.player.eventScores.filtered(`hole == ${props.hole.number}`)[0];
+    this.eventScore = realm.objects('EventScore').filtered(`hole == "${props.holeNr}"`)[0];
+    this.state = { strokes: this.eventScore.par, putts: this.eventScore.putts }
   }
 
   showScoreForm() {
     realm.write(() => {
-      this.player.isScoring = true;
+      this.props.player.isScoring = true;
     });
     this.forceUpdate();
   }
 
   closeScoreForm() {
     realm.write(() => {
-      this.player.isScoring = false;
+      this.props.player.isScoring = false;
       this.eventScore.isScored = true;
-    });
-    this.forceUpdate();
-  }
 
-  setScoreData(value, dataType) {
-    realm.write(() => {
-      if(dataType === 'strokes') {
-        this.eventScore.strokes = value;
-      }
+      this.eventScore.strokes = this.state.strokes;
+      this.eventScore.putts = this.state.putts;
 
-      if(dataType === 'putts') {
-         this.eventScore.putts = value;
-      }
-
-      if(dataType === 'beers') {
-         this.eventScore.beers = value;
-      }
+      const strokeSum = this.state.strokes - this.eventScore.extraStrokes;
+      const testSum = strokeSum - this.eventScore.par;
+      this.eventScore.points = pointsArray[testSum];
     });
     this.forceUpdate();
   }
 
 
   render() {
+    const { player } = this.props;
     const isScoredStyle = this.eventScore.isScored ? styles.isScored : styles.needsScore;
+
     let rowView = (
       <View style={styles.playerRow}>
-        <Text style={styles.playerName}>{this.player.name}</Text>
+        <View style={styles.playerName}>
+          <Text style={styles.flexOne}>{player.name}</Text>
+          <Text style={styles.flexOne}>{this.eventScore.extraStrokes > 0 ? `${this.eventScore.extraStrokes} slag` : ''}</Text>
+        </View>
         <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.strokes}</Text>
         <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.putts}</Text>
-        <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.beers}</Text>
+        <Text style={[styles.playerHoleData, isScoredStyle, styles.scorecardRowPoints]}>{this.eventScore.points}</Text>
       </View>
     );
 
     const strokePicker = (
       <PickerIOS
         style={styles.picker}
-        selectedValue={this.eventScore.strokes}
-        onValueChange={(strokes) => this.setScoreData(strokes, 'strokes')}>
+        selectedValue={this.state.strokes}
+        onValueChange={(strokes) => this.setState({strokes})}>
         {STROKE_VALUES.map((val) => (
           <PickerIOS.Item
             key={val}
             value={val}
-            label={`${val}`}
+            label={`${val} slag`}
           />
         ))}
       </PickerIOS>
@@ -78,41 +82,26 @@ export default class ScorecardPlayerRow extends Component {
     const puttPicker = (
       <PickerIOS
         style={styles.picker}
-        selectedValue={this.eventScore.putts}
-        onValueChange={(putts) => this.setScoreData(putts, 'putts')}>
+        selectedValue={this.state.putts}
+        onValueChange={(putts) => this.setState({putts})}>
         {PUTT_VALUES.map((val) => (
           <PickerIOS.Item
             key={val}
             value={val}
-            label={`${val}`}
-          />
-        ))}
-      </PickerIOS>
-    );
-
-    const beerPicker = (
-      <PickerIOS
-        style={styles.picker}
-        selectedValue={this.eventScore.beers}
-        onValueChange={(beers) => this.setScoreData(beers, 'beers')}>
-        {BEER_VALUES.map((val) => (
-          <PickerIOS.Item
-            key={val}
-            value={val}
-            label={`${val}`}
+            label={`${val} puttar`}
           />
         ))}
       </PickerIOS>
     );
 
     let scoring;
-    if(this.player.isScoring){
+    if(player.isScoring){
       scoring = (
         <View style={styles.scorebox}>
+          <Text style={styles.flexOne}>{player.name}</Text>
           <View style={{flexDirection: 'row'}}>
             {strokePicker}
             {puttPicker}
-            {beerPicker}
           </View>
           <TouchableOpacity onPress={() => this.closeScoreForm()}>
             <Text style={styles.inlineBtn}>DONE</Text>
@@ -120,7 +109,7 @@ export default class ScorecardPlayerRow extends Component {
         </View>
       );
     } else {
-      rowView = (
+      scoring = (
         <TouchableOpacity style={styles.scoreRow} onPress={() => this.showScoreForm()}>
           {rowView}
         </TouchableOpacity>
@@ -128,8 +117,7 @@ export default class ScorecardPlayerRow extends Component {
     }
 
     return(
-      <View style={(this.player.isScoring ? styles.scoring : styles.blank)} key={`player_row_${this.player.id}`}>
-        {rowView}
+      <View style={(player.isScoring ? styles.scoring : styles.blank)} key={`player_row_${player.id}`}>
         {scoring}
       </View>
     )

@@ -1,14 +1,13 @@
 import React, {Component} from "react";
-import {View, Text, Modal} from "react-native";
+import {View, Text} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 import SwipeableViews from 'react-swipeable-views/lib/index.native.animated';
-// There is another version. I'm unsure which one give the best UX.
-// import SwipeableViews from 'react-swipeable-views/lib/index.native.scroll';
+import Collapsible from 'react-native-collapsible';
 
 import HoleView from './HoleView';
-import Scorecard from './Scorecard';
 import Loading from './Loading';
+import Scorecard from './Scorecard';
 
 import styles from '../styles';
 import realm from '../realm';
@@ -18,14 +17,14 @@ export default class ScoreEvent extends Component {
     super(props);
     this.state = {
       currentHoleNr: props.event.currentHole,
-      showingScorecard: false
+      scorecardCollapsed: false
     }
     this.onChangeIndex = this._onChangeIndex.bind(this);
   }
 
   // componentWillMount() {
   //   realm.addListener('change', () => {
-  //     //this.forceUpdate();
+  //     this.forceUpdate();
   //   });
   // }
 
@@ -42,12 +41,12 @@ export default class ScoreEvent extends Component {
 
   render() {
     const { event, dispatch } = this.props;
-    const { currentHoleNr, showingScorecard } = this.state;
+    const { currentHoleNr, scorecardCollapsed} = this.state;
 
     const titleConfig = { title: event.course.name, tintColor: 'white'  };
     const rightButtonConfig = {
       title: 'Scorekort',
-      handler: () => this.setState({showingScorecard: true}),
+      handler: () => this.setState({ scorecardCollapsed: !scorecardCollapsed }),
       tintColor: 'white'
     };
 
@@ -58,6 +57,9 @@ export default class ScoreEvent extends Component {
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           rightButton={rightButtonConfig} />
+        <Collapsible collapsed={scorecardCollapsed} >
+          <Scorecard event={event} />
+        </Collapsible>
         <SwipeableViews
           autoplay={false}
           style={styles.wrapper}
@@ -73,13 +75,6 @@ export default class ScoreEvent extends Component {
             );
           })}
         </SwipeableViews>
-        <Modal animationType='slide' transparent={false} visible={showingScorecard}>
-          <Scorecard
-            event={event}
-            dispatch={dispatch}
-            closeScorecard={() => this.setState({showingScorecard: false})}
-          />
-        </Modal>
       </View>
     );
   }

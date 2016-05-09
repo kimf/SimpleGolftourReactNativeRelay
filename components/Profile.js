@@ -1,7 +1,7 @@
 'use strict';
 
-import React, {Component} from "react";
-import {Text, TouchableOpacity, View} from "react-native";
+import React, { Component } from "react";
+import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import styles from '../styles';
 
@@ -24,6 +24,7 @@ export default class Profile extends Component {
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig} />
 
+          <ScrollView></ScrollView>
           <TouchableOpacity onPress={onLogout} style={styles.btn}>
             <Text style={styles.btnLabel}> LOGGA UT </Text>
           </TouchableOpacity>

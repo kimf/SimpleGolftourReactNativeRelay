@@ -9,7 +9,7 @@ import styles from '../styles';
 
 export default class EventCard extends Component {
   render() {
-    const { event, dispatch } = this.props;
+    const { event, dispatch, currentUserId } = this.props;
 
     const editOrScoreStyle = event.status === 'planned'
                              ? moment(event.startsAt).isSame(Date.now(), 'day')
@@ -24,7 +24,7 @@ export default class EventCard extends Component {
         <Text>Course: {event.course ? event.course.name : 'No Course set'}</Text>
         <Text>Scoring: {event.scoringType}</Text>
         <Text>{event.teamEvent ? 'Team Event' : 'Individual Event'}</Text>
-        <TouchableOpacity onPress={() => dispatch({ type: 'selectPlayers', event: event})}>
+        <TouchableOpacity onPress={() => dispatch({ type: 'selectPlayers', event})}>
           <Text style={editOrScoreStyle}>
             {event.status === 'planned' ? 'SCORA' : 'REDIGERA'}
           </Text>

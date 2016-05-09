@@ -6,11 +6,14 @@ import {AsyncStorage, NavigationExperimental, Text, View} from "react-native";
 import Leaderboard from '../components/Leaderboard';
 import Profile from '../components/Profile';
 import Events from '../components/Events';
-import SelectPlayers from '../components/SelectPlayers';
+import EventSetup from '../components/EventSetup';
 import NewEvent from '../components/NewEvent';
 import Loading from '../components/Loading';
 import ScoreEvent from '../components/ScoreEvent';
 import SetCourse from '../components/SetCourse';
+import Scorecard from '../components/Scorecard';
+import EventPlayerSetup from '../components/EventPlayerSetup';
+import ChoosePlayer from '../components/ChoosePlayer';
 
 import AppReducer from '../lib/AppReducer';
 
@@ -52,7 +55,7 @@ export default class Default extends Component {
       return (
         <Events
           id={scene.key}
-          sessionToken={currentUser.session_token}
+          sessiontoken={currentUser.session_token}
           dispatch={this.dispatch.bind(this)}
         />
       );
@@ -71,13 +74,15 @@ export default class Default extends Component {
 
     if (scene.type === 'selectPlayers') {
       return (
-        <SelectPlayers
+        <EventSetup
           id={scene.key}
           event={scene.event}
           dispatch={this.dispatch.bind(this)}
+          currentUserId={currentUser.id}
         />
       );
     }
+
 
     if (scene.type === 'scoreEvent') {
       return (
@@ -93,6 +98,35 @@ export default class Default extends Component {
       return (
         <SetCourse
           id={scene.key}
+          dispatch={this.dispatch.bind(this)}
+        />
+      );
+    }
+
+    if (scene.type === 'showScorecard') {
+      return (
+        <Scorecard
+          event={scene.event}
+          dispatch={this.dispatch.bind(this)}
+        />
+      );
+    }
+
+    if (scene.type === 'setupEventPlayer') {
+      return (
+        <EventPlayerSetup
+          event={scene.event}
+          player={scene.player}
+          dispatch={this.dispatch.bind(this)}
+          needsSaving={scene.needsSaving}
+        />
+      );
+    }
+
+    if (scene.type === 'choosePlayer') {
+      return (
+        <ChoosePlayer
+          event={scene.event}
           dispatch={this.dispatch.bind(this)}
         />
       );

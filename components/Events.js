@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from "react";
-import {Text, View} from "react-native";
+import {StatusBar, Text, View} from "react-native";
 
 import realm from '../realm';
 
@@ -22,7 +22,7 @@ export default class Events extends Component {
   }
 
   componentDidMount() {
-    const events = realm.objects('Event').sorted('startsAt', true);
+    const events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt', true);
     this.setEvents(events, true);
 
     if(events.length < 1) {
@@ -31,6 +31,7 @@ export default class Events extends Component {
   }
 
   fetchEvents(events) {
+    StatusBar.setNetworkActivityIndicatorVisible(true);
     fetch(apiUrl + '/events', {
       method: 'GET',
       headers: {
@@ -57,7 +58,7 @@ export default class Events extends Component {
           }, true);
         });
       });
-
+      StatusBar.setNetworkActivityIndicatorVisible(false);
       this.setEvents(events, false);
     }).catch((error) => {
       this.setState({loading: 'false'});

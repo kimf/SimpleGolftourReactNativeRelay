@@ -11,7 +11,7 @@ import realm from './realm';
 export default class Wrapper extends Component {
   constructor(props){
     super(props);
-    this.state = { component: null }
+    this.state = { component: null };
     this.onLogin = this.checkUserCreds.bind(this);
     this.clubsIsLoaded = this.checkUserCreds.bind(this);
     this.onLogout = this.onLogout.bind(this);

@@ -17,7 +17,7 @@ export default StyleSheet.create({
   },
   header: {
     height: 60,
-    backgroundColor: '#477dca'
+    backgroundColor: '#477dca',
   },
   inlineHeader: {
     paddingTop: 10,
@@ -28,7 +28,7 @@ export default StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: '#cecece',
     flexDirection: 'row',
-    padding: 5,
+    paddingBottom: 20,
     paddingRight: 10,
     paddingLeft: 10,
     paddingBottom: 10,
@@ -37,6 +37,7 @@ export default StyleSheet.create({
   inlineBtn: {
     marginTop: 10,
     padding: 5,
+    marginBottom: 10,
     backgroundColor: '#000',
     color: '#fff',
     borderRadius: 4,
@@ -72,7 +73,7 @@ export default StyleSheet.create({
     marginRight: 0
   },
   btn: {
-    marginTop: 10,
+    margin: 10,
     padding: 20,
     paddingLeft: 60,
     paddingRight: 60,
@@ -175,11 +176,12 @@ export default StyleSheet.create({
     alignItems: 'flex-start'
   },
   playerName: {
-    flex: 4,
+    flex: 2,
   },
   playerHoleData: {
     flex: 1,
-    fontSize: 16
+    fontSize: 28,
+    fontWeight: 'bold'
   },
   scorebox: {
     paddingRight: 10,
@@ -201,6 +203,12 @@ export default StyleSheet.create({
   },
   needsScore: {
     color: '#eee'
+  },
+  isScored: {
+    color: '#ccc'
+  },
+  scorecardRowPoints: {
+    color: '#000'
   },
   centerText: {
     textAlign: 'center'
@@ -256,5 +264,9 @@ export default StyleSheet.create({
   holeHeaderText: {
     color: 'black',
     textAlign: 'center'
+  },
+  inlineButton: {
+    padding: 10,
+    backgroundColor: '#feb'
   }
 });

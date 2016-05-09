@@ -6,21 +6,48 @@ import {Text, TextInput, TouchableOpacity, ListView, View} from "react-native";
 import NavigationBar from 'react-native-navbar';
 
 import styles from '../styles';
+import realm from '../realm';
 
-export default class SetHcp extends Component {
+export default class EventPlayerSetup extends Component {
   constructor(props) {
     super(props);
-    this.state = {strokes: 10};
+    this.state = {strokes: (props.player.strokes || '') };
+  }
+
+  goBack() {
+    const { event, needsSaving, player, dispatch } = this.props;
+    const strokes = parseInt(this.state.strokes);
+
+    realm.write(() => {
+      if(needsSaving) {
+        event.eventPlayers.push({
+          id: player.id,
+          name: player.name,
+          strokes: strokes,
+          isScoring: false,
+          eventScores: []
+        });
+      } else {
+        player.strokes = strokes;
+      }
+    });
+    dispatch({ type: 'eventPlayerWasSetup' });
   }
 
   render() {
-    const { player, setHcp } = this.props;
+    const { player, dispatch } = this.props;
     const { strokes } = this.state;
 
-    const titleConfig = { title: 'Kolla HCP', tintColor: 'white'  };
+    const titleConfig = { title: 'Kolla Antal slag', tintColor: 'white'  };
+    const leftButtonConfig = {
+      title: '< Bakåt',
+      handler: () => dispatch({ type: 'back' }),
+      tintColor: 'white'
+    };
+
     const rightButtonConfig = {
       title: '✓ OK',
-      handler: () => setHcp(player.id, this.state.strokes),
+      handler: () => this.goBack(),
       tintColor: 'white'
     };
 
@@ -30,6 +57,7 @@ export default class SetHcp extends Component {
           style={styles.header}
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          leftButton={leftButtonConfig}
           rightButton={rightButtonConfig}
         />
 
