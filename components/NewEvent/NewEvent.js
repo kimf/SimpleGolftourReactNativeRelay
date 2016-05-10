@@ -1,14 +1,13 @@
 import React, {Component} from "react";
 import {DatePickerIOS, SegmentedControlIOS, Text, TextInput, TouchableOpacity, View} from "react-native";
 
-import styles from '../styles';
-import realm from '../realm';
-
 import NavigationBar from 'react-native-navbar';
 import Radio, { RadioButton } from 'react-native-simple-radio-button';
 import moment from 'moment';
 
-import { apiUrl } from '../lib/ApiService';
+import styles from '../../styles';
+import realm from '../../realm';
+import { apiUrl } from '../../lib/ApiService';
 
 export default class NewEvent extends Component {
   constructor(props) {
@@ -28,7 +27,7 @@ export default class NewEvent extends Component {
 
   onSubmit(){
     const { scoring_type, gametype, selectedIndex, date } = this.state;
-    const { course, dispatch, sessionToken } = this.props;
+    const { course, appDispatch, sessionToken } = this.props;
     const team_event = selectedIndex === 1;
 
     const url = apiUrl + '/events';
@@ -62,7 +61,7 @@ export default class NewEvent extends Component {
           course: realmCourse
         });
       });
-      dispatch({ type: 'eventWasCreated' });
+      appDispatch({ type: 'back' });
     }).catch((error) => {
       alert('Kunde inte spara runda, Var god se över informationen');
       console.log('Error retreiving data', error);
@@ -74,13 +73,13 @@ export default class NewEvent extends Component {
   }
 
   render() {
-    const { course, dispatch } = this.props;
+    const { course, dispatch, appDispatch } = this.props;
     const { selectedIndex, gametype, scoring_type, date, timeZoneOffsetInHours } = this.state;
 
     const titleConfig = { title: 'Ny Runda', tintColor: 'white'  };
     const leftButtonConfig = {
       title: '< Bakåt',
-      handler: () => dispatch({ type: 'back' }),
+      handler: () => appDispatch({ type: 'back' }),
       tintColor: 'white'
     };
 

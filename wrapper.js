@@ -18,6 +18,21 @@ export default class Wrapper extends Component {
   }
 
   componentWillMount() {
+    // ------------------------------------------------------------------------------
+    // TMP - FOR CLEARING THINGS UP
+    // const eventPlayers = realm.objects('EventPlayer');
+    // const eventScores = realm.objects('EventScore');
+    // const eventTeams = realm.objects('EventTeam');
+    // const events = realm.objects('Event');
+    // const players = realm.objects('Player');
+    // realm.write(() => {
+    //   realm.delete(eventPlayers);
+    //   realm.delete(eventScores);
+    //   realm.delete(eventTeams);
+    //   realm.delete(events);
+    //   realm.delete(players);
+    // });
+    // ------------------------------------------------------------------------------
     // AsyncStorage.removeItem('userData');
     this.checkUserCreds();
   }

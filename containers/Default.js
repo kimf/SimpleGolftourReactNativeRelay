@@ -1,19 +1,16 @@
 'use strict';
 
 import React, {Component} from "react";
-import {AsyncStorage, NavigationExperimental, Text, View} from "react-native";
+import {NavigationExperimental, Text, View} from "react-native";;
+import moment from 'moment';
 
-import Leaderboard from '../components/Leaderboard';
-import Profile from '../components/Profile';
-import Events from '../components/Events';
-import EventSetup from '../components/EventSetup';
-import NewEvent from '../components/NewEvent';
-import Loading from '../components/Loading';
-import ScoreEvent from '../components/ScoreEvent';
-import SetCourse from '../components/SetCourse';
-import Scorecard from '../components/Scorecard';
-import EventPlayerSetup from '../components/EventPlayerSetup';
-import ChoosePlayer from '../components/ChoosePlayer';
+import realm from '../realm'
+
+import Leaderboard from '../components/Default/Leaderboard';
+import Profile from '../components/Default/Profile';
+import Events from '../components/Default/Events';
+import NewEvent from '../containers/NewEvent';
+import Scoring from '../containers/Scoring';
 
 import AppReducer from '../lib/AppReducer';
 
@@ -32,9 +29,20 @@ export default class Default extends Component {
     const scene = this.state.scenes[this.state.scenes.length - 1];
 
     if (scene.key === 'leaderboard') {
+      let eventToday;
+
+      const scoringEvent = realm.objects('Event').find(event => event.isScoring);
+
+      if(!scoringEvent){
+        eventToday = realm.objects('Event').find((event) =>
+          moment(event.starts_at).isSame(Date.now(), 'day')
+        );
+      }
       return (
         <Leaderboard
           id={scene.key}
+          scoringEvent={scoringEvent}
+          eventToday={eventToday}
           sessionToken={currentUser.session_token}
           dispatch={this.dispatch.bind(this)}
         />
@@ -55,7 +63,7 @@ export default class Default extends Component {
       return (
         <Events
           id={scene.key}
-          sessiontoken={currentUser.session_token}
+          sessionToken={currentUser.session_token}
           dispatch={this.dispatch.bind(this)}
         />
       );
@@ -64,70 +72,21 @@ export default class Default extends Component {
     if (scene.type === 'newEvent') {
       return (
         <NewEvent
+          id={scene.key}
           sessionToken={currentUser.session_token}
-          id={scene.key}
-          course={scene.course}
-          dispatch={this.dispatch.bind(this)}
+          appDispatch={this.dispatch.bind(this)}
         />
       );
     }
 
-    if (scene.type === 'selectPlayers') {
+    if (scene.type === 'setupEvent') {
       return (
-        <EventSetup
+        <Scoring
           id={scene.key}
           event={scene.event}
-          dispatch={this.dispatch.bind(this)}
+          sessionToken={currentUser.session_token}
           currentUserId={currentUser.id}
-        />
-      );
-    }
-
-
-    if (scene.type === 'scoreEvent') {
-      return (
-        <ScoreEvent
-          id={`${scene.key}-${scene.event.id}-${scene.event.currentHole}`}
-          event={scene.event}
-          dispatch={this.dispatch.bind(this)}
-        />
-      );
-    }
-
-    if (scene.type === 'selectCourse') {
-      return (
-        <SetCourse
-          id={scene.key}
-          dispatch={this.dispatch.bind(this)}
-        />
-      );
-    }
-
-    if (scene.type === 'showScorecard') {
-      return (
-        <Scorecard
-          event={scene.event}
-          dispatch={this.dispatch.bind(this)}
-        />
-      );
-    }
-
-    if (scene.type === 'setupEventPlayer') {
-      return (
-        <EventPlayerSetup
-          event={scene.event}
-          player={scene.player}
-          dispatch={this.dispatch.bind(this)}
-          needsSaving={scene.needsSaving}
-        />
-      );
-    }
-
-    if (scene.type === 'choosePlayer') {
-      return (
-        <ChoosePlayer
-          event={scene.event}
-          dispatch={this.dispatch.bind(this)}
+          appDispatch={this.dispatch.bind(this)}
         />
       );
     }

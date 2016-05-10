@@ -16,7 +16,7 @@ export default class Loading extends Component {
         height: height
       }}>
         <StatusBar barStyle="light-content" />
-        <Image source={require('../images/logo.png')} />
+        <Image source={require('../../images/logo.png')} />
       </View>
     )
   }

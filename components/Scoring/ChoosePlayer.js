@@ -3,11 +3,10 @@
 import React, { Component } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import realm from '../realm';
-
 import NavigationBar from 'react-native-navbar';
 
-import styles from '../styles';
+import realm from '../../realm';
+import styles from '../../styles';
 
 export default class ChoosePlayer extends Component {
   constructor(props) {

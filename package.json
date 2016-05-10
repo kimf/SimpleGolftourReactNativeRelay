@@ -6,12 +6,12 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "lodash.sum": "^4.0.2",
+    "lodash.sumby": "^4.3.0",
     "moment": "^2.13.0",
     "react": "^15.0.2",
     "react-native": "0.26.0-rc",
-    "react-native-collapsible": "^0.6.0",
     "react-native-navbar": "gargamelius/react-native-navbar",
-    "react-native-router-ex": "jarredwitt/react-native-router-ex",
     "react-native-simple-radio-button": "kimf/react-native-simple-radio-button",
     "react-native-slowlog": "^1.0.1",
     "react-native-vector-icons": "^2.0.0",

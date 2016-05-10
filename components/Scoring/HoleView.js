@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {View, Text} from "react-native";
 import ScoringRow from './ScoringRow';
-import styles from '../styles';
-import realm from '../realm';
+import styles from '../../styles';
+import realm from '../../realm';
 
 export default class HoleView extends Component {
   render(){
@@ -11,7 +11,7 @@ export default class HoleView extends Component {
     return(
       <View style={styles.hole} >
         <View style={styles.inlineHeader}>
-          <Text style={styles.holeHeaderText}>Hål {hole.number} - Index: {hole.index}</Text>
+          <Text style={styles.holeHeaderText}>Hål {hole.number} - Par {hole.par} - Index: {hole.index}</Text>
         </View>
         {event.eventPlayers.map((player) => {
           return(

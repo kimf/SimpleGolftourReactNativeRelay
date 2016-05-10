@@ -180,6 +180,8 @@ export default StyleSheet.create({
   },
   playerHoleData: {
     flex: 1,
+    flexDirection: 'row',
+    color: '#ccc',
     fontSize: 28,
     fontWeight: 'bold'
   },
@@ -200,12 +202,6 @@ export default StyleSheet.create({
   },
   picker: {
     flex: 1
-  },
-  needsScore: {
-    color: '#eee'
-  },
-  isScored: {
-    color: '#ccc'
   },
   scorecardRowPoints: {
     color: '#000'

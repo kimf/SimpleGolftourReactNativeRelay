@@ -5,8 +5,8 @@ import {Text, TextInput, TouchableOpacity, ListView, View} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 
-import styles from '../styles';
-import realm from '../realm';
+import styles from '../../styles';
+import realm from '../../realm';
 
 export default class EventPlayerSetup extends Component {
   constructor(props) {

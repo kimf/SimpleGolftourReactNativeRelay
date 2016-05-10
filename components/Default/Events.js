@@ -2,17 +2,15 @@
 
 import React, {Component} from "react";
 import {StatusBar, Text, View} from "react-native";
-
-import realm from '../realm';
-
 import NavigationBar from 'react-native-navbar';
 import { ListView } from 'realm/react-native';
-import EventCard from './EventCard';
-
 import moment from 'moment';
 
-import styles from '../styles';
-import { apiUrl } from '../lib/ApiService';
+import EventCard from './EventCard';
+
+import realm from '../../realm';
+import styles from '../../styles';
+import { apiUrl } from '../../lib/ApiService';
 
 export default class Events extends Component {
   constructor(props) {
@@ -21,13 +19,10 @@ export default class Events extends Component {
     this.state = { dataSource: ds.cloneWithRows([]) };
   }
 
-  componentDidMount() {
-    const events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt', true);
-    this.setEvents(events, true);
-
-    if(events.length < 1) {
-      this.fetchEvents(events);
-    }
+  componentWillMount() {
+    let events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt', true);
+    this.setEvents(events);
+    this.fetchEvents(events);
   }
 
   fetchEvents(events) {
@@ -59,16 +54,16 @@ export default class Events extends Component {
         });
       });
       StatusBar.setNetworkActivityIndicatorVisible(false);
-      this.setEvents(events, false);
+      this.setEvents(events);
     }).catch((error) => {
-      this.setState({loading: 'false'});
+      StatusBar.setNetworkActivityIndicatorVisible(false);
       console.log('Error retreiving data', error);
     })
   }
 
-  setEvents(events, loading) {
+  setEvents(events) {
     const dataSource = this.state.dataSource.cloneWithRows(events);
-    this.setState({dataSource, loading});
+    this.setState({dataSource});
   }
 
   render() {

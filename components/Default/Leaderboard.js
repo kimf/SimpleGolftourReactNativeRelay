@@ -1,20 +1,20 @@
 'use strict';
 
 import React, {Component} from "react";
-import {AsyncStorage, StatusBar, Text, TouchableOpacity, View} from "react-native";
+import {StatusBar, Text, TouchableOpacity, View} from "react-native";
 
-import styles from '../styles';
-import realm from '../realm';
+import styles from '../../styles';
+import realm from '../../realm';
 import { ListView } from 'realm/react-native';
 
 import NavigationBar from 'react-native-navbar';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 
-import { apiUrl } from '../lib/ApiService';
+import { apiUrl } from '../../lib/ApiService';
 
 import LeaderboardCard from './LeaderboardCard';
-import Loading from './Loading';
+import Loading from '../shared/Loading';
 
 export default class Leaderboard extends Component {
   constructor(props) {
@@ -27,7 +27,7 @@ export default class Leaderboard extends Component {
   componentWillMount() {
     let players = realm.objects('Player').sorted('position');
     this.setPlayers(players, true);
-    //this.reloadLeaderboard(players);
+    this.reloadLeaderboard(players);
   }
 
   reloadLeaderboard(players) {
@@ -58,28 +58,28 @@ export default class Leaderboard extends Component {
           }, true);
         });
       });
-      this.setPlayers(players, false);
+      this.setPlayers(players);
       StatusBar.setNetworkActivityIndicatorVisible(false);
     }).catch((error) => {
-      this.setState({loading: 'false'});
+      StatusBar.setNetworkActivityIndicatorVisible(false);
       console.log('Error retreiving data', error);
     })
   }
 
-  setPlayers(players, loading) {
+  setPlayers(players) {
     const dataSource = this.state.dataSource.cloneWithRows(players);
-    this.setState({dataSource, loading});
+    this.setState({dataSource});
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { dispatch, eventToday, scoringEvent } = this.props;
     const { dataSource } = this.state;
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
     const leftButton = (
         <Icon
           style={[styles.headerBtn, styles.leftBtn]}
-          name="person"
+          name="cog"
           size={20}
           onPress={() => dispatch({ type: 'openProfile' })}
         />
@@ -87,25 +87,30 @@ export default class Leaderboard extends Component {
     const rightButton = (
       <Icon
         style={[styles.headerBtn, styles.rightBtn]}
-        name="calendar"
+        name="calendar-o"
         size={20}
         onPress={() => dispatch({ type: 'openEvents' })}
       />
     );
 
     let eventBanner;
-    // const todayEvents = currentUser.current_season_events.filter((event) =>
-    //   event.status === 'planned' && moment(event.starts_at).isSame(Date.now(), 'day')
-    // );
-    // if(todayEvents.length > 0) {
-    //   eventBanner = (
-    //     <TouchableOpacity
-    //       style={styles.btn}
-    //       onPress={() => dispatch({ type: 'selectPlayers', event: todayEvents[0] })}>
-    //       <Text style={styles.btnLabel}>RUNDA IDAG - SCORA NU</Text>
-    //     </TouchableOpacity>
-    //   );
-    // }
+    if(scoringEvent) {
+      eventBanner = (
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => dispatch({ type: 'setupEvent', event: scoringEvent })}>
+          <Text style={styles.btnLabel}>ÅTERUPPTA SCOREFÖRING</Text>
+        </TouchableOpacity>
+      );
+    } else if(eventToday) {
+      eventBanner = (
+        <TouchableOpacity
+          style={styles.btn}
+          onPress={() => dispatch({ type: 'setupEvent', event: eventToday })}>
+          <Text style={styles.btnLabel}>RUNDA IDAG - FÖR SCORE NU</Text>
+        </TouchableOpacity>
+      );
+    }
 
     return(
       <View style={styles.container}>
@@ -116,13 +121,13 @@ export default class Leaderboard extends Component {
           leftButton={leftButton}
           rightButton={rightButton} />
 
+          {eventBanner}
+
           <ListView
             enableEmptySections
             dataSource={dataSource}
             renderRow={(rowData) => <LeaderboardCard data={rowData} />}
           />
-
-          {eventBanner}
       </View>
     )
   }

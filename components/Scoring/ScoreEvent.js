@@ -3,21 +3,17 @@ import {View, Text} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 import SwipeableViews from 'react-swipeable-views/lib/index.native.animated';
-import Collapsible from 'react-native-collapsible';
 
 import HoleView from './HoleView';
-import Loading from './Loading';
-import Scorecard from './Scorecard';
 
-import styles from '../styles';
-import realm from '../realm';
+import styles from '../../styles';
+import realm from '../../realm';
 
 export default class ScoreEvent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentHoleNr: props.event.currentHole,
-      scorecardCollapsed: false
+      currentHoleNr: props.event.currentHole
     }
     this.onChangeIndex = this._onChangeIndex.bind(this);
   }
@@ -41,12 +37,12 @@ export default class ScoreEvent extends Component {
 
   render() {
     const { event, dispatch } = this.props;
-    const { currentHoleNr, scorecardCollapsed} = this.state;
+    const { currentHoleNr} = this.state;
 
     const titleConfig = { title: event.course.name, tintColor: 'white'  };
     const rightButtonConfig = {
       title: 'Scorekort',
-      handler: () => this.setState({ scorecardCollapsed: !scorecardCollapsed }),
+      handler: () => dispatch({ type: 'showScorecard' }),
       tintColor: 'white'
     };
 
@@ -57,9 +53,6 @@ export default class ScoreEvent extends Component {
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           rightButton={rightButtonConfig} />
-        <Collapsible collapsed={scorecardCollapsed} >
-          <Scorecard event={event} />
-        </Collapsible>
         <SwipeableViews
           autoplay={false}
           style={styles.wrapper}

@@ -5,7 +5,7 @@ import {Text, TouchableOpacity, View} from "react-native";
 
 import moment from 'moment';
 
-import styles from '../styles';
+import styles from '../../styles';
 
 export default class EventCard extends Component {
   render() {
@@ -24,7 +24,7 @@ export default class EventCard extends Component {
         <Text>Course: {event.course ? event.course.name : 'No Course set'}</Text>
         <Text>Scoring: {event.scoringType}</Text>
         <Text>{event.teamEvent ? 'Team Event' : 'Individual Event'}</Text>
-        <TouchableOpacity onPress={() => dispatch({ type: 'selectPlayers', event})}>
+        <TouchableOpacity onPress={() => dispatch({ type: 'setupEvent', event})}>
           <Text style={editOrScoreStyle}>
             {event.status === 'planned' ? 'SCORA' : 'REDIGERA'}
           </Text>

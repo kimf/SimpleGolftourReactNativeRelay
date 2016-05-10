@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {View, TouchableOpacity, Text, PickerIOS} from "react-native";
 
-import styles from '../styles';
-import realm from '../realm';
+import styles from '../../styles';
+import realm from '../../realm';
 
 const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];
@@ -50,7 +50,18 @@ export default class ScoringRow extends Component {
 
   render() {
     const { player } = this.props;
-    const isScoredStyle = this.eventScore.isScored ? styles.isScored : styles.needsScore;
+    const isScored = this.eventScore.isScored;
+
+    let resultsRow;
+    if(isScored)     {
+      resultsRow = (
+        <View style={[styles.flexOne, {flexDirection: 'row'}]}>
+          <Text style={styles.playerHoleData}>{this.eventScore.strokes}</Text>
+          <Text style={styles.playerHoleData}>{this.eventScore.putts}</Text>
+          <Text style={[styles.playerHoleData, styles.scorecardRowPoints]}>{this.eventScore.points}</Text>
+        </View>
+      );
+    }
 
     let rowView = (
       <View style={styles.playerRow}>
@@ -58,9 +69,7 @@ export default class ScoringRow extends Component {
           <Text style={styles.flexOne}>{player.name}</Text>
           <Text style={styles.flexOne}>{this.eventScore.extraStrokes > 0 ? `${this.eventScore.extraStrokes} slag` : ''}</Text>
         </View>
-        <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.strokes}</Text>
-        <Text style={[styles.playerHoleData, isScoredStyle]}>{this.eventScore.putts}</Text>
-        <Text style={[styles.playerHoleData, isScoredStyle, styles.scorecardRowPoints]}>{this.eventScore.points}</Text>
+        {resultsRow}
       </View>
     );
 

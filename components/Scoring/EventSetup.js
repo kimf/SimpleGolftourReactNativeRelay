@@ -3,25 +3,16 @@
 import React, {Component} from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import realm from '../realm';
-
 import NavigationBar from 'react-native-navbar';
 
-import styles from '../styles';
+import realm from '../../realm';
+import styles from '../../styles';
 
 export default class EventSetup extends Component {
   componentWillMount() {
     const { event, currentUserId } = this.props;
-    // ------------------------------------------------------------------------------
-    // TMP - FOR CLEARING THINGS UP
-    // const eventPlayers = realm.objects('EventPlayer');
-    // realm.write(() => {
-    //   realm.delete(eventPlayers);
-    // })
-    // ------------------------------------------------------------------------------
     let eventPlayer = event.eventPlayers.filtered(`id = ${currentUserId}`);
     if(eventPlayer.length === 0) {
-      console.log('Creating a new EventPlayer');
       const player = realm.objects('Player').find((p) => p.id === currentUserId);
       realm.write(() => {
         event.eventPlayers.push({
@@ -39,11 +30,11 @@ export default class EventSetup extends Component {
   }
 
   abort() {
-    const { event, dispatch } = this.props;
+    const { event, appDispatch } = this.props;
     realm.write(() => {
       realm.delete(event.eventPlayers);
     });
-    dispatch({ type: 'back' });
+    appDispatch({type: 'back'});
   }
 
   render() {

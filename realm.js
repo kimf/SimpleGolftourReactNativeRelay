@@ -1,7 +1,8 @@
 'use strict';
 
 import Realm from 'realm';
-import moment from 'moment';
+import sumBy from 'lodash.sumby';
+
 
 class Hole {}
 Hole.schema = {
@@ -54,14 +55,22 @@ EventScore.schema = {
     isScored: { type: 'bool', default: false }
   }
 }
-EventScore.prototype = {
-  calculatePoints(playingHcp) {
 
+
+
+class EventPlayer {
+  get totalPoints() {
+    return sumBy(this.eventScores, (s) => { return s.isScored ? s.points : 0; });
+  }
+
+  get totalPutts() {
+    return sumBy(this.eventScores, (s) => { return s.isScored ? s.putts : 0; });
+  }
+
+  get totalStrokes() {
+    return sumBy(this.eventScores, (s) => { return s.isScored ? s.strokes : 0; });
   }
 }
-
-
-class EventPlayer {}
 EventPlayer.schema = {
   name: 'EventPlayer',
   primaryKey: 'id',
