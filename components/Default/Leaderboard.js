@@ -27,7 +27,9 @@ export default class Leaderboard extends Component {
   componentWillMount() {
     let players = realm.objects('Player').sorted('position');
     this.setPlayers(players, true);
-    this.reloadLeaderboard(players);
+    if(players.length === 0) {
+      this.reloadLeaderboard(players);
+    }
   }
 
   reloadLeaderboard(players) {

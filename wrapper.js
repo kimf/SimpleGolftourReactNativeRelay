@@ -18,23 +18,28 @@ export default class Wrapper extends Component {
   }
 
   componentWillMount() {
+    this.checkUserCreds();
+    // this.clearAllData() //give true to clear userData as well
+  }
+
+  clearAllData(userDataTo){
     // ------------------------------------------------------------------------------
     // TMP - FOR CLEARING THINGS UP
-    // const eventPlayers = realm.objects('EventPlayer');
-    // const eventScores = realm.objects('EventScore');
-    // const eventTeams = realm.objects('EventTeam');
-    // const events = realm.objects('Event');
-    // const players = realm.objects('Player');
-    // realm.write(() => {
-    //   realm.delete(eventPlayers);
-    //   realm.delete(eventScores);
-    //   realm.delete(eventTeams);
-    //   realm.delete(events);
-    //   realm.delete(players);
-    // });
-    // ------------------------------------------------------------------------------
-    // AsyncStorage.removeItem('userData');
-    this.checkUserCreds();
+    const eventPlayers = realm.objects('EventPlayer');
+    const eventScores = realm.objects('EventScore');
+    const eventTeams = realm.objects('EventTeam');
+    const events = realm.objects('Event');
+    const players = realm.objects('Player');
+    realm.write(() => {
+      realm.delete(eventPlayers);
+      realm.delete(eventScores);
+      realm.delete(eventTeams);
+      realm.delete(events);
+      realm.delete(players);
+    });
+    if(userDataTo) {
+      AsyncStorage.removeItem('userData');
+    }
   }
 
   onLogout() {

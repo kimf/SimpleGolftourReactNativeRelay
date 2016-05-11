@@ -19,7 +19,6 @@ export default class EventSetup extends Component {
           id: player.id,
           name: player.name,
           strokes: 0,
-          isScoring: false,
           eventScores: []
         });
       });

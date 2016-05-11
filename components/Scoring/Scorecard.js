@@ -133,7 +133,6 @@ export default class Scorecard extends Component {
               <Text style={[cellStyle, {textAlign: 'right', color: '#feb'}]}>b</Text>
 
               {event.eventPlayers.map((player) => {
-                console.log(player);
                 return(
                   <View style={{flex: 1}} key={`headerRowFor_${player.id}`}>
                     <Text style={[cellStyle, {textAlign: 'right', backgroundColor: '#eee', color: '#eee', marginTop: 10}]}>

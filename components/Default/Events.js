@@ -22,7 +22,9 @@ export default class Events extends Component {
   componentWillMount() {
     let events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt', true);
     this.setEvents(events);
-    this.fetchEvents(events);
+    if(events.length === 0) {
+      this.fetchEvents(events);
+    }
   }
 
   fetchEvents(events) {

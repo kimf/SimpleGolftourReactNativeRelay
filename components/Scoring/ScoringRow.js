@@ -18,56 +18,98 @@ pointsArray[2] = 0;
 pointsArray[3] = 0;
 pointsArray[4] = 0;
 
+
 export default class ScoringRow extends Component {
   constructor(props) {
     super(props);
-    this.eventScore = realm.objects('EventScore').filtered(`hole == "${props.holeNr}"`)[0];
-    this.state = { strokes: this.eventScore.par, putts: this.eventScore.putts }
+    this.state = {
+      strokes: props.par,
+      putts: 2,
+      isScoring: false
+    }
+    this.closeScoreForm = this.closeScoreForm.bind(this);
   }
 
-  showScoreForm() {
-    realm.write(() => {
-      this.props.player.isScoring = true;
-    });
-    this.forceUpdate();
+  componentWillMount() {
+    const { player, holesCount, holeNr, par, index } = this.props;
+    let eventScore = player.eventScores.find(s => s.hole === holeNr);
+
+    if(eventScore !== undefined) {
+      this.setState({eventScore: eventScore});
+    } else {
+      let extraStrokes = 0;
+      if(index <= player.strokes) {
+        extraStrokes = 1;
+        if(player.strokes > holesCount) {
+          if(index <= (player.strokes - holesCount)){
+            extraStrokes = 2;
+          }
+        }
+      }
+
+      realm.write(() => {
+        eventScore = realm.create('EventScore', {
+          extraStrokes: extraStrokes,
+          hole: holeNr,
+          index: index,
+          isScored: false,
+          par: par
+        });
+        player.eventScores.push(eventScore);
+      });
+
+      this.setState({eventScore: eventScore});
+    }
   }
 
   closeScoreForm() {
+    const { player } = this.props;
+    const { eventScore, strokes, putts } = this.state;
     realm.write(() => {
-      this.props.player.isScoring = false;
-      this.eventScore.isScored = true;
+      eventScore.strokes = strokes;
+      eventScore.putts = putts;
 
-      this.eventScore.strokes = this.state.strokes;
-      this.eventScore.putts = this.state.putts;
-
-      const strokeSum = this.state.strokes - this.eventScore.extraStrokes;
-      const testSum = strokeSum - this.eventScore.par;
-      this.eventScore.points = pointsArray[testSum];
+      const strokeSum = strokes - eventScore.extraStrokes;
+      const testSum = strokeSum - eventScore.par;
+      eventScore.points = pointsArray[testSum];
+      eventScore.isScored = true;
     });
-    this.forceUpdate();
+    this.setState({isScoring: false});
   }
 
 
   render() {
     const { player } = this.props;
-    const isScored = this.eventScore.isScored;
+    const { isScoring, eventScore } = this.state;
+    const isScored = eventScore.isScored;
 
     let resultsRow;
     if(isScored)     {
       resultsRow = (
         <View style={[styles.flexOne, {flexDirection: 'row'}]}>
-          <Text style={styles.playerHoleData}>{this.eventScore.strokes}</Text>
-          <Text style={styles.playerHoleData}>{this.eventScore.putts}</Text>
-          <Text style={[styles.playerHoleData, styles.scorecardRowPoints]}>{this.eventScore.points}</Text>
+          <Text style={styles.playerHoleData}>{eventScore.strokes}</Text>
+          <Text style={styles.playerHoleData}>{eventScore.putts}</Text>
+          <Text style={[styles.playerHoleData, styles.scorecardRowPoints]}>{eventScore.points}</Text>
         </View>
       );
+    } else {
+      resultsRow = <Text style={[styles.inlineBtn, {backgroundColor: '#eee', color: '#777'}]}>
+        LÄGG TILL SCORE
+      </Text>;
+    }
+
+    let extraStrokes = ''
+    for(let i=0; i<eventScore.extraStrokes; i++){
+      extraStrokes = extraStrokes + '•';
     }
 
     let rowView = (
       <View style={styles.playerRow}>
         <View style={styles.playerName}>
           <Text style={styles.flexOne}>{player.name}</Text>
-          <Text style={styles.flexOne}>{this.eventScore.extraStrokes > 0 ? `${this.eventScore.extraStrokes} slag` : ''}</Text>
+          <Text style={styles.flexOne}>
+            {extraStrokes}
+          </Text>
         </View>
         {resultsRow}
       </View>
@@ -104,7 +146,7 @@ export default class ScoringRow extends Component {
     );
 
     let scoring;
-    if(player.isScoring){
+    if(isScoring){
       scoring = (
         <View style={styles.scorebox}>
           <Text style={styles.flexOne}>{player.name}</Text>
@@ -119,14 +161,14 @@ export default class ScoringRow extends Component {
       );
     } else {
       scoring = (
-        <TouchableOpacity style={styles.scoreRow} onPress={() => this.showScoreForm()}>
+        <TouchableOpacity style={styles.scoreRow} onPress={() => this.setState({isScoring: true})}>
           {rowView}
         </TouchableOpacity>
       );
     }
 
     return(
-      <View style={(player.isScoring ? styles.scoring : styles.blank)} key={`player_row_${player.id}`}>
+      <View style={(isScoring ? styles.scoring : styles.blank)} key={`player_row_${player.id}`}>
         {scoring}
       </View>
     )
