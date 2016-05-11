@@ -68,6 +68,7 @@ export default class EventPlayerSetup extends Component {
               style={styles.inputField}
               autoCapitalize="none"
               keyboardType="number-pad"
+              autoFocus={true}
               ref="strokes"
               onChangeText={(strokes) => this.setState({strokes})}
               value={`${strokes}`}

@@ -79,21 +79,21 @@ export default class ScoringRow extends Component {
 
 
   render() {
-    const { player } = this.props;
+    const { player, showScorecard } = this.props;
     const { isScoring, eventScore } = this.state;
     const isScored = eventScore.isScored;
 
     let resultsRow;
     if(isScored)     {
       resultsRow = (
-        <View style={[styles.flexOne, {flexDirection: 'row'}]}>
-          <Text style={styles.playerHoleData}>{eventScore.strokes}</Text>
-          <Text style={styles.playerHoleData}>{eventScore.putts}</Text>
-          <Text style={[styles.playerHoleData, styles.scorecardRowPoints]}>{eventScore.points}</Text>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[styles.scoreHeader, styles.largeText]}>{showScorecard ? player.totalStrokes : eventScore.strokes}</Text>
+          <Text style={[styles.scoreHeader, styles.largeText]}>{showScorecard ? player.totalPutts :eventScore.putts}</Text>
+          <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{showScorecard ? player.totalPoints :eventScore.points}</Text>
         </View>
       );
     } else {
-      resultsRow = <Text style={[styles.inlineBtn, {backgroundColor: '#eee', color: '#777'}]}>
+      resultsRow = <Text style={[styles.inlineBtn, {backgroundColor: '#fff', color: '#777', padding: 0, margin: 0}]}>
         LÄGG TILL SCORE
       </Text>;
     }

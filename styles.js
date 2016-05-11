@@ -36,18 +36,16 @@ export default StyleSheet.create({
   },
   inlineBtn: {
     marginTop: 10,
-    padding: 5,
+    padding: 10,
     marginBottom: 10,
     backgroundColor: '#000',
     color: '#fff',
-    borderRadius: 4,
     textAlign: 'center',
   },
   smallInlineBtn: {
     padding: 2,
     backgroundColor: '#ccc',
     color: '#777',
-    borderRadius: 4,
     textAlign: 'center',
   },
   todayBanner: {
@@ -134,7 +132,6 @@ export default StyleSheet.create({
     margin: 10,
     height: 40,
     backgroundColor: 'white',
-    borderRadius: 4,
     fontSize: 16,
   },
   datepicker: {
@@ -177,6 +174,7 @@ export default StyleSheet.create({
   },
   playerName: {
     flex: 2,
+    paddingTop: 10
   },
   playerHoleData: {
     flex: 1,
@@ -225,7 +223,6 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     borderColor: '#ccc',
     borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 2,
     fontSize: 14,
     flex: 1,
   },
@@ -246,7 +243,6 @@ export default StyleSheet.create({
     marginTop: 10,
     padding: 5,
     color: '#fff',
-    borderRadius: 4,
     textAlign: 'center'
   },
   todayBtn: {
@@ -254,7 +250,6 @@ export default StyleSheet.create({
     marginTop: 10,
     padding: 5,
     color: '#fff',
-    borderRadius: 4,
     textAlign: 'center',
   },
   holeHeaderText: {
@@ -264,5 +259,105 @@ export default StyleSheet.create({
   inlineButton: {
     padding: 10,
     backgroundColor: '#feb'
+  },
+  holeSwitchButton: {
+    flex: 1,
+    height: 40,
+    margin: 5,
+    padding: 10,
+    backgroundColor: '#ccc',
+  },
+  holeSwitchButtonLabel: {
+    textAlign: 'center',
+    color: '#444',
+  },
+  scorecardButton: {
+    flex: 2,
+    height: 40,
+    margin: 5,
+    padding: 10,
+    backgroundColor: '#444',
+  },
+  scorecardButtonLabel: {
+    color: '#fff',
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  bottomBar: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    backgroundColor: '#eee',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  cellStyle: {
+    padding: 5,
+    flex: 1,
+    fontWeight: 'bold',
+    color: '#444',
+    backgroundColor: '#ccc',
+    fontSize: 10,
+    margin: 1,
+    height: 30,
+    width: 60,
+    textAlign: 'center',
+  },
+  cellStyleScore: {
+    height: 30,
+    width: 30,
+    textAlign: 'center',
+    padding: 5,
+    flex: 1,
+    margin: 1,
+    color: '#444',
+    backgroundColor: '#eee',
+    fontSize: 12,
+  },
+  playerHeaderCellStyle: {
+    height: 30,
+    textAlign: 'center',
+    backgroundColor: '#eee',
+    marginTop: 5
+  },
+  emptyCellStyle: {
+    backgroundColor: 'transparent',
+    height: 30,
+    width: 0,
+    marginTop: 5
+  },
+  playerNameCell: {
+    fontSize: 10
+  },
+  scoreHeaderRow: {
+    backgroundColor: '#eee',
+    flexDirection: 'row',
+    alignSelf: 'flex-end'
+  },
+  scoreHeader: {
+    flex: 1,
+    padding: 5,
+    color: '#ccc'
+  },
+  scoreHeaderRow: {
+    backgroundColor: '#eee',
+    flexDirection: 'row',
+    padding: 5,
+  },
+  scoreHeader: {
+    width: 70,
+    textAlign: 'right',
+    padding: 5,
+    color: '#ccc'
+  },
+  scoreHeaderPlayer: {
+    flex: 3,
+    padding: 5,
+    color: '#ccc'
+  },
+  largeText: {
+    fontSize: 28
   }
 });

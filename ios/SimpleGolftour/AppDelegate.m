@@ -22,7 +22,8 @@
       // Run from locally running dev server
       jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
     #else
-      // Run on device with code coming from dev server on PC (change the IP to your PCs IP)
+      // Run on device with code coming from a server reachable on the network
+      // (change the IP to your PCs IP or use dns proxies)
       jsCodeLocation = [NSURL URLWithString:@"http://home.fransman.se:8081/index.ios.bundle?platform=ios&dev=true"];
     #endif
   #else

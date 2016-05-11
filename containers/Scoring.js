@@ -6,7 +6,6 @@ import {NavigationExperimental, Text, View} from "react-native";;
 import EventSetup from '../components/Scoring/EventSetup';
 import EventPlayerSetup from '../components/Scoring/EventPlayerSetup';
 import ScoreEvent from '../components/Scoring/ScoreEvent';
-import Scorecard from '../components/Scoring/Scorecard';
 import ChoosePlayer from '../components/Scoring/ChoosePlayer';
 
 import realm from '../realm'
@@ -68,16 +67,6 @@ export default class Scoring extends Component {
           id={scene.key}
           event={event}
           sessionToken={sessionToken}
-          appDispatch={appDispatch}
-          dispatch={this.dispatch.bind(this)}
-        />
-      );
-    }
-
-    if (scene.type === 'showScorecard') {
-      return (
-        <Scorecard
-          event={event}
           appDispatch={appDispatch}
           dispatch={this.dispatch.bind(this)}
         />

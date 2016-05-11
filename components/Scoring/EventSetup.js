@@ -11,7 +11,7 @@ import styles from '../../styles';
 export default class EventSetup extends Component {
   componentWillMount() {
     const { event, currentUserId } = this.props;
-    let eventPlayer = event.eventPlayers.filtered(`id = ${currentUserId}`);
+    let eventPlayer = event.eventPlayers.filtered(`id == ${currentUserId}`);
     if(eventPlayer.length === 0) {
       const player = realm.objects('Player').find((p) => p.id === currentUserId);
       realm.write(() => {
