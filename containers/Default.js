@@ -29,20 +29,11 @@ export default class Default extends Component {
     const scene = this.state.scenes[this.state.scenes.length - 1];
 
     if (scene.key === 'leaderboard') {
-      let eventToday;
-
       const scoringEvent = realm.objects('Event').find(event => event.isScoring);
-
-      if(!scoringEvent){
-        eventToday = realm.objects('Event').find((event) =>
-          moment(event.starts_at).isSame(Date.now(), 'day')
-        );
-      }
       return (
         <Leaderboard
           id={scene.key}
           scoringEvent={scoringEvent}
-          eventToday={eventToday}
           sessionToken={currentUser.session_token}
           dispatch={this.dispatch.bind(this)}
         />
