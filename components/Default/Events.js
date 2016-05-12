@@ -4,13 +4,12 @@ import React, {Component} from "react";
 import {StatusBar, Text, View} from "react-native";
 import NavigationBar from 'react-native-navbar';
 import { ListView } from 'realm/react-native';
-import moment from 'moment';
 
 import EventCard from './EventCard';
 
 import realm from '../../realm';
 import styles from '../../styles';
-import { apiUrl } from '../../lib/ApiService';
+import { fetchEvents } from '../../lib/ApiService';
 
 export default class Events extends Component {
   constructor(props) {
@@ -22,45 +21,18 @@ export default class Events extends Component {
   componentWillMount() {
     let events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt', true);
     this.setEvents(events);
-    if(events.length === 0) {
-      this.fetchEvents(events);
-    }
+    //this.refreshEvents(events);
   }
 
-  fetchEvents(events) {
+  refreshEvents(events) {
     StatusBar.setNetworkActivityIndicatorVisible(true);
-    fetch(apiUrl + '/events', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Token token=${this.props.sessionToken}`
-      }
-    })
-    .then((response) => {
-      return response.json()
-    })
-    .then((json) => {
-      json.events.map((event) => {
-        const course = realm.objects('Course').filtered(`id == ${event.course_id}`)[0];
-        realm.write(() => {
-          realm.create('Event', {
-            id: event.id,
-            startsAt: moment(event.starts_at).toDate(),
-            status: event.status,
-            gametype: event.gametype,
-            scoringType: event.scoring_type,
-            teamEvent: event.team_event,
-            course: course
-          }, true);
-        });
-      });
+    fetchEvents(this.props.sessionToken).then((players) => {
+      this.setEvents(players);
       StatusBar.setNetworkActivityIndicatorVisible(false);
-      this.setEvents(events);
     }).catch((error) => {
       StatusBar.setNetworkActivityIndicatorVisible(false);
       console.log('Error retreiving data', error);
-    })
+    });
   }
 
   setEvents(events) {

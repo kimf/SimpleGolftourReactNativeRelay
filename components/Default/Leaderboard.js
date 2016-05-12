@@ -11,7 +11,7 @@ import NavigationBar from 'react-native-navbar';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 
-import { apiUrl } from '../../lib/ApiService';
+import { fetchPlayers } from '../../lib/ApiService';
 
 import LeaderboardCard from './LeaderboardCard';
 import Loading from '../shared/Loading';
@@ -25,47 +25,20 @@ export default class Leaderboard extends Component {
   }
 
   componentWillMount() {
-    let players = realm.objects('Player').sorted('position');
+    let players = realm.objects('Player').filtered('eventCount > 1').sorted('position');
     this.setPlayers(players, true);
-    if(players.length === 0) {
-      this.reloadLeaderboard(players);
-    }
+    //this.reloadLeaderboard(players);
   }
 
   reloadLeaderboard(players) {
     StatusBar.setNetworkActivityIndicatorVisible(true);
-    fetch(apiUrl + '/leaderboard', {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Token token=${this.props.sessionToken}`
-      }
-    })
-    .then((response) => {
-      return response.json()
-    })
-    .then((json) => {
-      json.map((player) => {
-        realm.write(() => {
-          realm.create('Player', {
-            id: player.id,
-            name: player.name,
-            position: player.position,
-            eventCount: player.num_events,
-            average: player.average,
-            totalPoints: parseFloat(player.total_points),
-            prevPos: player.prev_position,
-            points: player.points_array.toString()
-          }, true);
-        });
-      });
+    fetchPlayers(this.props.sessionToken).then((players) => {
       this.setPlayers(players);
       StatusBar.setNetworkActivityIndicatorVisible(false);
     }).catch((error) => {
       StatusBar.setNetworkActivityIndicatorVisible(false);
       console.log('Error retreiving data', error);
-    })
+    });
   }
 
   setPlayers(players) {
@@ -74,7 +47,7 @@ export default class Leaderboard extends Component {
   }
 
   render() {
-    const { dispatch, eventToday, scoringEvent } = this.props;
+    const { dispatch, scoringEvent } = this.props;
     const { dataSource } = this.state;
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
@@ -104,13 +77,22 @@ export default class Leaderboard extends Component {
           <Text style={styles.btnLabel}>ÅTERUPPTA SCOREFÖRING</Text>
         </TouchableOpacity>
       );
-    } else if(eventToday) {
-      eventBanner = (
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => dispatch({ type: 'setupEvent', event: eventToday })}>
-          <Text style={styles.btnLabel}>RUNDA IDAG - FÖR SCORE NU</Text>
-        </TouchableOpacity>
+    }
+
+    let leaderboard;
+    if(dataSource.rowIdentities[0].length === 0) {
+      leaderboard = (
+        <Text style={{flex: 1, padding: 40, fontWeight: 'bold', fontSize: 20, textAlign: 'center'}}>
+          INGA RUNDOR SPELADE
+        </Text>
+      );
+    } else {
+      leaderboard = (
+        <ListView
+          enableEmptySections
+          dataSource={dataSource}
+          renderRow={(rowData) => <LeaderboardCard data={rowData} />}
+        />
       );
     }
 
@@ -124,12 +106,7 @@ export default class Leaderboard extends Component {
           rightButton={rightButton} />
 
           {eventBanner}
-
-          <ListView
-            enableEmptySections
-            dataSource={dataSource}
-            renderRow={(rowData) => <LeaderboardCard data={rowData} />}
-          />
+          {leaderboard}
       </View>
     )
   }

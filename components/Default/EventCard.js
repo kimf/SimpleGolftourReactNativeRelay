@@ -16,7 +16,7 @@ export default class EventCard extends Component {
                                ? styles.todayBtn
                                : styles.inlineBtn
                              : styles.scoredEventBtn
-    return(
+    return (
       <View style={[styles.card, styles.eventCard]}>
         <Text>{event.status}</Text>
         <Text>Starts at: {moment(event.startsAt).format('MMMM Do, H:mm YYYY')}</Text>

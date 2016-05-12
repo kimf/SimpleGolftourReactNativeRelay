@@ -1,25 +1,29 @@
 'use strict';
 import React, {Component} from "react";
 import {AsyncStorage} from "react-native";
+import moment from 'moment';
 
 import Default from './containers/Default';
 import Login from './containers/Login';
-import LoadingClubs from './components/LoadingClubs';
+import DataSyncer from './components/DataSyncer';
+
+import Events from './components/Default/Events';
 
 import realm from './realm';
 
 export default class Wrapper extends Component {
   constructor(props){
     super(props);
+    this.userData = false;
     this.state = { component: null };
     this.onLogin = this.checkUserCreds.bind(this);
-    this.clubsIsLoaded = this.checkUserCreds.bind(this);
+    this.syncIsDone = this.goDefault.bind(this);
     this.onLogout = this.onLogout.bind(this);
   }
 
   componentWillMount() {
     this.checkUserCreds();
-    // this.clearAllData() //give true to clear userData as well
+    //this.clearAllData() //give true to clear userData as well
   }
 
   clearAllData(userDataTo){
@@ -37,57 +41,69 @@ export default class Wrapper extends Component {
       realm.delete(events);
       realm.delete(players);
     });
+    AsyncStorage.removeItem('syncedTimestamp');
     if(userDataTo) {
       AsyncStorage.removeItem('userData');
     }
   }
 
+  goDefault() {
+    this.setState({ component: 'Default', userData: this.userData })
+  }
+
   onLogout() {
     AsyncStorage.getItem('userData', (err, result) => {
-      let userData = JSON.parse(result);
-      AsyncStorage.setItem('userData', JSON.stringify({ email: userData.email }));
-      this.setState({
-        component: 'Login',
-        onLogin: this.onLogin,
-        userData: userData
-      });
+      const oldData = JSON.parse(result);
+      this.userData  = { email: oldData.email };
+      AsyncStorage.setItem('userData', JSON.stringify(this.userData));
+      this.setState({ component: 'Login' });
     });
   }
 
-  checkUserCreds() {
+  checkUserCreds(synced = false) {
     //AsyncStorage.removeItem('userData');
     AsyncStorage.getItem('userData', (err, result) => {
-      let userData = JSON.parse(result);
+      let newData = JSON.parse(result);
+      if(newData && newData.isLoggedIn && newData.session_token) {
+        this.userData = newData;
 
-      if(userData && userData.isLoggedIn && userData.session_token) {
-        let clubs = realm.objects('Club');
-        if(clubs.length === 0) {
-          this.setState({ component: 'LoadingClubs' });
-        } else {
-          this.setState({ component: 'Default', userData: userData });
-        }
+        AsyncStorage.getItem('syncedTimestamp', (err, result) => {
+          const syncedRecently = moment(parseInt(result)).isSame(Date.now(), 'day');
+          if(syncedRecently) {
+            this.setState({ component: 'Default' });
+          } else {
+            let clubs = realm.objects('Club');
+            let events = realm.objects('Event');
+            let players = realm.objects('Player');
+            if(clubs.length === 0 || events.length === 0 || players.length === 0) {
+              this.setState({ component: 'DataSyncer', needClubs: (clubs.length === 0) });
+            } else {
+              this.setState({ component: 'Default' });
+            }
+          }
+        });
       } else {
-        this.setState({ component: 'Login', userData: userData, navState: null });
+        this.setState({ component: 'Login' });
       }
     });
   }
 
   render() {
-    const { component, userData, navState } = this.state;
+    const { component, needClubs } = this.state;
 
-    if(component === 'LoadingClubs') {
+    if(component === 'DataSyncer') {
       return (
-        <LoadingClubs onDone={this.clubsIsLoaded} />
+        <DataSyncer onDone={this.syncIsDone} needClubs={needClubs} sessionToken={this.userData.session_token}/>
       );
     } else if(component === 'Default') {
       return (
         <Default
           onLogout={this.onLogout}
-          currentUser={userData}
+          currentUser={this.userData}
         />
       );
     } else if(component === 'Login') {
-      return <Login onLogin={this.onLogin} userData={userData} />;
+      return <Login onLogin={this.onLogin} userData={this.userData} />;
     } else {
       return null;
     }
