@@ -17,6 +17,7 @@ export default class Events extends Component {
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = { dataSource: ds.cloneWithRows([]) };
     this.openNewEvent = this.openNewEvent.bind(this);
+    this.setupEvent = this.setupEvent.bind(this);
   }
 
   componentWillMount() {
@@ -45,6 +46,10 @@ export default class Events extends Component {
     this.props.navigator.push({setCourse: 1});
   }
 
+  setupEvent(event) {
+    this.props.navigator.push({setupEvent: 1, event: event})
+  }
+
   render() {
     const { dispatch } = this.props;
     const { dataSource } = this.state;
@@ -68,7 +73,9 @@ export default class Events extends Component {
         <ListView
           enableEmptySections
           dataSource={dataSource}
-          renderRow={(rowData) => <EventCard event={rowData} dispatch={dispatch} />}
+          renderRow={
+            (rowData) => <EventCard event={rowData} dispatch={dispatch} setupEvent={this.setupEvent(rowData)}/>
+          }
         />
       </View>
     )
