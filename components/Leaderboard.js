@@ -3,18 +3,17 @@
 import React, {Component} from "react";
 import {StatusBar, Text, TouchableOpacity, View} from "react-native";
 
-import styles from '../../styles';
-import realm from '../../realm';
+import styles from '../styles';
+import realm from '../realm';
 import { ListView } from 'realm/react-native';
 
 import NavigationBar from 'react-native-navbar';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 
-import { fetchPlayers } from '../../lib/ApiService';
+import { fetchPlayers } from '../lib/ApiService';
 
 import LeaderboardCard from './LeaderboardCard';
-import Loading from '../shared/Loading';
+import Loading from './shared/Loading';
 
 export default class Leaderboard extends Component {
   constructor(props) {
@@ -26,14 +25,15 @@ export default class Leaderboard extends Component {
 
   componentWillMount() {
     let players = realm.objects('Player').filtered('eventCount > 1').sorted('position');
-    this.setPlayers(players, true);
+    const scoringEvent = realm.objects('Event').find(event => event.isScoring);
+    this.setDataState(players, scoringEvent);
     //this.reloadLeaderboard(players);
   }
 
   reloadLeaderboard(players) {
     StatusBar.setNetworkActivityIndicatorVisible(true);
     fetchPlayers(this.props.sessionToken).then((players) => {
-      this.setPlayers(players);
+      this.setDataState(players);
       StatusBar.setNetworkActivityIndicatorVisible(false);
     }).catch((error) => {
       StatusBar.setNetworkActivityIndicatorVisible(false);
@@ -41,32 +41,16 @@ export default class Leaderboard extends Component {
     });
   }
 
-  setPlayers(players) {
+  setDataState(players, scoringEvent) {
     const dataSource = this.state.dataSource.cloneWithRows(players);
-    this.setState({dataSource});
+    this.setState({dataSource, scoringEvent});
   }
 
   render() {
-    const { dispatch, scoringEvent } = this.props;
-    const { dataSource } = this.state;
+    const { dispatch } = this.props;
+    const { dataSource, scoringEvent } = this.state;
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
-    const leftButton = (
-        <Icon
-          style={[styles.headerBtn, styles.leftBtn]}
-          name="cog"
-          size={20}
-          onPress={() => dispatch({ type: 'openProfile' })}
-        />
-    );
-    const rightButton = (
-      <Icon
-        style={[styles.headerBtn, styles.rightBtn]}
-        name="calendar-o"
-        size={20}
-        onPress={() => dispatch({ type: 'openEvents' })}
-      />
-    );
 
     let eventBanner;
     if(scoringEvent) {
@@ -101,9 +85,7 @@ export default class Leaderboard extends Component {
         <NavigationBar
           style={styles.header}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
-          title={titleConfig}
-          leftButton={leftButton}
-          rightButton={rightButton} />
+          title={titleConfig}/>
 
           {eventBanner}
           {leaderboard}

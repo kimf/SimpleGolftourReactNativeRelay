@@ -34,6 +34,16 @@ export default StyleSheet.create({
     paddingBottom: 10,
     marginTop: 10,
   },
+  formRow: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: '#cecece',
+    flexDirection: 'column',
+    paddingBottom: 20,
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingBottom: 10,
+    marginTop: 10,
+  },
   inlineBtn: {
     marginTop: 10,
     padding: 10,
@@ -138,13 +148,15 @@ export default StyleSheet.create({
     height: 50
   },
   radio: {
-    padding: 10
+    flex: 1,
+    flexDirection: 'column',
+    padding: 10,
   },
   selectedDate: {
+    paddingTop: 5,
+    paddingBottom: 5,
     marginTop: 5,
-    marginLeft: 10,
-    color: '#222',
-    fontSize: 14,
+    marginLeft: 10
   },
   datePickerContainer: {
     backgroundColor: '#fff',
@@ -248,7 +260,8 @@ export default StyleSheet.create({
   todayBtn: {
     backgroundColor: 'green',
     marginTop: 10,
-    padding: 5,
+    padding: 10,
+    marginBottom: 10,
     color: '#fff',
     textAlign: 'center',
   },
@@ -359,5 +372,10 @@ export default StyleSheet.create({
   },
   largeText: {
     fontSize: 28
+  },
+  formColumn: {
+    flex: 1,
+    paddingLeft: 10,
+    paddingRight: 10
   }
 });

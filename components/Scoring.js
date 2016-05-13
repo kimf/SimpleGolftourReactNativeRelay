@@ -3,10 +3,10 @@
 import React, {Component} from "react";
 import {NavigationExperimental, Text, View} from "react-native";;
 
-import EventSetup from '../components/Scoring/EventSetup';
-import EventPlayerSetup from '../components/Scoring/EventPlayerSetup';
-import ScoreEvent from '../components/Scoring/ScoreEvent';
-import ChoosePlayer from '../components/Scoring/ChoosePlayer';
+import EventSetup from './components/Scoring/EventSetup';
+import EventPlayerSetup from './components/Scoring/EventPlayerSetup';
+import ScoreEvent from './components/Scoring/ScoreEvent';
+import ChoosePlayer from './components/Scoring/ChoosePlayer';
 
 import realm from '../realm'
 import ScoringReducer from '../lib/ScoringReducer';

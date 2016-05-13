@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {AsyncStorage, Dimensions, StatusBar, Text, View, Image} from "react-native";
+import {Dimensions, StatusBar, Text, View, Image} from "react-native";
 
 import realm from '../realm';
 import { fetchClubs, fetchEvents, fetchPlayers } from '../lib/ApiService';
@@ -18,7 +18,9 @@ export default class DataSyncer extends Component {
     this.syncedItems.push(what);
     if(this.syncedItems.sort().toString() === 'clubs,events,players') {
       StatusBar.setNetworkActivityIndicatorVisible(false);
-      AsyncStorage.setItem('syncedTimestamp', `${new Date().getTime()}`)
+      realm.write(() => {
+        this.props.currentUser.syncedTimestamp = `${new Date().getTime()}`;
+      })
       this.props.onDone();
     }
   }
@@ -39,7 +41,7 @@ export default class DataSyncer extends Component {
   }
 
   syncPlayers() {
-    fetchPlayers(this.props.sessionToken).then((players) => {
+    fetchPlayers(this.props.currentUser.sessionToken).then((players) => {
       this.setSyncedItem('players');
     }).catch((error) => {
       this.setSyncedItem('players');
@@ -48,7 +50,7 @@ export default class DataSyncer extends Component {
   }
 
   syncEvents() {
-    fetchEvents(this.props.sessionToken).then((players) => {
+    fetchEvents(this.props.currentUser.sessionToken).then((players) => {
       this.setSyncedItem('events');
     }).catch((error) => {
       this.setSyncedItem('events');
@@ -59,7 +61,7 @@ export default class DataSyncer extends Component {
   syncClubs() {
     fetchClubs().then(() => {
       this.setSyncedItem('clubs');
-      this.syncEvents(this.props.sessionToken);
+      this.syncEvents(this.props.currentUser.sessionToken);
     }).catch((error) => {
       this.setSyncedItem('clubs');
       console.log('Error retreiving clubs', error);

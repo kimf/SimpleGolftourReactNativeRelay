@@ -5,9 +5,9 @@ import {AppRegistry} from "react-native";
 
 import wrapper from './wrapper'
 
-// console.ignoredYellowBox = [
-//   // FIXME: https://github.com/facebook/react-native/issues/1501
-//   'Warning: ScrollView doesn\'t take rejection well - scrolls anyway',
-// ];
+console.ignoredYellowBox = [
+'Warning: Failed propType: Invalid prop `date` of type `Number` supplied to `RCTDatePicker`',
+'Warning: Failed propType: Required prop `onDateChange` was not specified in `RCTDatePicker`'
+];
 
 AppRegistry.registerComponent('SimpleGolftour', () => wrapper);

@@ -3,6 +3,19 @@
 import Realm from 'realm';
 import sumBy from 'lodash.sumby';
 
+class CurrentUser {}
+CurrentUser.schema = {
+  name: 'CurrentUser',
+  primaryKey: 'id',
+  properties: {
+    id: 'int',
+    isLoggedIn: 'bool',
+    sessionToken: 'string',
+    email: 'string',
+    name: 'string'
+  }
+}
+
 
 class Hole {}
 Hole.schema = {
@@ -102,7 +115,6 @@ Event.schema = {
     id: 'int',
     startsAt: { type: 'date', indexed: true },
     status: { type: 'string', indexed: true },
-    gametype: 'string',
     scoringType: 'string',
     teamEvent: { type: 'bool', default:  false },
     isScoring: { type: 'bool', default: false },
@@ -130,6 +142,6 @@ Player.schema = {
 }
 
 export default new Realm({
-  schema: [Club, Course, Hole, Event, Player, EventPlayer, EventTeam, EventScore],
-  schemaVersion: 13
+  schema: [Club, Course, Hole, Event, Player, EventPlayer, EventTeam, EventScore, CurrentUser],
+  schemaVersion: 14
 });

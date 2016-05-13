@@ -3,29 +3,23 @@
 import React, { Component } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
-import styles from '../../styles';
+import styles from '../styles';
 
 import NavigationBar from 'react-native-navbar';
 
 export default class Profile extends Component {
   render() {
-    const { currentUser, onLogout, dispatch } = this.props;
+    const { currentUser, onLogout } = this.props;
     const titleConfig = { title: currentUser.name, tintColor: 'white'  };
-    const leftButtonConfig = {
-      title: 'Stäng',
-      handler: () => dispatch({ type: 'back' }),
-      tintColor: 'white'
-    };
+
     return(
       <View style={styles.container}>
         <NavigationBar
           style={styles.header}
           title={titleConfig}
-          statusBar={{style: 'light-content', tintColor: '#477dca'}}
-          leftButton={leftButtonConfig} />
+          statusBar={{style: 'light-content', tintColor: '#477dca'}} />
 
-          <ScrollView></ScrollView>
-          <TouchableOpacity onPress={onLogout} style={styles.btn}>
+          <TouchableOpacity onPress={onLogout} style={[styles.btn, styles.danger]}>
             <Text style={styles.btnLabel}> LOGGA UT </Text>
           </TouchableOpacity>
       </View>

@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {AsyncStorage, Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
 
 import { apiUrl } from '../lib/ApiService';
+import realm from '../realm';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
@@ -9,8 +10,9 @@ const height = Dimensions.get('window').height;
 export default class Login extends Component {
   constructor(props){
     super(props);
-    const userData = props.userData;
-    const email = userData ? userData.email : '';
+    const currentUser = props.currentUser;
+    const email = currentUser ? currentUser.email : '';
+
     this.state = {
       loginError: false,
       email: email,
@@ -35,9 +37,6 @@ export default class Login extends Component {
       })
     })
     .then((response) => {
-      if (response.status >= 400) {
-        AsyncStorage.removeItem('userData')
-      }
       return response.json()
     })
     .then((user) => {
@@ -45,7 +44,15 @@ export default class Login extends Component {
         this.setState({ loginError: true });
       } else if (user.session_token && user.session_token !== '') {
         user.isLoggedIn = true;
-        AsyncStorage.setItem('userData', JSON.stringify(user));
+        realm.write(() => {
+          realm.create('CurrentUser', {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            sessionToken: user.session_token,
+            isLoggedIn: true
+          }, true);
+        })
         this.props.onLogin();
       }
     }).catch((error) => {

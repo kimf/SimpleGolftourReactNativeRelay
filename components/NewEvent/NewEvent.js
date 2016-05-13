@@ -1,159 +1,106 @@
 import React, {Component} from "react";
-import {DatePickerIOS, SegmentedControlIOS, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {
+  Switch, DatePickerIOS, Text, TouchableOpacity, View, StyleSheet
+} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
-import Radio, { RadioButton } from 'react-native-simple-radio-button';
 import moment from 'moment';
 
 import styles from '../../styles';
 import realm from '../../realm';
-import { apiUrl } from '../../lib/ApiService';
+import { saveEvent } from '../../lib/ApiService';
 
 export default class NewEvent extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      selectedIndex: 0,
-      scoring_type: 'points',
-      gametype: 'Stableford',
+      teamEvent: false,
+      scoringType: 'points',
       date: new Date(),
       timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60
     };
 
     this.onSubmit = this.onSubmit.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
+    this.close = this.close.bind(this);
   }
 
   onSubmit(){
-    const { scoring_type, gametype, selectedIndex, date } = this.state;
-    const { course, appDispatch, sessionToken } = this.props;
-    const team_event = selectedIndex === 1;
+    const { isStrokes, teamEvent, date } = this.state;
+    const { course, sessionToken, navigator } = this.props;
 
-    const url = apiUrl + '/events';
-    const starts_at = date;
-
-    fetch(url, {
-      method: 'POST',
-      crossOrigin: true,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Token token=${sessionToken}`
-      },
-      body: JSON.stringify({
-        course: course.name, course_id: course.id, starts_at, scoring_type, gametype, team_event
-      })
-    })
-    .then((response) => {
-      return response.json()
-    })
-    .then((event) => {
-      const realmCourse = realm.objects('Course').filtered(`id == ${course.id}`)[0];
-      realm.write(() => {
-        realm.create('Event', {
-          id: event.id,
-          startsAt: moment(event.starts_at).toDate(),
-          status: event.status,
-          gametype: event.gametype,
-          scoringType: event.scoring_type,
-          teamEvent: event.team_event,
-          course: realmCourse
-        });
-      });
-      appDispatch({ type: 'back' });
+    const data = {course, date, isStrokes, teamEvent};
+    saveEvent(data, sessionToken).then(() => {
+      requestAnimationFrame(() => navigator.resetTo({ tab: 'events' }));
     }).catch((error) => {
-      alert('Kunde inte spara runda, Var god se över informationen');
-      console.log('Error retreiving data', error);
-    })
+      alert('Error....');
+      console.log('Error retreiving players', error);
+    });
   }
 
   onDateChange(date) {
     this.setState({date});
   }
 
+  close() {
+    const { navigator } = this.props;
+    if (navigator) {
+      requestAnimationFrame(() => navigator.pop());
+    }
+  }
+
   render() {
-    const { course, dispatch, appDispatch } = this.props;
-    const { selectedIndex, gametype, scoring_type, date, timeZoneOffsetInHours } = this.state;
+    const { course, navigator } = this.props;
+    const { teamEvent, isStrokes, date, timeZoneOffsetInHours } = this.state;
 
     const titleConfig = { title: 'Ny Runda', tintColor: 'white'  };
     const leftButtonConfig = {
-      title: '< Bakåt',
-      handler: () => appDispatch({ type: 'back' }),
+      title: '< Välj bana',
+      handler: this.close,
       tintColor: 'white'
     };
 
-    let teamGameType;
-    if(selectedIndex !== 0) {
-      teamGameType = (
-        <View style={styles.row}>
-          <Text style={styles.label}>Spelsätt</Text>
-          <TextInput
-            style={styles.inputField}
-            autoCapitalize="words"
-            selectTextOnFocus={true}
-            ref="gametype"
-            onChangeText={(gametype) => this.setState({gametype})}
-            value={gametype}
-          />
-        </View>
-      );
-    }
-
     return(
-      <View style={styles.container}>
+      <View style={[styles.container, {alignItems: 'stretch', flexDirection: 'column'}]}>
         <NavigationBar
           style={styles.header}
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
         />
+        <View style={styles.inlineHeader}>
+          <Text style={styles.centerText}>{course.name}</Text>
+        </View>
 
-        <SegmentedControlIOS
-          style={styles.segmentedcontrol}
-          values={['Individuellt', 'Lagtävling']}
-          selectedIndex={selectedIndex}
-          tintColor="#477dca"
-          onChange={(event) => {
-            this.setState({selectedIndex: event.nativeEvent.selectedSegmentIndex});
-          }}
-        />
+        <View style={[styles.formRow, {flexDirection: 'row'}]}>
+          <View style={[styles.formColumn, {borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#cecece'}]}>
+            <Text style={styles.label}>Lagtävling?</Text>
+            <Switch
+              onValueChange={(teamEvent) => this.setState({teamEvent})}
+              style={styles.selectedDate}
+              value={teamEvent} />
+          </View>
+          <View style={styles.formColumn}>
+            <Text style={styles.label}>Slaggolf?</Text>
+            <Switch
+              onValueChange={(isStrokes) => this.setState({isStrokes})}
+              style={styles.selectedDate}
+              value={isStrokes} />
+          </View>
+        </View>
 
-        <Text style={styles.label}>Vilken bana</Text>
-        <TouchableOpacity onPress={() => dispatch({ type: 'selectCourse' })} style={styles.toggleDatePicker}>
-          <Text style={styles.selectedDate}>
-            { course ? course.name : 'Välj bana ->'}
-          </Text>
-        </TouchableOpacity>
-
-        <Text style={styles.label}>Starttid</Text>
-        <Text style={styles.selectedDate}>
-          { date ? moment(date).format('dddd Do MMMM, HH:mm') : 'Välj Starttid ->'}
-        </Text>
-        <DatePickerIOS
-          date={date}
-          mode="datetime"
-          timeZoneOffsetInMinutes={timeZoneOffsetInHours * 60}
-          onDateChange={this.onDateChange}
-        />
-
-        {teamGameType}
-
-        <View style={styles.row}>
-          <Text style={styles.label}>{selectedIndex === 0 ? 'Spelsätt' : 'Poängräkning'}</Text>
-          <Radio
-            style={styles.radio}
-            radio_props={[
-              {label: 'Poäng', value: 'points' },
-              {label: 'Slag', value: 'strokes' }
-            ]}
-            initial={0}
-            formHorizontal={true}
-            onPress={(scoring_type) => {this.setState({scoring_type})}}
+        <View style={styles.formRow}>
+          <Text style={styles.label}>Starttid</Text>
+          <DatePickerIOS
+            date={date}
+            mode="datetime"
+            timeZoneOffsetInMinutes={timeZoneOffsetInHours * 60}
+            onDateChange={this.onDateChange}
           />
         </View>
 
-        <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
+        <TouchableOpacity style={[styles.btn, styles.formRow]} onPress={this.onSubmit}>
           <Text style={styles.btnLabel}> SKAPA RUNDA </Text>
         </TouchableOpacity>
       </View>

@@ -7,19 +7,20 @@ import { ListView } from 'realm/react-native';
 
 import EventCard from './EventCard';
 
-import realm from '../../realm';
-import styles from '../../styles';
-import { fetchEvents } from '../../lib/ApiService';
+import realm from '../realm';
+import styles from '../styles';
+import { fetchEvents } from '../lib/ApiService';
 
 export default class Events extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = { dataSource: ds.cloneWithRows([]) };
+    this.openNewEvent = this.openNewEvent.bind(this);
   }
 
   componentWillMount() {
-    let events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt', true);
+    let events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt');
     this.setEvents(events);
     //this.refreshEvents(events);
   }
@@ -40,19 +41,18 @@ export default class Events extends Component {
     this.setState({dataSource});
   }
 
+  openNewEvent() {
+    this.props.navigator.push({setCourse: 1});
+  }
+
   render() {
     const { dispatch } = this.props;
     const { dataSource } = this.state;
 
     const titleConfig = { title: 'Rundor', tintColor: 'white'  };
-    const leftButtonConfig = {
-      title: '< Tillbaka',
-      handler: () => dispatch({ type: 'back' }),
-      tintColor: 'white'
-    };
     const rightButtonConfig = {
       title: '+ Ny',
-      handler: () => dispatch({ type: 'newEvent' }),
+      handler: this.openNewEvent,
       tintColor: 'white'
     };
 
@@ -62,7 +62,6 @@ export default class Events extends Component {
           style={styles.header}
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
-          leftButton={leftButtonConfig}
           rightButton={rightButtonConfig}
         />
 

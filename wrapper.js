@@ -1,20 +1,24 @@
 'use strict';
 import React, {Component} from "react";
-import {AsyncStorage} from "react-native";
+import { View, StatusBar } from "react-native";
 import moment from 'moment';
 
-import Default from './containers/Default';
-import Login from './containers/Login';
+import Login from './components/Login';
 import DataSyncer from './components/DataSyncer';
-
-import Events from './components/Default/Events';
+import SGTNavigator from './components/SGTNavigator'
+import Events from './components/Events';
 
 import realm from './realm';
+
+import {whyDidYouUpdate} from 'why-did-you-update'
+
+
+//if(__DEV__) { whyDidYouUpdate(React) }
 
 export default class Wrapper extends Component {
   constructor(props){
     super(props);
-    this.userData = false;
+    this.currentUser = null;
     this.state = { component: null };
     this.onLogin = this.checkUserCreds.bind(this);
     this.syncIsDone = this.goDefault.bind(this);
@@ -23,10 +27,10 @@ export default class Wrapper extends Component {
 
   componentWillMount() {
     this.checkUserCreds();
-    //this.clearAllData() //give true to clear userData as well
+    //this.clearAllData(true) //give true to clear userData as well
   }
 
-  clearAllData(userDataTo){
+  clearAllData(userDataTo = false){
     // ------------------------------------------------------------------------------
     // TMP - FOR CLEARING THINGS UP
     const eventPlayers = realm.objects('EventPlayer');
@@ -34,58 +38,53 @@ export default class Wrapper extends Component {
     const eventTeams = realm.objects('EventTeam');
     const events = realm.objects('Event');
     const players = realm.objects('Player');
+    const currentUser = realm.objects('CurrentUser')[0]
     realm.write(() => {
       realm.delete(eventPlayers);
       realm.delete(eventScores);
       realm.delete(eventTeams);
       realm.delete(events);
       realm.delete(players);
+      currentUser.syncedTimestamp = null;
+      if(userDataTo) {
+        currentUser.isLoggedIn = false;
+        currentUser.sessionToken = '';
+      }
     });
-    AsyncStorage.removeItem('syncedTimestamp');
-    if(userDataTo) {
-      AsyncStorage.removeItem('userData');
-    }
   }
 
   goDefault() {
-    this.setState({ component: 'Default', userData: this.userData })
+    this.setState({ component: 'Default' })
   }
 
   onLogout() {
-    AsyncStorage.getItem('userData', (err, result) => {
-      const oldData = JSON.parse(result);
-      this.userData  = { email: oldData.email };
-      AsyncStorage.setItem('userData', JSON.stringify(this.userData));
-      this.setState({ component: 'Login' });
-    });
+    realm.write(() => {
+      this.currentUser.isLoggedIn = false;
+      this.currentUser.sessionToken = '';
+    })
+    this.setState({ component: 'Login' });
   }
 
   checkUserCreds(synced = false) {
-    //AsyncStorage.removeItem('userData');
-    AsyncStorage.getItem('userData', (err, result) => {
-      let newData = JSON.parse(result);
-      if(newData && newData.isLoggedIn && newData.session_token) {
-        this.userData = newData;
+    this.currentUser = realm.objects('CurrentUser')[0]
 
-        AsyncStorage.getItem('syncedTimestamp', (err, result) => {
-          const syncedRecently = moment(parseInt(result)).isSame(Date.now(), 'day');
-          if(syncedRecently) {
-            this.setState({ component: 'Default' });
-          } else {
-            let clubs = realm.objects('Club');
-            let events = realm.objects('Event');
-            let players = realm.objects('Player');
-            if(clubs.length === 0 || events.length === 0 || players.length === 0) {
-              this.setState({ component: 'DataSyncer', needClubs: (clubs.length === 0) });
-            } else {
-              this.setState({ component: 'Default' });
-            }
-          }
-        });
+    if(this.currentUser && this.currentUser.isLoggedIn && this.currentUser.sessionToken) {
+      const syncedRecently = moment(parseInt(this.currentUser.syncedTimestamp)).isSame(Date.now(), 'day');
+      if(syncedRecently) {
+        this.setState({ component: 'Default' });
       } else {
-        this.setState({ component: 'Login' });
+        let clubs = realm.objects('Club');
+        let events = realm.objects('Event');
+        let players = realm.objects('Player');
+        if(clubs.length === 0 || events.length === 0 || players.length === 0) {
+          this.setState({ component: 'DataSyncer', needClubs: (clubs.length === 0) });
+        } else {
+          this.setState({ component: 'Default' });
+        }
       }
-    });
+    } else {
+      this.setState({ component: 'Login' });
+    }
   }
 
   render() {
@@ -93,17 +92,21 @@ export default class Wrapper extends Component {
 
     if(component === 'DataSyncer') {
       return (
-        <DataSyncer onDone={this.syncIsDone} needClubs={needClubs} sessionToken={this.userData.session_token}/>
+        <DataSyncer onDone={this.syncIsDone} needClubs={needClubs} currentUser={this.currentUser}/>
       );
     } else if(component === 'Default') {
       return (
-        <Default
-          onLogout={this.onLogout}
-          currentUser={this.userData}
-        />
+        <View style={{ backgroundColor: '#fff', alignItems: 'stretch', flex: 1 }}>
+          <StatusBar
+            translucent={true}
+            backgroundColor="#477dca"
+            barStyle="light-content"
+           />
+          <SGTNavigator currentUser={this.currentUser} onLogout={this.onLogout}/>
+        </View>
       );
     } else if(component === 'Login') {
-      return <Login onLogin={this.onLogin} userData={this.userData} />;
+      return <Login onLogin={this.onLogin} currentUser={this.currentUser} />;
     } else {
       return null;
     }
