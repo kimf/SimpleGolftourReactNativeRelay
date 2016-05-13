@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, Text, StyleSheet} from "react-native";
+import {View, Text} from "react-native";
 import ScoringRow from './ScoringRow';
 import styles from '../../styles';
 import realm from '../../realm';
@@ -9,19 +9,14 @@ export default class HoleView extends Component {
     super(props);
   }
   render(){
-    const { event, hole, showScorecard } = this.props;
-
-    let headerText = ''
-    if(showScorecard) {
-      headerText = 'VISAR SCOREKORT';
-    } else {
-      headerText = `Hål ${hole.number} - Par ${hole.par} - Index: ${hole.index}`;
-    }
+    const { event, hole } = this.props;
 
     return(
       <View style={styles.hole} >
-        <View style={[styles.inlineHeader, {backgroundColor: showScorecard ? '#c00' : '#eee'}]}>
-          <Text style={styles.holeHeaderText}>{headerText}</Text>
+        <View style={[styles.inlineHeader, {backgroundColor: '#777'}]}>
+          <Text style={[styles.holeHeaderText, {color: '#eee'}]}>
+            {`Hål ${hole.number} - Par ${hole.par} - Index: ${hole.index}`}
+          </Text>
         </View>
 
         <View style={styles.scoreHeaderRow}>
@@ -39,8 +34,7 @@ export default class HoleView extends Component {
               holeNr={hole.number}
               par={hole.par}
               index={hole.index}
-              showScorecard={showScorecard}
-              key={`player_scorecard_row_${player.id}`}
+              key={`player_scoring_row_${player.id}`}
             />
           )
         })}

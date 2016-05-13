@@ -11,6 +11,7 @@ import EventSetup from '../components/Scoring/EventSetup';
 import ChoosePlayer from '../components/Scoring/ChoosePlayer';
 import EventPlayerSetup from '../components/Scoring/EventPlayerSetup';
 import ScoreEvent from '../components/Scoring/ScoreEvent';
+import Scorecard from '../components/Scoring/Scorecard';
 
 function TabReducer(lastState, action) {
   let state = lastState;
@@ -43,7 +44,7 @@ export default class SGTNavigator extends Component {
         ref="navigator"
         style={{flex: 1, backgroundColor: 'black'}}
         configureScene={(route) => {
-          if (route.newEvent || route.selectPlayer || route.setupEventPlayer) {
+          if (route.newEvent || route.selectPlayer || route.setupEventPlayer || route.showScorecard) {
              return Navigator.SceneConfigs.FloatFromRight;
            } else {
              return Navigator.SceneConfigs.FloatFromBottom;
@@ -60,8 +61,14 @@ export default class SGTNavigator extends Component {
 
     console.log(route);
 
+    if (route.showScorecard) {
+      return <Scorecard
+                event={route.event}
+                navigator={navigator} />
+    }
+
     if (route.scoreEvent) {
-      return  <ScoreEvent
+      return <ScoreEvent
                 event={route.event}
                 sessionToken={currentUser.sessionToken}
                 navigator={navigator} />
@@ -69,23 +76,23 @@ export default class SGTNavigator extends Component {
 
     if (route.setupEventPlayer) {
       return <EventPlayerSetup
-              event={route.event}
-              player={route.player}
-              navigator={navigator}
-              needsSaving={route.needsSaving} />
+                event={route.event}
+                player={route.player}
+                navigator={navigator}
+                needsSaving={route.needsSaving} />
     }
 
     if (route.selectPlayer) {
       return <ChoosePlayer
-              event={route.event}
-              navigator={navigator} />
+                event={route.event}
+                navigator={navigator} />
     }
 
     if (route.setupEvent) {
       return <EventSetup
-              event={route.event}
-              navigator={navigator}
-              currentUserId={currentUser.id} />
+                event={route.event}
+                navigator={navigator}
+                currentUserId={currentUser.id} />
     }
 
     if (route.setCourse) {

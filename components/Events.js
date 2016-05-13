@@ -23,13 +23,13 @@ export default class Events extends Component {
   componentWillMount() {
     let events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt');
     this.setEvents(events);
-    //this.refreshEvents(events);
+    this.refreshEvents(events);
   }
 
   refreshEvents(events) {
     StatusBar.setNetworkActivityIndicatorVisible(true);
-    fetchEvents(this.props.sessionToken).then((players) => {
-      this.setEvents(players);
+    fetchEvents(this.props.sessionToken).then((events) => {
+      this.setEvents(events);
       StatusBar.setNetworkActivityIndicatorVisible(false);
     }).catch((error) => {
       StatusBar.setNetworkActivityIndicatorVisible(false);

@@ -4,7 +4,6 @@ import {
 } from "react-native";
 
 import NavigationBar from 'react-native-navbar';
-import SwipeableViews from 'react-swipeable-views/lib/index.native.animated';
 import moment from 'moment';
 
 import HoleView from './HoleView';
@@ -19,8 +18,6 @@ export default class ScoreEvent extends Component {
     super(props);
     this.state = { hole: null };
     this.changeHole = this.changeHole.bind(this);
-    this.cancelScoring = this.cancelScoring.bind(this);
-    this.reallyCancelScoring = this.reallyCancelScoring.bind(this);
     this.saveRound = this.saveRound.bind(this);
   }
 
@@ -72,7 +69,8 @@ export default class ScoreEvent extends Component {
         realm.create('Event', {
           id: event.id,
           status: event.status,
-          isScoring: false
+          isScoring: false,
+          currentHole: 0
         }, true);
       });
       requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
@@ -82,33 +80,6 @@ export default class ScoreEvent extends Component {
       alert('Kunde inte spara runda, Var god se över informationen');
       console.log('Error retreiving data', error);
     })
-  }
-
-  cancelScoring() {
-    Alert.alert(
-      'Avsluta rundan?',
-      'Är du riktigt säker?',
-      [
-        {text: 'NEJ', onPress: () => console.log('Cancel'), style: 'cancel'},
-        {text: 'JARÅ', onPress: () => this.reallyCancelScoring()},
-      ]
-    )
-  }
-
-  reallyCancelScoring() {
-    const { event, navigator } = this.props;
-
-    realm.write(() => {
-      for (let player of event.eventPlayers) {
-        realm.delete(player.eventScores);
-      }
-      realm.delete(event.eventPlayers);
-      event.isScoring = false;
-      event.currentHole = 0;
-      event.eventPlayers = [];
-    });
-
-    requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
   }
 
   componentWillMount() {
@@ -125,19 +96,24 @@ export default class ScoreEvent extends Component {
        event.currentHole = newHoleNr;
     });
     const hole = event.course.holes.find(h => h.number === newHoleNr);
-    this.setState({ showScorecard: false, hole });
+    this.setState({ hole });
   }
 
   render() {
-    const { event } = this.props;
-    const { hole, showScorecard } = this.state;
+    const { event, navigator } = this.props;
+    const { hole } = this.state;
 
     const titleConfig = { title: event.course.name, tintColor: 'white'  };
+    const rightButtonConfig = {
+      title: 'Scorekort',
+      handler: () => requestAnimationFrame(() => navigator.push({showScorecard: 1, event})),
+      tintColor: 'white'
+    };
 
     if(hole) {
 
-      let prevHole = <View />;
-      if(!showScorecard && hole.number > 1) {
+      let prevHole;
+      if(hole.number > 1) {
         const newHoleNr = hole.number -1;
         prevHole = (
           <TouchableOpacity
@@ -149,7 +125,7 @@ export default class ScoreEvent extends Component {
       }
 
       let nextHole;
-      if(!showScorecard && hole.number !== event.course.holes_count) {
+      if(hole.number !== event.course.holes_count) {
         const newHoleNr = hole.number + 1;
         nextHole = (
           <TouchableOpacity
@@ -158,42 +134,12 @@ export default class ScoreEvent extends Component {
             <Text style={styles.holeSwitchButtonLabel}>HÅL {newHoleNr} →</Text>
           </TouchableOpacity>
         );
-      } else if(!showScorecard && hole.number === event.course.holes_count) {
+      } else if(hole.number === event.course.holes_count) {
         nextHole = (
           <TouchableOpacity
             style={[styles.holeSwitchButton, {backgroundColor: 'green'}]}
             onPress={() => this.saveRound()}>
-            <Text style={styles.holeSwitchButtonLabel}>SPARA RUNDA</Text>
-          </TouchableOpacity>
-        );
-      }
-
-      let scorecardBtn;
-      if(showScorecard) {
-        scorecardBtn = (
-          <TouchableOpacity
-            style={styles.scorecardButton}
-            onPress={() => this.setState({ showScorecard: false })}>
-            <Text style={styles.scorecardButtonLabel}>DÖLJ SCOREKORT</Text>
-          </TouchableOpacity>
-        );
-      } else {
-        scorecardBtn = (
-          <TouchableOpacity
-            style={styles.scorecardButton}
-            onPress={() => this.setState({ showScorecard: true })}>
-            <Text style={styles.scorecardButtonLabel}>VISA SCOREKORT</Text>
-          </TouchableOpacity>
-        );
-      }
-
-      let cancelRndBtn;
-      if(showScorecard) {
-        cancelRndBtn = (
-          <TouchableOpacity
-            style={[styles.scorecardButton, {backgroundColor: 'red'}]}
-            onPress={this.cancelScoring}>
-            <Text style={styles.btnLabel}>AVSLUTA RUNDA</Text>
+            <Text style={[styles.holeSwitchButtonLabel, {color: '#fff'}]}>SPARA RUNDA</Text>
           </TouchableOpacity>
         );
       }
@@ -203,20 +149,18 @@ export default class ScoreEvent extends Component {
           <NavigationBar
             style={styles.header}
             title={titleConfig}
-            statusBar={{style: 'light-content', tintColor: '#477dca'}} />
+            statusBar={{style: 'light-content', tintColor: '#477dca'}}
+            rightButton={rightButtonConfig} />
 
 
           <HoleView
             style={{flex: 1}}
             key={`hole_view_${hole.id}`}
             hole={hole}
-            event={event}
-            showScorecard={showScorecard} />
+            event={event} />
 
           <View style={styles.bottomBar}>
             {prevHole}
-            {scorecardBtn}
-            {cancelRndBtn}
             {nextHole}
           </View>
         </View>

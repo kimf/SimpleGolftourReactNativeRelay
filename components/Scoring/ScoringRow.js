@@ -79,17 +79,17 @@ export default class ScoringRow extends Component {
 
 
   render() {
-    const { player, showScorecard } = this.props;
+    const { player } = this.props;
     const { isScoring, eventScore } = this.state;
     const isScored = eventScore.isScored;
 
     let resultsRow;
-    if(isScored)     {
+    if(isScored) {
       resultsRow = (
         <View style={{flexDirection: 'row'}}>
-          <Text style={[styles.scoreHeader, styles.largeText]}>{showScorecard ? player.totalStrokes : eventScore.strokes}</Text>
-          <Text style={[styles.scoreHeader, styles.largeText]}>{showScorecard ? player.totalPutts :eventScore.putts}</Text>
-          <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{showScorecard ? player.totalPoints :eventScore.points}</Text>
+          <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.strokes}</Text>
+          <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.putts}</Text>
+          <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{eventScore.points}</Text>
         </View>
       );
     } else {

@@ -296,6 +296,16 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
+  aboveBottomBarBar: {
+    height: 50,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    backgroundColor: '#eee',
+    position: 'absolute',
+    bottom: 50,
+    left: 0,
+    right: 0,
+  },
   bottomBar: {
     height: 50,
     flexDirection: 'row',

@@ -27,7 +27,7 @@ export default class Leaderboard extends Component {
     let players = realm.objects('Player').filtered('eventCount > 1').sorted('position');
     const scoringEvent = realm.objects('Event').find(event => event.isScoring);
     this.setDataState(players, scoringEvent);
-    //this.reloadLeaderboard(players);
+    this.reloadLeaderboard(players);
   }
 
   reloadLeaderboard(players) {
