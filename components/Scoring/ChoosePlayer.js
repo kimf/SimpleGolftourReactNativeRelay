@@ -15,20 +15,20 @@ export default class ChoosePlayer extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { event, navigator } = this.props;
     const { players } = this.state;
 
     const titleConfig = { title: 'Välj Spelare', tintColor: 'white'  };
     const leftButtonConfig = {
-      title: '< Bakåt',
-      handler: () => dispatch({ type: 'back' }),
+      title: '< Scora',
+      handler: () => requestAnimationFrame(() => navigator.pop()),
       tintColor: 'white'
     };
-    const rightButtonConfig = {
-      title: '+ Ny',
-      handler: () => dispatch({ type: 'newPlayer' }),
-      tintColor: 'white'
-    };
+    // const rightButtonConfig = {
+    //   title: '+ Ny',
+    //   handler: () => requestAnimationFrame(() => navigator.push()),
+    //   tintColor: 'white'
+    // };
 
     return(
       <View style={styles.container}>
@@ -37,15 +37,18 @@ export default class ChoosePlayer extends Component {
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
-          rightButton={rightButtonConfig}
         />
         <ScrollView>
           {players.map((player) => {
+            if(event.eventPlayers.find((p) => p.id === player.id)){
+              return null
+            }
+
             return (
               <TouchableOpacity
                 key={`choose_player_row_${player.id}`}
                 style={styles.card}
-                onPress={() => dispatch({ type: 'setupEventPlayer', needsSaving: true, player })}>
+                onPress={() => navigator.push({ setupEventPlayer: 1, needsSaving: true, player, event })}>
                 <Text style={[styles.flexOne]}>
                   {player.name}
                 </Text>

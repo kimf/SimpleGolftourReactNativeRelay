@@ -28,26 +28,37 @@ export default class EventSetup extends Component {
     this.abort = this.abort.bind(this);
   }
 
+  goPlay() {
+    const { event, navigator } = this.props;
+    realm.write(() => {
+      event.isScoring = true
+      event.currentHole = 1
+    })
+    requestAnimationFrame(() => navigator.resetTo({ scoreEvent: 1, event: event }));
+  }
+
   abort() {
-    const { event, appDispatch } = this.props;
+    const { event, navigator } = this.props;
     realm.write(() => {
       realm.delete(event.eventPlayers);
     });
-    appDispatch({type: 'back'});
+    requestAnimationFrame(() => navigator.resetTo({ tab: 'events' }));
   }
 
   render() {
-    const { event, dispatch } = this.props;
-    const titleConfig = { title: 'Välj Spelare', tintColor: 'white'  };
+    const { event, navigator } = this.props;
+    const titleConfig = { title: 'Scora', tintColor: 'white'  };
     const leftButtonConfig = {
-      title: '< Bakåt',
+      title: 'Avbryt',
       handler: () => this.abort(),
       tintColor: 'white'
     };
 
     const newPlayer = (
       <View style={[styles.card, {justifyContent: 'flex-end', borderBottomWidth: 0}]}>
-        <TouchableOpacity style={[styles.inlineButton]} onPress={() => dispatch({ type: 'choosePlayer' })}>
+        <TouchableOpacity
+          style={[styles.inlineButton]}
+          onPress={() => navigator.push({selectPlayer: 1, event: event})}>
           <Text style={styles.centerText}>LÄGG TILL SPELARE</Text>
         </TouchableOpacity>
       </View>
@@ -72,7 +83,7 @@ export default class EventSetup extends Component {
               <TouchableOpacity
                 key={`setup_player_row_${player.id}`}
                 style={[styles.card, styles.playerRow]}
-                onPress={() => dispatch({ type: 'setupEventPlayer', player })}>
+                onPress={() => navigator.push({ setupEventPlayer: 1, player, event })}>
                 <Text style={[styles.flexOne]}>
                   {player.name}
                 </Text>
@@ -86,7 +97,7 @@ export default class EventSetup extends Component {
 
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => dispatch({ type: 'scoreEvent', event: event })}>
+          onPress={() => this.goPlay()}>
           <Text style={styles.btnLabel}>STARTA RUNDA</Text>
         </TouchableOpacity>
       </View>

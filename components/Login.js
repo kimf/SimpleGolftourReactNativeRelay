@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {AsyncStorage, Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
+import {Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
 
 import { apiUrl } from '../lib/ApiService';
 import realm from '../realm';

@@ -9,7 +9,7 @@ import styles from '../styles';
 
 export default class EventCard extends Component {
   render() {
-    const { setupEvent } = this.props;
+    const { event, setupEvent } = this.props;
 
     const btnStyle = moment(event.startsAt).isSame(Date.now(), 'day')
                      ? styles.todayBtn
@@ -21,7 +21,7 @@ export default class EventCard extends Component {
         <Text>Course: {event.course ? event.course.name : 'No Course set'}</Text>
         <Text>Scoring: {event.scoringType}</Text>
         <Text>{event.teamEvent ? 'Team Event' : 'Individual Event'}</Text>
-        <TouchableOpacity onPress={setupEvent}>
+        <TouchableOpacity onPress={() => setupEvent(event)}>
           <Text style={btnStyle}>
             {event.status === 'planned' ? 'SCORA' : 'REDIGERA'}
           </Text>

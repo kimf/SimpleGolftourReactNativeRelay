@@ -7,6 +7,11 @@ import SGTTabsView from './SGTTabsView';
 import NewEvent from '../components/NewEvent/NewEvent';
 import SetCourse from '../components/NewEvent/SetCourse';
 
+import EventSetup from '../components/Scoring/EventSetup';
+import ChoosePlayer from '../components/Scoring/ChoosePlayer';
+import EventPlayerSetup from '../components/Scoring/EventPlayerSetup';
+import ScoreEvent from '../components/Scoring/ScoreEvent';
+
 function TabReducer(lastState, action) {
   let state = lastState;
 
@@ -38,7 +43,7 @@ export default class SGTNavigator extends Component {
         ref="navigator"
         style={{flex: 1, backgroundColor: 'black'}}
         configureScene={(route) => {
-          if (route.setupEvent || route.newEvent) {
+          if (route.newEvent || route.selectPlayer || route.setupEventPlayer) {
              return Navigator.SceneConfigs.FloatFromRight;
            } else {
              return Navigator.SceneConfigs.FloatFromBottom;
@@ -54,6 +59,34 @@ export default class SGTNavigator extends Component {
     const { currentUser, onLogout } = this.props;
 
     console.log(route);
+
+    if (route.scoreEvent) {
+      return  <ScoreEvent
+                event={route.event}
+                sessionToken={currentUser.sessionToken}
+                navigator={navigator} />
+    }
+
+    if (route.setupEventPlayer) {
+      return <EventPlayerSetup
+              event={route.event}
+              player={route.player}
+              navigator={navigator}
+              needsSaving={route.needsSaving} />
+    }
+
+    if (route.selectPlayer) {
+      return <ChoosePlayer
+              event={route.event}
+              navigator={navigator} />
+    }
+
+    if (route.setupEvent) {
+      return <EventSetup
+              event={route.event}
+              navigator={navigator}
+              currentUserId={currentUser.id} />
+    }
 
     if (route.setCourse) {
       return <SetCourse navigator={navigator} />;

@@ -73,7 +73,6 @@ export default class SetCourse extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
     const { dataSource, query } = this.state;
 
     const titleConfig = { title: 'Välj Bana', tintColor: 'white'  };

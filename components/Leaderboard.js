@@ -47,7 +47,7 @@ export default class Leaderboard extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
+    const { navigator } = this.props;
     const { dataSource, scoringEvent } = this.state;
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
@@ -57,7 +57,7 @@ export default class Leaderboard extends Component {
       eventBanner = (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => dispatch({ type: 'setupEvent', event: scoringEvent })}>
+          onPress={() => navigator.push({ scoreEvent: 1, event: scoringEvent })}>
           <Text style={styles.btnLabel}>ÅTERUPPTA SCOREFÖRING</Text>
         </TouchableOpacity>
       );

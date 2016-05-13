@@ -51,7 +51,6 @@ export default class Events extends Component {
   }
 
   render() {
-    const { dispatch } = this.props;
     const { dataSource } = this.state;
 
     const titleConfig = { title: 'Rundor', tintColor: 'white'  };
@@ -74,7 +73,7 @@ export default class Events extends Component {
           enableEmptySections
           dataSource={dataSource}
           renderRow={
-            (rowData) => <EventCard event={rowData} dispatch={dispatch} setupEvent={this.setupEvent(rowData)}/>
+            (rowData) => <EventCard event={rowData} setupEvent={this.setupEvent}/>
           }
         />
       </View>

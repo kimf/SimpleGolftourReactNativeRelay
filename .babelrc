@@ -3,13 +3,15 @@
     "development": {
       "passPerPreset": true,
       "presets": [
-        "react-native", "stage-0", "es2015", "react-optimize"
+        "react-native-stage-0",
+        "react-optimize"
       ]
     },
     "production": {
       "passPerPreset": true,
       "presets": [
-        "react-native", "stage-0", "es2015", "react-optimize"
+        "react-native-stage-0",
+        "react-optimize"
       ]
     }
   }

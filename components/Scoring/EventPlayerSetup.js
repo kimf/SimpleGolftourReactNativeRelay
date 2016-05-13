@@ -11,11 +11,11 @@ import realm from '../../realm';
 export default class EventPlayerSetup extends Component {
   constructor(props) {
     super(props);
-    this.state = {strokes: (props.player.strokes || '') };
+    this.state = {strokes: (props.player.strokes || 0) };
   }
 
-  goBack() {
-    const { event, needsSaving, player, dispatch } = this.props;
+  confirm() {
+    const { event, needsSaving, player, navigator } = this.props;
     const strokes = parseInt(this.state.strokes);
 
     realm.write(() => {
@@ -30,23 +30,23 @@ export default class EventPlayerSetup extends Component {
         player.strokes = strokes;
       }
     });
-    dispatch({ type: 'eventPlayerWasSetup' });
+    requestAnimationFrame(() => navigator.resetTo({ setupEvent: 1, event: event }));
   }
 
   render() {
-    const { player, dispatch } = this.props;
+    const { player, navigator } = this.props;
     const { strokes } = this.state;
 
     const titleConfig = { title: 'Kolla Antal slag', tintColor: 'white'  };
     const leftButtonConfig = {
-      title: '< Bakåt',
-      handler: () => dispatch({ type: 'back' }),
+      title: '< Tillbaka',
+      handler: () => requestAnimationFrame(() => navigator.pop()),
       tintColor: 'white'
     };
 
     const rightButtonConfig = {
       title: '✓ OK',
-      handler: () => this.goBack(),
+      handler: () => this.confirm(),
       tintColor: 'white'
     };
 

@@ -30,9 +30,9 @@ export default class Wrapper extends Component {
     //this.clearAllData(true) //give true to clear userData as well
   }
 
+  // ------------------------------------------------------------------------------
+  // TMP - FOR CLEARING THINGS UP
   clearAllData(userDataTo = false){
-    // ------------------------------------------------------------------------------
-    // TMP - FOR CLEARING THINGS UP
     const eventPlayers = realm.objects('EventPlayer');
     const eventScores = realm.objects('EventScore');
     const eventTeams = realm.objects('EventTeam');

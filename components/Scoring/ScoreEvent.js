@@ -25,7 +25,7 @@ export default class ScoreEvent extends Component {
   }
 
   saveRound() {
-    const { event, appDispatch, sessionToken } = this.props;
+    const { event, navigator, sessionToken } = this.props;
     const url = apiUrl + '/events/' + event.id;
 
     StatusBar.setNetworkActivityIndicatorVisible(true);
@@ -75,7 +75,7 @@ export default class ScoreEvent extends Component {
           isScoring: false
         }, true);
       });
-      appDispatch({ type: 'back' });
+      requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
       StatusBar.setNetworkActivityIndicatorVisible(false);
     }).catch((error) => {
       StatusBar.setNetworkActivityIndicatorVisible(false);
@@ -96,7 +96,7 @@ export default class ScoreEvent extends Component {
   }
 
   reallyCancelScoring() {
-    const { event, appDispatch } = this.props;
+    const { event, navigator } = this.props;
 
     realm.write(() => {
       for (let player of event.eventPlayers) {
@@ -108,17 +108,19 @@ export default class ScoreEvent extends Component {
       event.eventPlayers = [];
     });
 
-    appDispatch(false)
+    requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
   }
 
-  componentDidMount() {
+  componentWillMount() {
     const { event } = this.props
+    console.log(event.eventPlayers.length);
     const hole = event.course.holes.find(h => h.number === event.currentHole);
     this.setState({ hole });
   }
 
   changeHole(newHoleNr) {
     const { event } = this.props;
+    const oldHoleNr = event.currentHole;
     realm.write(() => {
        event.currentHole = newHoleNr;
     });
@@ -127,14 +129,14 @@ export default class ScoreEvent extends Component {
   }
 
   render() {
-    const { event, dispatch } = this.props;
+    const { event } = this.props;
     const { hole, showScorecard } = this.state;
 
     const titleConfig = { title: event.course.name, tintColor: 'white'  };
 
     if(hole) {
 
-      let prevHole;
+      let prevHole = <View />;
       if(!showScorecard && hole.number > 1) {
         const newHoleNr = hole.number -1;
         prevHole = (

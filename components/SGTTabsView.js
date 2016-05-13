@@ -37,7 +37,7 @@ export default class SGTTabsView extends Component {
           onPress={() => this.onTabSelect('leaderboard')}
           iconSize={20}
           iconName="list-ol">
-          <Leaderboard sessionToken={currentUser.sessionToken} />
+          <Leaderboard sessionToken={currentUser.sessionToken} navigator={navigator}/>
         </TabBarItemIOS>
         <TabBarItemIOS
           title="Rundor"
