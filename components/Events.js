@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from "react";
-import {StatusBar, Text, View} from "react-native";
+import {StatusBar, Text, View, RefreshControl} from "react-native";
 import NavigationBar from 'react-native-navbar';
 import { ListView } from 'realm/react-native';
 
@@ -15,9 +15,10 @@ export default class Events extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = { dataSource: ds.cloneWithRows([]) };
+    this.state = { refreshing: false, dataSource: ds.cloneWithRows([]) };
     this.openNewEvent = this.openNewEvent.bind(this);
     this.setupEvent = this.setupEvent.bind(this);
+    this.refreshEvents = this.refreshEvents.bind(this);
   }
 
   componentWillMount() {
@@ -27,11 +28,13 @@ export default class Events extends Component {
   }
 
   refreshEvents(events) {
+    this.setState({refreshing: true});
     StatusBar.setNetworkActivityIndicatorVisible(true);
     fetchEvents(this.props.sessionToken).then((events) => {
       this.setEvents(events);
       StatusBar.setNetworkActivityIndicatorVisible(false);
     }).catch((error) => {
+      this.setState({refreshing: false});
       StatusBar.setNetworkActivityIndicatorVisible(false);
       console.log('Error retreiving data', error);
     });
@@ -39,7 +42,7 @@ export default class Events extends Component {
 
   setEvents(events) {
     const dataSource = this.state.dataSource.cloneWithRows(events);
-    this.setState({dataSource});
+    this.setState({refreshing: false, dataSource});
   }
 
   openNewEvent() {
@@ -51,7 +54,7 @@ export default class Events extends Component {
   }
 
   render() {
-    const { dataSource } = this.state;
+    const { dataSource, refreshing } = this.state;
 
     const titleConfig = { title: 'Rundor', tintColor: 'white'  };
     const rightButtonConfig = {
@@ -72,6 +75,16 @@ export default class Events extends Component {
         <ListView
           enableEmptySections
           dataSource={dataSource}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={this.refreshEvents}
+              tintColor="#477dca"
+              title="Uppdaterar..."
+              titleColor="#477dca"
+              progressBackgroundColor="#ffff00"
+            />
+          }
           renderRow={
             (rowData) => <EventCard event={rowData} setupEvent={this.setupEvent}/>
           }
