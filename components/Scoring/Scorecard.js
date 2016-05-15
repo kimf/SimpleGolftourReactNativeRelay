@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Alert, View, Text, TouchableOpacity} from "react-native";
+import {View, Text, TouchableOpacity} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 
@@ -11,35 +11,6 @@ import styles from '../../styles';
 export default class Scorecard extends Component {
   constructor(props) {
     super(props);
-    this.cancelScoring = this.cancelScoring.bind(this);
-    this.reallyCancelScoring = this.reallyCancelScoring.bind(this);
-  }
-
-  cancelScoring() {
-    Alert.alert(
-      'Avsluta rundan?',
-      'Är du riktigt säker?',
-      [
-        {text: 'NEJ', onPress: () => console.log('Cancel'), style: 'cancel'},
-        {text: 'JARÅ', onPress: () => this.reallyCancelScoring()},
-      ]
-    )
-  }
-
-  reallyCancelScoring() {
-    const { event, navigator } = this.props;
-
-    realm.write(() => {
-      for (let player of event.eventPlayers) {
-        realm.delete(player.eventScores);
-      }
-      realm.delete(event.eventPlayers);
-      event.isScoring = false;
-      event.currentHole = 0;
-      event.eventPlayers = [];
-    });
-
-    requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
   }
 
   render(){
@@ -85,14 +56,6 @@ export default class Scorecard extends Component {
               </View>
             )
           })}
-
-          <View style={styles.bottomBar}>
-            <TouchableOpacity
-              style={[styles.bottomBarBtn, styles.danger]}
-              onPress={this.cancelScoring}>
-                <Text style={styles.btnLabel}>AVSLUTA RUNDA</Text>
-            </TouchableOpacity>
-          </View>
       </View>
     )
   }

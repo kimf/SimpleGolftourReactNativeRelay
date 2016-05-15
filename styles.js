@@ -28,7 +28,7 @@ export default StyleSheet.create({
   inlineHeader: {
     paddingTop: 20,
     paddingBottom: 20,
-    backgroundColor: colors.cellBorder,
+    backgroundColor: '#feb',
   },
 
   listrow: {
@@ -353,8 +353,27 @@ export default StyleSheet.create({
     fontSize: 28
   },
 
+  drawer: {
+    shadowColor: '#000000',
+    shadowOpacity: 0.8,
+    shadowRadius: 3
+  },
+
   /* EVENT CARDS */
   eventCard: {
     flexDirection: 'column',
+  },
+
+  holePicker: {
+    flex: 1,
+    padding: 20,
+    height: 40,
+    marginBottom: 5,
+    backgroundColor: colors.actionText,
+  },
+
+  holePickerText: {
+    textAlign: 'center',
+    color: '#fff'
   }
 });

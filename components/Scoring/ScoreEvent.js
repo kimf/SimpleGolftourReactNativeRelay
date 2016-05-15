@@ -4,10 +4,13 @@ import {
 } from "react-native";
 
 import NavigationBar from 'react-native-navbar';
+import Drawer from 'react-native-drawer';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 
 import HoleView from './HoleView';
 import Loading from '../shared/Loading';
+import ControlPanel from './ControlPanel';
 
 import styles from '../../styles';
 import realm from '../../realm';
@@ -19,6 +22,10 @@ export default class ScoreEvent extends Component {
     this.state = { hole: null };
     this.changeHole = this.changeHole.bind(this);
     this.saveRound = this.saveRound.bind(this);
+  }
+
+  openControlPanel() {
+    this._drawer.open()
   }
 
   saveRound() {
@@ -95,6 +102,7 @@ export default class ScoreEvent extends Component {
        event.currentHole = newHoleNr;
     });
     const hole = event.course.holes.find(h => h.number === newHoleNr);
+    this._drawer.close();
     this.setState({ hole });
   }
 
@@ -104,10 +112,15 @@ export default class ScoreEvent extends Component {
 
     const titleConfig = { title: event.course.name, tintColor: 'white'  };
     const rightButtonConfig = {
-      title: 'Scorekort',
+      title: <Icon name="pencil-square-o" size={20} />,
       handler: () => requestAnimationFrame(() => navigator.push({showScorecard: 1, event})),
       tintColor: 'white'
     };
+    const leftButtonConfig = {
+      title: <Icon name="th" size={20} />,
+      handler: () => this.openControlPanel(),
+      tintColor: 'white'
+    }
 
     if(hole) {
 
@@ -144,24 +157,39 @@ export default class ScoreEvent extends Component {
       }
 
       return(
-        <View style={styles.container}>
-          <NavigationBar
-            style={styles.header}
-            title={titleConfig}
-            statusBar={{style: 'light-content', tintColor: '#477dca'}}
-            rightButton={rightButtonConfig} />
+        <Drawer
+          ref={(ref) => this._drawer = ref}
+          openDrawerOffset={0.1}
+          panCloseMask={0.1}
+          tweenHandler={Drawer.tweenPresets.parallax}
+          tapToClose={true}
+          content={
+            <ControlPanel
+              event={event}
+              navigator={navigator}
+              onSelectHole={this.changeHole}/>
+          }>
+
+          <View style={styles.container}>
+            <NavigationBar
+              style={styles.header}
+              title={titleConfig}
+              statusBar={{style: 'light-content', tintColor: '#477dca'}}
+              leftButton={leftButtonConfig}
+              rightButton={rightButtonConfig} />
 
 
-          <HoleView
-            key={`hole_view_${hole.id}`}
-            hole={hole}
-            event={event} />
+            <HoleView
+              key={`hole_view_${hole.id}`}
+              hole={hole}
+              event={event} />
 
-          <View style={styles.bottomBar}>
-            {prevHole}
-            {nextHole}
+            <View style={styles.bottomBar}>
+              {prevHole}
+              {nextHole}
+            </View>
           </View>
-        </View>
+        </Drawer>
       );
     } else {
       return <Loading />;

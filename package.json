@@ -11,6 +11,7 @@
     "react": "^15.0.2",
     "react-addons-shallow-compare": "^15.0.2",
     "react-native": "0.26.0-rc",
+    "react-native-drawer": "^2.2.2",
     "react-native-navbar": "gargamelius/react-native-navbar",
     "react-native-slowlog": "^1.0.1",
     "react-native-vector-icons": "^2.0.1",
