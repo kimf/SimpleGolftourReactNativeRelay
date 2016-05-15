@@ -156,7 +156,7 @@ export default StyleSheet.create({
   },
 
   scoring: {
-    backgroundColor: colors.cellBorder
+    backgroundColor: colors.cellBorder,
   },
 
   playerRow: {
@@ -356,5 +356,5 @@ export default StyleSheet.create({
   /* EVENT CARDS */
   eventCard: {
     flexDirection: 'column',
-  },
+  }
 });

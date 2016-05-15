@@ -84,7 +84,6 @@ export default class ScoreEvent extends Component {
 
   componentWillMount() {
     const { event } = this.props
-    console.log(event.eventPlayers.length);
     const hole = event.course.holes.find(h => h.number === event.currentHole);
     this.setState({ hole });
   }

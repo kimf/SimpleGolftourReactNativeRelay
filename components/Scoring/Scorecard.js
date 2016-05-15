@@ -3,7 +3,7 @@ import {Alert, View, Text, TouchableOpacity} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 
-import ScorecardRow from './ScorecardRow';
+import ScoreRow from './ScoreRow';
 
 import realm from '../../realm';
 import styles from '../../styles';
@@ -70,10 +70,19 @@ export default class Scorecard extends Component {
 
           {event.eventPlayers.map((player) => {
             return(
-              <ScorecardRow
-                player={player}
-                key={`player_scorecard_row_${player.id}`}
-              />
+              <View style={styles.listrow} key={`scorecard_player_row_${player.id}`}>
+
+                <View style={styles.playerName}>
+                  <Text style={styles.flexOne}>{player.name}</Text>
+                  <Text style={styles.flexOne, styles.meta}>{player.strokes} extraslag</Text>
+                </View>
+
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={[styles.scoreHeader, styles.largeText]}>{player.totalStrokes}</Text>
+                  <Text style={[styles.scoreHeader, styles.largeText]}>{player.totalPutts}</Text>
+                  <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{player.totalPoints}</Text>
+                </View>
+              </View>
             )
           })}
 
