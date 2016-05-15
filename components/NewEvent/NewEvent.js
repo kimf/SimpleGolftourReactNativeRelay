@@ -78,14 +78,14 @@ export default class NewEvent extends Component {
             <Text style={styles.label}>Lagtävling?</Text>
             <Switch
               onValueChange={(teamEvent) => this.setState({teamEvent})}
-              style={styles.selectedDate}
+              style={styles.formColumnContent}
               value={teamEvent} />
           </View>
           <View style={styles.formColumn}>
             <Text style={styles.label}>Slaggolf?</Text>
             <Switch
               onValueChange={(isStrokes) => this.setState({isStrokes})}
-              style={styles.selectedDate}
+              style={styles.formColumnContent}
               value={isStrokes} />
           </View>
         </View>
@@ -100,7 +100,8 @@ export default class NewEvent extends Component {
           />
         </View>
 
-        <TouchableOpacity style={[styles.btn, styles.formRow]} onPress={this.onSubmit}>
+
+        <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
           <Text style={styles.btnLabel}> SKAPA RUNDA </Text>
         </TouchableOpacity>
       </View>

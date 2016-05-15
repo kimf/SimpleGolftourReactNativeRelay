@@ -15,12 +15,14 @@ export default class EventSetup extends Component {
     if(eventPlayer.length === 0) {
       const player = realm.objects('Player').find((p) => p.id === currentUserId);
       realm.write(() => {
-        event.eventPlayers.push({
-          id: player.id,
-          name: player.name,
-          strokes: 0,
-          eventScores: []
-        });
+        const eventPlayer = realm.create(
+          'EventPlayer', {
+            id: player.id,
+            name: player.name,
+            strokes: 0,
+            eventScores: []
+          }, true);
+        event.eventPlayers.push(eventPlayer);
       });
       this.forceUpdate();
     }
@@ -55,7 +57,7 @@ export default class EventSetup extends Component {
     };
 
     const newPlayer = (
-      <View style={[styles.card, {justifyContent: 'flex-end', borderBottomWidth: 0}]}>
+      <View style={[styles.listrow, {justifyContent: 'flex-end', borderBottomWidth: 0}]}>
         <TouchableOpacity
           style={[styles.inlineButton]}
           onPress={() => navigator.push({selectPlayer: 1, event: event})}>
@@ -82,7 +84,7 @@ export default class EventSetup extends Component {
             return (
               <TouchableOpacity
                 key={`setup_player_row_${player.id}`}
-                style={[styles.card, styles.playerRow]}
+                style={styles.listrow}
                 onPress={() => navigator.push({ setupEventPlayer: 1, player, event })}>
                 <Text style={[styles.flexOne]}>
                   {player.name}

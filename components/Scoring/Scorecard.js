@@ -79,7 +79,7 @@ export default class Scorecard extends Component {
 
           <View style={styles.bottomBar}>
             <TouchableOpacity
-              style={[styles.scorecardButton, {backgroundColor: 'red'}]}
+              style={[styles.bottomBarBtn, styles.danger]}
               onPress={this.cancelScoring}>
                 <Text style={styles.btnLabel}>AVSLUTA RUNDA</Text>
             </TouchableOpacity>

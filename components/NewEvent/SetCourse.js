@@ -44,14 +44,14 @@ export default class SetCourse extends Component {
   _renderRow(club) {
     const { navigator } = this.props;
     return(
-      <View key={`club_row_${club.id}`} style={[styles.card, {flexDirection: 'column'}]}>
+      <View key={`club_row_${club.id}`} style={[styles.listrow, {flexDirection: 'column'}]}>
         <Text>{club.name}</Text>
         {club.courses.map((course) => {
           return(
             <TouchableOpacity
               onPress={() => this.chooseCourse(course)}
               key={`course_row_${course.id}`}>
-              <View style={styles.card}>
+              <View style={styles.listrow}>
                 <Text>{course.name} {course.par}</Text>
               </View>
             </TouchableOpacity>
@@ -91,14 +91,17 @@ export default class SetCourse extends Component {
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           leftButton={leftButtonConfig}
         />
-        <TextInput
-          style={styles.inputField}
-          autoCapitalize="words"
-          autoCorrect={false}
-          ref= "query"
-          onChangeText={(query) => this.setSearchQuery(query)}
-          value={this.state.email}
-        />
+        <View style={styles.inlineHeader}>
+          <TextInput
+            style={styles.inputField}
+            autoCapitalize="words"
+            autoCorrect={false}
+            placeholder="Sök klubb"
+            ref= "query"
+            onChangeText={(query) => this.setSearchQuery(query)}
+            value={this.state.email}
+          />
+        </View>
         <ListView
           dataSource={dataSource}
           renderRow={this._renderRow}

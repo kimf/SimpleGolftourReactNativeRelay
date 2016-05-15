@@ -9,16 +9,14 @@ export default class ScorecardRow extends Component {
     const { player } = this.props;
 
     return(
-      <View key={`scorecard_player_row_${player.id}`}>
-        <View style={styles.playerRow}>
-          <View style={styles.playerName}>
-            <Text style={styles.flexOne}>{player.name}</Text>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.scoreHeader, styles.largeText]}>{player.totalStrokes}</Text>
-            <Text style={[styles.scoreHeader, styles.largeText]}>{player.totalPutts}</Text>
-            <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{player.totalPoints}</Text>
-          </View>
+      <View style={styles.listrow} key={`scorecard_player_row_${player.id}`}>
+        <View style={styles.playerName}>
+          <Text style={styles.flexOne}>{player.name}</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={[styles.scoreHeader, styles.largeText]}>{player.totalStrokes}</Text>
+          <Text style={[styles.scoreHeader, styles.largeText]}>{player.totalPutts}</Text>
+          <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{player.totalPoints}</Text>
         </View>
       </View>
     )

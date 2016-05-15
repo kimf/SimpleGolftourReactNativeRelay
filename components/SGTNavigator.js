@@ -42,7 +42,7 @@ export default class SGTNavigator extends Component {
     return (
       <Navigator
         ref="navigator"
-        style={{flex: 1, backgroundColor: 'black'}}
+        style={{flex: 1, alignItems: 'stretch', backgroundColor: '#feb'}}
         configureScene={(route) => {
           if (route.newEvent || route.selectPlayer || route.setupEventPlayer || route.showScorecard) {
              return Navigator.SceneConfigs.FloatFromRight;

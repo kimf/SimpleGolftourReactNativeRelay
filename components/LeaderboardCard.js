@@ -21,7 +21,7 @@ export default class LeaderboardCard extends Component {
     }
 
     return(
-      <View key={data.id} style={styles.card}>
+      <View key={data.id} style={styles.listrow}>
         <View style={styles.position}>
           <Text style={{flex: 1, fontWeight: 'bold', color: '#777'}}>{data.position}</Text>
            {up_or_down}

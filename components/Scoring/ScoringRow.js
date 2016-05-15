@@ -104,7 +104,7 @@ export default class ScoringRow extends Component {
     }
 
     let rowView = (
-      <View style={styles.playerRow}>
+      <View style={styles.listrow}>
         <View style={styles.playerName}>
           <Text style={styles.flexOne}>{player.name}</Text>
           <Text style={styles.flexOne}>

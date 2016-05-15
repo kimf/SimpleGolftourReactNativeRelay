@@ -61,7 +61,7 @@ export default class EventPlayerSetup extends Component {
         />
 
 
-        <View style={styles.card} key={`hcp_row_for_player_${player.id}`}>
+        <View style={styles.listrow} key={`hcp_row_for_player_${player.id}`}>
           <View style={styles.cardTitle}>
             <Text style={styles.label}>Hur många slag har {player.name}?</Text>
             <TextInput

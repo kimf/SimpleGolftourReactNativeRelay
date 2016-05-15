@@ -12,9 +12,9 @@ export default class HoleView extends Component {
     const { event, hole } = this.props;
 
     return(
-      <View style={styles.hole} >
-        <View style={[styles.inlineHeader, {backgroundColor: '#777'}]}>
-          <Text style={[styles.holeHeaderText, {color: '#eee'}]}>
+      <View>
+        <View style={styles.inlineHeader}>
+          <Text style={[styles.holeHeaderText]}>
             {`Hål ${hole.number} - Par ${hole.par} - Index: ${hole.index}`}
           </Text>
         </View>

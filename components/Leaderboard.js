@@ -28,11 +28,14 @@ export default class Leaderboard extends Component {
     let players = realm.objects('Player').filtered('eventCount >= 1').sorted('position');
     const scoringEvent = realm.objects('Event').find(event => event.isScoring);
     this.setDataState(players, scoringEvent);
-    this.reloadLeaderboard(players);
+    // this.reloadLeaderboard(players, false);
   }
 
-  reloadLeaderboard(players) {
-    this.setState({refreshing: true});
+  reloadLeaderboard(players, setState = true) {
+    if(setState) {
+      this.setState({refreshing: true});
+    }
+
     StatusBar.setNetworkActivityIndicatorVisible(true);
     fetchPlayers(this.props.sessionToken).then((players) => {
       this.setDataState(players);
@@ -85,7 +88,7 @@ export default class Leaderboard extends Component {
                 tintColor="#477dca"
                 title="Uppdaterar..."
                 titleColor="#477dca"
-                progressBackgroundColor="#ffff00"
+                progressBackgroundColor="#FF2179"
               />
             }
             renderRow={(rowData) => <LeaderboardCard data={rowData} />}

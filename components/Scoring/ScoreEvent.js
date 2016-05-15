@@ -154,7 +154,6 @@ export default class ScoreEvent extends Component {
 
 
           <HoleView
-            style={{flex: 1}}
             key={`hole_view_${hole.id}`}
             hole={hole}
             event={event} />
