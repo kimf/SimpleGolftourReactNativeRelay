@@ -35,10 +35,12 @@ Course.schema = {
   primaryKey: 'id',
   properties: {
     id: 'int',
+    club: 'string',
     name: 'string',
     holes_count: 'int',
     par: 'int',
-    holes: { type: 'list', objectType: 'Hole' }
+    holes: { type: 'list', objectType: 'Hole' },
+
   }
 };
 
@@ -143,5 +145,5 @@ Player.schema = {
 
 export default new Realm({
   schema: [Club, Course, Hole, Event, Player, EventPlayer, EventTeam, EventScore, CurrentUser],
-  schemaVersion: 14
+  schemaVersion: 15
 });

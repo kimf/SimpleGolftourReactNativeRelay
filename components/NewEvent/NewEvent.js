@@ -18,8 +18,10 @@ export default class NewEvent extends Component {
       teamEvent: false,
       scoringType: 'points',
       date: new Date(),
-      timeZoneOffsetInHours: (-1) * (new Date()).getTimezoneOffset() / 60
     };
+
+    this.state.date.setHours(17);
+    this.state.date.setMinutes(0);
 
     this.onSubmit = this.onSubmit.bind(this);
     this.onDateChange = this.onDateChange.bind(this);
@@ -35,7 +37,7 @@ export default class NewEvent extends Component {
       requestAnimationFrame(() => navigator.resetTo({ tab: 'events' }));
     }).catch((error) => {
       alert('Error....');
-      console.log('Error retreiving players', error);
+      console.log('Error saving event', error);
     });
   }
 
@@ -95,7 +97,6 @@ export default class NewEvent extends Component {
           <DatePickerIOS
             date={date}
             mode="datetime"
-            timeZoneOffsetInMinutes={timeZoneOffsetInHours * 60}
             onDateChange={this.onDateChange}
           />
         </View>
