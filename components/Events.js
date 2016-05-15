@@ -67,7 +67,7 @@ export default class Events extends Component {
     };
 
     return(
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: '#eee'}]}>
         <NavigationBar
           style={styles.header}
           title={titleConfig}

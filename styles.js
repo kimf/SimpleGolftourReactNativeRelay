@@ -362,6 +362,12 @@ export default StyleSheet.create({
   /* EVENT CARDS */
   eventCard: {
     flexDirection: 'column',
+    margin: 10,
+    marginTop: 0,
+    padding: 10,
+    borderRadius: 5,
+    borderColor: colors.cellBorder,
+    borderWidth: StyleSheet.hairlineWidth
   },
 
   holePicker: {

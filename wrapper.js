@@ -39,7 +39,15 @@ export default class Wrapper extends Component {
     const events = realm.objects('Event');
     const players = realm.objects('Player');
     const currentUser = realm.objects('CurrentUser')[0]
+
+    // const clubs = realm.objects('Club');
+    // const courses = realm.objects('Course');
+    // const holes = realm.objects('Hole');
+
     realm.write(() => {
+      // realm.delete(clubs);
+      // realm.delete(courses);
+      // realm.delete(holes);
       realm.delete(eventPlayers);
       realm.delete(eventScores);
       realm.delete(eventTeams);
