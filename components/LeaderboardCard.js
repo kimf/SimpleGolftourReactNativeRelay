@@ -14,9 +14,9 @@ export default class LeaderboardCard extends Component {
     const level = <Text style={{color: '#777', flex: 1, fontSize: 6, marginTop: 5}}>-</Text>;
 
     let up_or_down;
-    if(data.position > data.prevPos) {
+    if(data.position < data.prevPos) {
       up_or_down = <Text style={{color: 'green'}}>⇡{data.position - data.prevPos}</Text>;
-    } else if(data.position < data.prevPos) {
+    } else if(data.position > data.prevPos) {
       up_or_down = <Text style={{color: 'red'}}>⇣ {data.prevPos - data.position}</Text>;
     }
 

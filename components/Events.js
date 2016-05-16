@@ -24,7 +24,7 @@ export default class Events extends Component {
   }
 
   componentWillMount() {
-    let events = realm.objects('Event').filtered('status == "planned"').sorted('startsAt');
+    let events = realm.objects('Event').sorted('startsAt', true);
     this.setEvents(events);
     // this.refreshEvents(events, false);
   }

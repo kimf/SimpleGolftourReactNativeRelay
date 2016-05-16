@@ -12,13 +12,17 @@ export default class EventCard extends Component {
     const { event, setupEvent, scoreEvent, followEvent } = this.props;
 
 
-    let scoringBtn = (
-      <TouchableOpacity
-        onPress={() => setupEvent(event)}
-        style={s.scoreBtn}>
-        <Text style={[s.eventCardBtn, {color: '#fff'}]}>SCORA</Text>
-      </TouchableOpacity>
-    )
+    let scoringBtn;
+
+    if (event.status !== 'finished') {
+      scoringBtn = (
+        <TouchableOpacity
+          onPress={() => setupEvent(event)}
+          style={s.scoreBtn}>
+          <Text style={[s.eventCardBtn, {color: '#fff'}]}>SCORA</Text>
+        </TouchableOpacity>
+      )
+    }
 
     if(event.isScoring) {
       scoringBtn = (
@@ -53,7 +57,7 @@ export default class EventCard extends Component {
           <TouchableOpacity
             onPress={() => followEvent(event)}
               style={s.followBtn}>
-            <Text style={[s.eventCardBtn, {color: '#777'}]}>FÖLJ</Text>
+            <Text style={[s.eventCardBtn, {color: '#777'}]}>{event.status === 'planned' ? 'FÖLJ' : 'SE RESULTAT'}</Text>
           </TouchableOpacity>
         </View>
       </View>
