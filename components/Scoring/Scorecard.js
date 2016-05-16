@@ -4,6 +4,7 @@ import {AppState, View, Text, TouchableOpacity, StyleSheet, ListView, StatusBar}
 import NavigationBar from 'react-native-navbar';
 import ScoreRow from './ScoreRow';
 import styles from '../../styles';
+import realm from '../../realm';
 
 import { fetchEventLeaderboard } from '../../lib/ApiService';
 
@@ -14,6 +15,35 @@ export default class Scorecard extends Component {
     this.state = { dataSource: ds.cloneWithRows([]) };
     this.refresh = this.refresh.bind(this);
     this._handleAppStateChange = this._handleAppStateChange.bind(this);
+    this.cancelScoring = this.cancelScoring.bind(this);
+    this.reallyCancelScoring = this.reallyCancelScoring.bind(this);
+  }
+
+  cancelScoring() {
+    Alert.alert(
+      'Avsluta rundan?',
+      'Är du riktigt säker?',
+      [
+        {text: 'NEJ', onPress: () => console.log('Cancel'), style: 'cancel'},
+        {text: 'JARÅ', onPress: () => this.reallyCancelScoring()},
+      ]
+    )
+  }
+
+  reallyCancelScoring() {
+    const { event, navigator } = this.props;
+
+    realm.write(() => {
+      for (let player of event.eventPlayers) {
+        realm.delete(player.eventScores);
+      }
+      realm.delete(event.eventPlayers);
+      event.isScoring = false;
+      event.currentHole = 0;
+      event.eventPlayers = [];
+    });
+
+    requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
   }
 
   componentWillMount() {
@@ -58,7 +88,7 @@ export default class Scorecard extends Component {
   }
 
   render(){
-    const { navigator } = this.props;
+    const { navigator, event } = this.props;
     const { dataSource } = this.state;
 
     const titleConfig = { title: 'Scorekort', tintColor: 'white'  };
@@ -67,6 +97,19 @@ export default class Scorecard extends Component {
       handler: () => requestAnimationFrame(() => navigator.pop()),
       tintColor: 'white'
     };
+
+    let cancelBtn;
+    if(event.isScoring) {
+      cancelBtn = (
+        <View style={styles.bottomBar}>
+          <TouchableOpacity
+            style={[styles.bottomBarBtn, styles.danger]}
+            onPress={this.cancelScoring}>
+              <Text style={styles.btnLabel}>AVSLUTA RUNDA</Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
 
     return(
       <View style={styles.container}>
@@ -101,6 +144,8 @@ export default class Scorecard extends Component {
                         </View>
           }
         />
+
+        {cancelBtn}
       </View>
     )
   }
