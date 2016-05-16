@@ -1,12 +1,15 @@
 'use strict';
 import React, {Component} from "react";
-import { View, StatusBar } from "react-native";
+import { View, StatusBar, AppState } from "react-native";
 import moment from 'moment';
+
+import codePush from "react-native-code-push";
 
 import Login from './components/Login';
 import DataSyncer from './components/DataSyncer';
 import SGTNavigator from './components/SGTNavigator'
 import Events from './components/Events';
+
 
 import realm from './realm';
 
@@ -23,11 +26,33 @@ export default class Wrapper extends Component {
     this.onLogin = this.checkUserCreds.bind(this);
     this.syncIsDone = this.goDefault.bind(this);
     this.onLogout = this.onLogout.bind(this);
+    this.updateCodePush = this.updateCodePush.bind(this);
+    this._handleAppStateChange = this._handleAppStateChange.bind(this);
   }
 
   componentWillMount() {
     this.checkUserCreds();
     //this.clearAllData(true) //give true to clear userData as well
+  }
+
+  updateCodePush() {
+    codePush.sync({
+      updateDialog: true,
+      installMode: codePush.InstallMode.IMMEDIATE,
+      appendReleaseDescription: true
+    });
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this._handleAppStateChange);
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
+  }
+
+  _handleAppStateChange(newState) {
+    newState === "active" && this.updateCodePush();
   }
 
   // ------------------------------------------------------------------------------
