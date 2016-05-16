@@ -37,7 +37,7 @@ export default class EventPlayerSetup extends Component {
     const { player, navigator } = this.props;
     const { strokes } = this.state;
 
-    const titleConfig = { title: 'Kolla Antal slag', tintColor: 'white'  };
+    const titleConfig = { title: 'Spel HCP', tintColor: 'white'  };
     const leftButtonConfig = {
       title: '< Tillbaka',
       handler: () => requestAnimationFrame(() => navigator.pop()),
@@ -51,7 +51,7 @@ export default class EventPlayerSetup extends Component {
     };
 
     return(
-      <View style={[styles.container, {backgroundColor: '#ccc'}]}>
+      <View style={[styles.container, {backgroundColor: '#eee'}]}>
         <NavigationBar
           style={styles.header}
           title={titleConfig}
@@ -65,10 +65,11 @@ export default class EventPlayerSetup extends Component {
           <View style={styles.cardTitle}>
             <Text style={styles.label}>Hur många slag har {player.name}?</Text>
             <TextInput
-              style={styles.inputField}
+              style={[styles.inputField, {height: 200, fontSize: 100, textAlign: 'center'}]}
               autoCapitalize="none"
               keyboardType="number-pad"
-              autoFocus={true}
+              autoFocus
+              selectTextOnFocus
               ref="strokes"
               onChangeText={(strokes) => this.setState({strokes})}
               value={`${strokes}`}

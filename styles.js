@@ -28,7 +28,7 @@ export default StyleSheet.create({
   inlineHeader: {
     paddingTop: 20,
     paddingBottom: 20,
-    backgroundColor: '#feb',
+    backgroundColor: colors.inactiveText,
   },
 
   listrow: {
@@ -359,17 +359,6 @@ export default StyleSheet.create({
     shadowRadius: 3
   },
 
-  /* EVENT CARDS */
-  eventCard: {
-    flexDirection: 'column',
-    margin: 10,
-    marginTop: 0,
-    padding: 10,
-    borderRadius: 5,
-    borderColor: colors.cellBorder,
-    borderWidth: StyleSheet.hairlineWidth
-  },
-
   holePicker: {
     flex: 1,
     padding: 20,
@@ -381,5 +370,16 @@ export default StyleSheet.create({
   holePickerText: {
     textAlign: 'center',
     color: '#fff'
-  }
+  },
+
+  addPlayerButton: {
+    marginTop: 10,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: colors.actionText,
+    color: '#fff',
+    textAlign: 'center',
+  },
 });
+
+

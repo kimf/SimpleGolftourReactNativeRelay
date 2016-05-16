@@ -80,7 +80,7 @@ export default class ScoringScreen extends Component {
             </PickerIOS>
           </View>
           <TouchableOpacity onPress={() => this.closeScoreForm()}>
-            <Text style={styles.inlineBtn}>DONE</Text>
+            <Text style={[styles.inlineBtn, {backgroundColor: 'green'}]}>SPARA SCORE</Text>
           </TouchableOpacity>
         </View>
       </View>

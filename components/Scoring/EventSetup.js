@@ -57,11 +57,11 @@ export default class EventSetup extends Component {
     };
 
     const newPlayer = (
-      <View style={[styles.listrow, {justifyContent: 'flex-end', borderBottomWidth: 0}]}>
+      <View style={[styles.listrow, {flex: 1, borderBottomWidth: 0}]}>
         <TouchableOpacity
-          style={[styles.inlineButton]}
+          style={styles.addPlayerButton}
           onPress={() => navigator.push({selectPlayer: 1, event: event})}>
-          <Text style={styles.centerText}>LÄGG TILL SPELARE</Text>
+          <Text style={[styles.centerText, {color: '#fff'}]}>LÄGG TILL SPELARE</Text>
         </TouchableOpacity>
       </View>
     );
