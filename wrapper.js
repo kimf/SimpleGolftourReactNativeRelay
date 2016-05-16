@@ -10,8 +10,10 @@ import Events from './components/Events';
 
 import realm from './realm';
 
-//import {whyDidYouUpdate} from 'why-did-you-update'
-//if(__DEV__) { whyDidYouUpdate(React) }
+// import {whyDidYouUpdate} from 'why-did-you-update'
+// if(__DEV__) {
+//   whyDidYouUpdate(React, { exclude: /^YellowBox/ })
+// }
 
 export default class Wrapper extends Component {
   constructor(props){

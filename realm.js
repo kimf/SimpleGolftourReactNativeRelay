@@ -59,6 +59,7 @@ class EventScore {}
 EventScore.schema = {
   name: 'EventScore',
   properties: {
+    externalId: { type: 'int', optional: true },
     index: 'int',
     hole: { type: 'int', indexed: true },
     par: 'int',
@@ -83,6 +84,10 @@ class EventPlayer {
 
   get totalStrokes() {
     return sumBy(this.eventScores, (s) => { return s.isScored ? s.strokes : 0; });
+  }
+
+  get playedHoles() {
+    return sumBy(this.eventScores, (s) => { return s.isScored });
   }
 }
 EventPlayer.schema = {
@@ -145,5 +150,5 @@ Player.schema = {
 
 export default new Realm({
   schema: [Club, Course, Hole, Event, Player, EventPlayer, EventTeam, EventScore, CurrentUser],
-  schemaVersion: 15
+  schemaVersion: 18
 });

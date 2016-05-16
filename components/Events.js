@@ -18,6 +18,8 @@ export default class Events extends Component {
     this.state = { refreshing: false, dataSource: ds.cloneWithRows([]) };
     this.openNewEvent = this.openNewEvent.bind(this);
     this.setupEvent = this.setupEvent.bind(this);
+    this.scoreEvent = this.scoreEvent.bind(this);
+    this.followEvent = this.followEvent.bind(this);
     this.refreshEvents = this.refreshEvents.bind(this);
   }
 
@@ -56,6 +58,14 @@ export default class Events extends Component {
     this.props.navigator.push({setupEvent: 1, event: event})
   }
 
+  scoreEvent(event) {
+    this.props.navigator.push({ scoreEvent: 1, event: event })
+  }
+
+  followEvent(event) {
+    this.props.navigator.push({ followEvent: 1, event: event })
+  }
+
   render() {
     const { dataSource, refreshing } = this.state;
 
@@ -89,7 +99,11 @@ export default class Events extends Component {
             />
           }
           renderRow={
-            (rowData) => <EventCard event={rowData} setupEvent={this.setupEvent}/>
+            (rowData) => <EventCard
+                            event={rowData}
+                            setupEvent={this.setupEvent}
+                            scoreEvent={this.scoreEvent}
+                            followEvent={this.followEvent} />
           }
         />
       </View>

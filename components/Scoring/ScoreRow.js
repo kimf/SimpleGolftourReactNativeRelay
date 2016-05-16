@@ -34,7 +34,6 @@ export default class ScoreRow extends Component {
     this.setState({eventScore: eventScore});
   }
 
-
   render() {
     const {player, hole, showScoreForm } = this.props;
     const { eventScore } = this.state;
@@ -63,7 +62,7 @@ export default class ScoreRow extends Component {
 
     return(
       <TouchableOpacity
-        key={`scoreRowDeluxe_${hole.id}_${player.id}_${eventScore.id}`}
+        key={`scoreRowDeluxe_${hole.id}_${player.id}`}
         style={styles.scoreRow}
         onPress={() => showScoreForm(player, eventScore)}>
         <View style={styles.listrow} key={`scoring_player_row_${player.id}`}>

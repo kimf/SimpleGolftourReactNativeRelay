@@ -1,8 +1,10 @@
 import React, {Component} from "react";
-import {View, TouchableOpacity, Text, PickerIOS} from "react-native";
+import {View, TouchableOpacity, Text, PickerIOS, StatusBar} from "react-native";
 
 import styles from '../../styles';
 import realm from '../../realm';
+
+import { pushScoreToServer } from '../../lib/ApiService';
 
 const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];
@@ -30,7 +32,8 @@ export default class ScoringScreen extends Component {
   }
 
   closeScoreForm() {
-    const { player, eventScore } = this.props;
+    StatusBar.setNetworkActivityIndicatorVisible(true);
+    const { player, eventId, eventScore, sessionToken } = this.props;
     const { strokes, putts } = this.state;
     realm.write(() => {
       eventScore.strokes = strokes;
@@ -41,7 +44,17 @@ export default class ScoringScreen extends Component {
       eventScore.points = pointsArray[testSum];
       eventScore.isScored = true;
     });
-    this.props.closeScoreForm();
+
+    requestAnimationFrame(() => {
+      pushScoreToServer(eventId, player.id, eventScore, sessionToken).then(() => {
+        StatusBar.setNetworkActivityIndicatorVisible(false);
+        this.props.closeScoreForm();
+      }).catch((error) => {
+        StatusBar.setNetworkActivityIndicatorVisible(false);
+        this.props.closeScoreForm();
+        console.log('Error saving score', error);
+      });
+    });
   }
 
 

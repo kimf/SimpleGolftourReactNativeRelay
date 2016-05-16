@@ -321,18 +321,6 @@ export default StyleSheet.create({
   scoreHeaderRow: {
     backgroundColor: '#eee',
     flexDirection: 'row',
-    alignSelf: 'flex-end'
-  },
-
-  scoreHeader: {
-    flex: 1,
-    padding: 5,
-    color: '#ccc'
-  },
-
-  scoreHeaderRow: {
-    backgroundColor: '#eee',
-    flexDirection: 'row',
     padding: 5,
   },
 

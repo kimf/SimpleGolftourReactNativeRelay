@@ -9,7 +9,26 @@ import colors from '../common/colors';
 
 export default class EventCard extends Component {
   render() {
-    const { event, setupEvent } = this.props;
+    const { event, setupEvent, scoreEvent, followEvent } = this.props;
+
+
+    let scoringBtn = (
+      <TouchableOpacity
+        onPress={() => setupEvent(event)}
+        style={s.scoreBtn}>
+        <Text style={[s.eventCardBtn, {color: '#fff'}]}>SCORA</Text>
+      </TouchableOpacity>
+    )
+
+    if(event.isScoring) {
+      scoringBtn = (
+        <TouchableOpacity
+          onPress={() => scoreEvent(event)}
+          style={s.scoringBtn}>
+          <Text style={[s.eventCardBtn, {color: '#fff'}]}>FORTSÄTT</Text>
+        </TouchableOpacity>
+      )
+    }
 
     return (
       <View style={[s.eventCard]}>
@@ -30,15 +49,9 @@ export default class EventCard extends Component {
         </View>
 
         <View style={[s.row, s.buttonRow]}>
-
+          {scoringBtn}
           <TouchableOpacity
-            onPress={() => setupEvent(event)}
-            style={s.scoreBtn}>
-            <Text style={[s.eventCardBtn, {color: '#fff'}]}>SCORA</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => this.followEvent(event)}
+            onPress={() => followEvent(event)}
               style={s.followBtn}>
             <Text style={[s.eventCardBtn, {color: '#777'}]}>FÖLJ</Text>
           </TouchableOpacity>
@@ -98,6 +111,12 @@ const s = StyleSheet.create({
     flex: 1,
     marginRight: 7,
     backgroundColor: colors.actionText,
+  },
+
+  scoringBtn: {
+    flex: 1,
+    marginRight: 7,
+    backgroundColor: 'green',
   },
 
   followBtn: {

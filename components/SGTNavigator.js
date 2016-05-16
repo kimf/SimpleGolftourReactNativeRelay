@@ -61,9 +61,10 @@ export default class SGTNavigator extends Component {
 
     console.log(route);
 
-    if (route.showScorecard) {
+    if (route.showScorecard || route.followEvent) {
       return <Scorecard
                 event={route.event}
+                sessionToken={currentUser.sessionToken}
                 navigator={navigator} />
     }
 
