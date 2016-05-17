@@ -68,7 +68,6 @@ export default class ScoreEvent extends Component {
                 sessionToken={sessionToken} />
             )
           })}
-          <SaveRoundView event={event} sessionToken={sessionToken} />
         </SwipeableViews>
 
         <View style={{height: 20}}>
