@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {AppState, View, Text, TouchableOpacity, StyleSheet, ListView, StatusBar} from "react-native";
+import {Alert, AppState, View, Text, TouchableOpacity, StyleSheet, ListView, StatusBar} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 import ScoreRow from './ScoreRow';

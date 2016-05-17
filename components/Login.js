@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
+import {Linking, Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
 
 import { apiUrl } from '../lib/ApiService';
 import realm from '../realm';
@@ -19,6 +19,7 @@ export default class Login extends Component {
       password: ''
     };
     this.onSubmit = this.onSubmit.bind(this);
+    this.openPassword = this.openPassword.bind(this);
   }
 
   onSubmit(){
@@ -60,6 +61,10 @@ export default class Login extends Component {
       console.log('Error retreiving data', error);
       this.setState({ loginError: true });
     })
+  }
+
+  openPassword() {
+    Linking.openURL('https://www.simplegolftour.com/password_resets/new');
   }
 
 
@@ -110,7 +115,7 @@ export default class Login extends Component {
           <Text style={styles.btnLabel}> LOGGA IN </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => this.openPassword}>
           <Text style={styles.forgotten}> Glömt dina uppgifter? </Text>
         </TouchableOpacity>
       </View>
