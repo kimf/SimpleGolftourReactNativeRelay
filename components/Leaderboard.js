@@ -28,7 +28,7 @@ export default class Leaderboard extends Component {
     let players = realm.objects('Player').filtered('eventCount >= 1').sorted('position');
     const scoringEvent = realm.objects('Event').find(event => event.isScoring);
     this.setDataState(players, scoringEvent);
-    // this.reloadLeaderboard(players, false);
+    this.reloadLeaderboard(players, false);
   }
 
   reloadLeaderboard(players, setState = true) {
@@ -63,7 +63,7 @@ export default class Leaderboard extends Component {
       eventBanner = (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => requestAnimationFrame(() => navigator.push({ scoreEvent: 1, event: scoringEvent }))}>
+          onPress={() => requestAnimationFrame(() => navigator.resetTo({ scoreEvent: 1, event: scoringEvent }))}>
           <Text style={styles.btnLabel}>ÅTERUPPTA SCOREFÖRING</Text>
         </TouchableOpacity>
       );

@@ -63,7 +63,7 @@ export default class EventPlayerSetup extends Component {
 
         <View style={styles.listrow} key={`hcp_row_for_player_${player.id}`}>
           <View style={styles.cardTitle}>
-            <Text style={styles.label}>Hur många slag har {player.name}?</Text>
+            <Text style={styles.label}>Hur många extra-slag har {player.name}?</Text>
             <TextInput
               style={[styles.inputField, {height: 200, fontSize: 100, textAlign: 'center'}]}
               autoCapitalize="none"

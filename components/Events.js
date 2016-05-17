@@ -26,7 +26,7 @@ export default class Events extends Component {
   componentWillMount() {
     let events = realm.objects('Event').sorted('startsAt', true);
     this.setEvents(events);
-    // this.refreshEvents(events, false);
+    this.refreshEvents(events, false);
   }
 
   refreshEvents(events, setState = true) {
@@ -59,7 +59,7 @@ export default class Events extends Component {
   }
 
   scoreEvent(event) {
-    requestAnimationFrame(() => this.props.navigator.push({ scoreEvent: 1, event: event }) );
+    requestAnimationFrame(() => this.props.navigator.resetTo({ scoreEvent: 1, event: event }) );
   }
 
   followEvent(event) {

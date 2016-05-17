@@ -10,6 +10,7 @@ const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];
 const BEER_VALUES = [0,1,2,3,4,5];
 const pointsArray = []
+pointsArray[-5] = 7;
 pointsArray[-4] = 6;
 pointsArray[-3] = 5;
 pointsArray[-2] = 4;

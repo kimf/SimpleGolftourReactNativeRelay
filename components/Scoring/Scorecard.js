@@ -21,11 +21,11 @@ export default class Scorecard extends Component {
 
   cancelScoring() {
     Alert.alert(
-      'Avsluta rundan?',
-      'Är du riktigt säker?',
+      'Avsluta rundan och radera allt du matat in?',
+      'Är du riktigt säker?, riktigt riktigt säker?',
       [
-        {text: 'NEJ', onPress: () => console.log('Cancel'), style: 'cancel'},
-        {text: 'JARÅ', onPress: () => this.reallyCancelScoring()},
+        {text: 'NEJ, NEJ', onPress: () => console.log('Cancel'), style: 'cancel'},
+        {text: 'JA, RADERA ALLT', onPress: () => this.reallyCancelScoring()},
       ]
     )
   }
@@ -119,7 +119,7 @@ export default class Scorecard extends Component {
           <TouchableOpacity
             style={[styles.bottomBarBtn, styles.danger]}
             onPress={this.cancelScoring}>
-              <Text style={styles.btnLabel}>AVSLUTA RUNDA</Text>
+              <Text style={styles.btnLabel}>RADERA SCORER & AVSLUTA</Text>
           </TouchableOpacity>
         </View>
       )

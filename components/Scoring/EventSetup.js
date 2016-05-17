@@ -93,7 +93,7 @@ export default class EventSetup extends Component {
                 <Text style={[styles.flexOne]}>
                   {player.name}
                 </Text>
-                <Text style={styles.strokeInfo}>Slag: {player.strokes}</Text>
+                <Text style={styles.strokeInfo}>extraslag: {player.strokes}</Text>
               </TouchableOpacity>
             );
           })}
