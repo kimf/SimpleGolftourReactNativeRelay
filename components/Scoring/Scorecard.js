@@ -17,6 +17,8 @@ export default class Scorecard extends Component {
     this._handleAppStateChange = this._handleAppStateChange.bind(this);
     this.cancelScoring = this.cancelScoring.bind(this);
     this.reallyCancelScoring = this.reallyCancelScoring.bind(this);
+    this.saveScoring = this.saveScoring.bind(this);
+    this.reallySaveScoring = this.reallySaveScoring.bind(this);
   }
 
   cancelScoring() {
@@ -58,6 +60,27 @@ export default class Scorecard extends Component {
       requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
       console.log('opps, deleting went so so', error);
     });
+  }
+
+  saveScoring() {
+    Alert.alert(
+      'Avsluta rundan och Lämna scoreföringen?',
+      'Stämmer alla siffror? På riktigt?',
+      [
+        {text: 'OJ, NEJ', onPress: () => console.log('Cancel'), style: 'cancel'},
+        {text: 'JA, JAG ÄR KLAR', onPress: () => this.reallySaveScoring()},
+      ]
+    )
+  }
+
+  reallySaveScoring() {
+    const { event, navigator } = this.props;
+    realm.write(() => {
+      event.isScoring = false;
+      event.status = 'finished';
+    });
+
+    requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
   }
 
   componentWillMount() {
@@ -117,9 +140,14 @@ export default class Scorecard extends Component {
       cancelBtn = (
         <View style={styles.bottomBar}>
           <TouchableOpacity
+            style={[styles.bottomBarBtn, styles.success]}
+            onPress={this.saveScoring}>
+              <Text style={styles.btnLabel}>SPARA & AVSLUTA</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={[styles.bottomBarBtn, styles.danger]}
             onPress={this.cancelScoring}>
-              <Text style={styles.btnLabel}>RADERA SCORER & AVSLUTA</Text>
+              <Text style={styles.btnLabel}>RADERA SCORER</Text>
           </TouchableOpacity>
         </View>
       )

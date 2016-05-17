@@ -1,7 +1,7 @@
 'use strict';
 
 import React, {Component} from "react";
-import {Text, TextInput, TouchableOpacity, ListView, View} from "react-native";
+import {Alert, Text, TextInput, TouchableOpacity, ListView, View} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 
@@ -18,19 +18,23 @@ export default class EventPlayerSetup extends Component {
     const { event, needsSaving, player, navigator } = this.props;
     const strokes = parseInt(this.state.strokes);
 
-    realm.write(() => {
-      if(needsSaving) {
-        event.eventPlayers.push({
-          id: player.id,
-          name: player.name,
-          strokes: strokes,
-          eventScores: []
-        });
-      } else {
-        player.strokes = strokes;
-      }
-    });
-    requestAnimationFrame(() => navigator.resetTo({ setupEvent: 1, event: event }));
+    if(strokes < 37) {
+      realm.write(() => {
+        if(needsSaving) {
+          event.eventPlayers.push({
+            id: player.id,
+            name: player.name,
+            strokes: strokes,
+            eventScores: []
+          });
+        } else {
+          player.strokes = strokes;
+        }
+      });
+      requestAnimationFrame(() => navigator.resetTo({ setupEvent: 1, event: event }));
+    } else {
+      Alert.alert('MAX 36 SLAG, SÅ DÅLIG ÄR HEN NOG INTE!');
+    }
   }
 
   render() {
@@ -64,6 +68,7 @@ export default class EventPlayerSetup extends Component {
         <View style={styles.listrow} key={`hcp_row_for_player_${player.id}`}>
           <View style={styles.cardTitle}>
             <Text style={styles.label}>Hur många extra-slag har {player.name}?</Text>
+            <Text style={styles.label}>Max 36!</Text>
             <TextInput
               style={[styles.inputField, {height: 200, fontSize: 100, textAlign: 'center'}]}
               autoCapitalize="none"

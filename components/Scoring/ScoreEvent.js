@@ -52,23 +52,6 @@ export default class ScoreEvent extends Component {
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           rightButton={rightButtonConfig} />
 
-          <View style={{height: 20}}>
-            <View style={{flexDirection: 'row', flex: 1, alignItems: 'flex-start'}}>
-            {event.course.holes.sorted('number').map((hole) => {
-              let activeStyle;
-              if(hole.number === (currentIndex + 1)){
-                activeStyle = {color: '#fff', backgroundColor: '#444'}
-              }
-
-              return (
-                  <TouchableOpacity key={`hole_button_${hole.id}`} style={[{flex: 1}]} onPress={() => this.changeHole(hole.number - 1)}>
-                    <Text style={[activeStyle, {fontSize: 10, padding: 3, color: '#ccc', textAlign: 'center'}]}>{hole.number}</Text>
-                  </TouchableOpacity>
-              )
-            })}
-            </View>
-          </View>
-
         <SwipeableViews
           style={styles.slideContainer}
           index={currentIndex}
@@ -87,6 +70,23 @@ export default class ScoreEvent extends Component {
           })}
           <SaveRoundView event={event} sessionToken={sessionToken} />
         </SwipeableViews>
+
+        <View style={{height: 20}}>
+          <View style={{flexDirection: 'row', flex: 1, alignItems: 'flex-start'}}>
+          {event.course.holes.sorted('number').map((hole) => {
+            let activeStyle;
+            if(hole.number === (currentIndex + 1)){
+              activeStyle = {color: '#fff', backgroundColor: '#444'}
+            }
+
+            return (
+                <TouchableOpacity key={`hole_button_${hole.id}`} style={[{flex: 1}]} onPress={() => this.changeHole(hole.number - 1)}>
+                  <Text style={[activeStyle, {fontSize: 10, padding: 3, color: '#ccc', textAlign: 'center'}]}>{hole.number}</Text>
+                </TouchableOpacity>
+            )
+          })}
+          </View>
+        </View>
       </View>
     );
   }

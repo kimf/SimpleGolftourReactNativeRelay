@@ -44,15 +44,22 @@ export default class Wrapper extends Component {
   }
 
   componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
+    if(!__DEV__) {
+      this.updateCodePush();
+      AppState.addEventListener('change', this._handleAppStateChange);
+    }
   }
 
   componentWillUnmount() {
-    AppState.removeEventListener('change', this._handleAppStateChange);
+    if(!__DEV__) {
+      AppState.removeEventListener('change', this._handleAppStateChange);
+    }
   }
 
   _handleAppStateChange(newState) {
-    newState === "active" && this.updateCodePush();
+    if(!__DEV__) {
+      newState === "active" && this.updateCodePush();
+    }
   }
 
   // ------------------------------------------------------------------------------

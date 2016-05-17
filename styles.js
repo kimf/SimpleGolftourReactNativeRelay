@@ -155,6 +155,10 @@ export default StyleSheet.create({
     backgroundColor: 'red'
   },
 
+  success: {
+    backgroundColor: 'green'
+  },
+
   scoring: {
     backgroundColor: colors.cellBorder,
   },

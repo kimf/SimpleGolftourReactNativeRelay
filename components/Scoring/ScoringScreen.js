@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, TouchableOpacity, Text, PickerIOS, StatusBar, InteractionManager} from "react-native";
+import {Alert, View, TouchableOpacity, Text, PickerIOS, StatusBar, InteractionManager} from "react-native";
 
 import styles from '../../styles';
 import realm from '../../realm';
@@ -10,6 +10,9 @@ const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];
 const BEER_VALUES = [0,1,2,3,4,5];
 const pointsArray = []
+pointsArray[-8] = 10;
+pointsArray[-7] = 9;
+pointsArray[-6] = 8;
 pointsArray[-5] = 7;
 pointsArray[-4] = 6;
 pointsArray[-3] = 5;
@@ -20,6 +23,12 @@ pointsArray[1] = 1;
 pointsArray[2] = 0;
 pointsArray[3] = 0;
 pointsArray[4] = 0;
+pointsArray[5] = 0;
+pointsArray[6] = 0;
+pointsArray[7] = 0;
+pointsArray[8] = 0;
+pointsArray[9] = 0;
+pointsArray[10] = 0;
 
 
 export default class ScoringScreen extends Component {
@@ -37,26 +46,30 @@ export default class ScoringScreen extends Component {
     const { player, eventId, eventScore, sessionToken } = this.props;
     const { strokes, putts } = this.state;
 
-    realm.write(() => {
-      eventScore.strokes = strokes;
-      eventScore.putts = putts;
+    if(strokes - putts < 0) {
+      Alert.alert('Du verkar ha angett fler puttar än slag!')
+    } else {
+      realm.write(() => {
+        eventScore.strokes = strokes;
+        eventScore.putts = putts;
 
-      const strokeSum = strokes - eventScore.extraStrokes;
-      const testSum = strokeSum - eventScore.par;
-      eventScore.points = pointsArray[testSum];
-      eventScore.isScored = true;
-    });
-
-    requestAnimationFrame(() => this.props.closeScoreForm() );
-
-    InteractionManager.runAfterInteractions(() => {
-      pushScoreToServer(eventId, player.id, eventScore, sessionToken).then(() => {
-        StatusBar.setNetworkActivityIndicatorVisible(false);
-      }).catch((error) => {
-        StatusBar.setNetworkActivityIndicatorVisible(false);
-        console.log('Error saving score', error);
+        const strokeSum = strokes - eventScore.extraStrokes;
+        const testSum = strokeSum - eventScore.par;
+        eventScore.points = parseInt(pointsArray[testSum], 10);
+        eventScore.isScored = true;
       });
-    });
+
+      requestAnimationFrame(() => this.props.closeScoreForm() );
+
+      InteractionManager.runAfterInteractions(() => {
+        pushScoreToServer(eventId, player.id, eventScore, sessionToken).then(() => {
+          StatusBar.setNetworkActivityIndicatorVisible(false);
+        }).catch((error) => {
+          StatusBar.setNetworkActivityIndicatorVisible(false);
+          console.log('Error saving score', error);
+        });
+      });
+    }
   }
 
 
