@@ -115,7 +115,7 @@ export default class Login extends Component {
           <Text style={styles.btnLabel}> LOGGA IN </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => this.openPassword}>
+        <TouchableOpacity onPress={this.openPassword}>
           <Text style={styles.forgotten}> Glömt dina uppgifter? </Text>
         </TouchableOpacity>
       </View>
