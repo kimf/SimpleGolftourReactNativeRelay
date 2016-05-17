@@ -48,7 +48,7 @@ export default class ChoosePlayer extends Component {
               <TouchableOpacity
                 key={`choose_player_row_${player.id}`}
                 style={styles.listrow}
-                onPress={() => navigator.push({ setupEventPlayer: 1, needsSaving: true, player, event })}>
+                onPress={() => requestAnimationFrame(() => navigator.push({ setupEventPlayer: 1, needsSaving: true, player, event }))}>
                 <Text style={[styles.flexOne]}>
                   {player.name}
                 </Text>

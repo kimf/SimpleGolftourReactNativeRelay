@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {
-  Alert, View, Text, TouchableOpacity, ScrollView, StatusBar
+  Alert, View, Text, TouchableOpacity, ScrollView, StatusBar, InteractionManager
 } from "react-native";
 
 import NavigationBar from 'react-native-navbar';
@@ -23,13 +23,11 @@ export default class ScoreEvent extends Component {
   }
 
   changeHole(index) {
-    console.log(index)
     const { event } = this.props;
-    requestAnimationFrame(() => {
+    InteractionManager.runAfterInteractions(() => {
       realm.write(() => {
          event.currentHole = index + 1;
       });
-      this.setState({ currentIndex: index });
     });
   }
 

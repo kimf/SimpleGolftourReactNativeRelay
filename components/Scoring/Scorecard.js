@@ -6,7 +6,7 @@ import ScoreRow from './ScoreRow';
 import styles from '../../styles';
 import realm from '../../realm';
 
-import { fetchEventLeaderboard } from '../../lib/ApiService';
+import { fetchEventLeaderboard, deleteScoresFromServer } from '../../lib/ApiService';
 
 export default class Scorecard extends Component {
   constructor(props) {
@@ -31,10 +31,17 @@ export default class Scorecard extends Component {
   }
 
   reallyCancelScoring() {
-    const { event, navigator } = this.props;
+    const { event, navigator, sessionToken } = this.props;
+    StatusBar.setNetworkActivityIndicatorVisible(true);
 
+    let scoreIds = [];
     realm.write(() => {
       for (let player of event.eventPlayers) {
+        for (let score of player.eventScores) {
+          if(score.externalId !== null) {
+            scoreIds.push(score.externalId);
+          }
+        }
         realm.delete(player.eventScores);
       }
       realm.delete(event.eventPlayers);
@@ -43,7 +50,14 @@ export default class Scorecard extends Component {
       event.eventPlayers = [];
     });
 
-    requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
+    deleteScoresFromServer(event.id, scoreIds, sessionToken).then(() => {
+      StatusBar.setNetworkActivityIndicatorVisible(false);
+      requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
+    }).catch((error) => {
+      StatusBar.setNetworkActivityIndicatorVisible(false);
+      requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
+      console.log('opps, deleting went so so', error);
+    });
   }
 
   componentWillMount() {
@@ -123,9 +137,9 @@ export default class Scorecard extends Component {
             <Text style={s.scoreHeaderPos}>POS</Text>
             <Text style={s.scoreHeaderPlayer}>NAMN</Text>
             <Text style={s.scoreHeader}>🍺</Text>
-            <Text style={s.scoreHeader}>HÅL</Text>
-            <Text style={s.scoreHeader}>POÄNG</Text>
             <Text style={s.scoreHeader}>KR</Text>
+            <Text style={s.scoreHeader}>HÅL</Text>
+            <Text style={s.scoreHeader}>{event.scoringType === 'points' ? 'POÄNG' : 'SLAG'}</Text>
           </View>
 
         <ListView
@@ -137,9 +151,9 @@ export default class Scorecard extends Component {
                             <Text style={s.scoreHeaderPos}>{player.position}</Text>
                             <Text style={s.scoreHeaderPlayer}>{player.name.split(' ')[0]}</Text>
                             <Text style={s.scoreHeader}>{player.beers}</Text>
+                            <Text style={s.scoreHeader}>{player.total_kr}</Text>
                             <Text style={s.scoreHeader}>{player.through}</Text>
                             <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{player.total_points}</Text>
-                            <Text style={s.scoreHeader}>{player.total_kr}</Text>
                           </View>
                         </View>
           }

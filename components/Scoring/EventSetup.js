@@ -35,8 +35,10 @@ export default class EventSetup extends Component {
     realm.write(() => {
       event.isScoring = true
       event.currentHole = 1
-    })
-    requestAnimationFrame(() => navigator.resetTo({ scoreEvent: 1, event: event }));
+    });
+    requestAnimationFrame(() =>
+      navigator.resetTo({ scoreEvent: 1, event: event })
+    );
   }
 
   abort() {
@@ -44,7 +46,9 @@ export default class EventSetup extends Component {
     realm.write(() => {
       realm.delete(event.eventPlayers);
     });
-    requestAnimationFrame(() => navigator.resetTo({ tab: 'events' }));
+    requestAnimationFrame(() =>
+      navigator.resetTo({ tab: 'events' })
+    );
   }
 
   render() {
@@ -60,7 +64,7 @@ export default class EventSetup extends Component {
       <View style={[styles.listrow, {flex: 1, borderBottomWidth: 0}]}>
         <TouchableOpacity
           style={styles.addPlayerButton}
-          onPress={() => navigator.push({selectPlayer: 1, event: event})}>
+          onPress={() => requestAnimationFrame(() => navigator.push({selectPlayer: 1, event: event}))}>
           <Text style={[styles.centerText, {color: '#fff'}]}>LÄGG TILL SPELARE</Text>
         </TouchableOpacity>
       </View>
@@ -85,7 +89,7 @@ export default class EventSetup extends Component {
               <TouchableOpacity
                 key={`setup_player_row_${player.id}`}
                 style={styles.listrow}
-                onPress={() => navigator.push({ setupEventPlayer: 1, player, event })}>
+                onPress={() => requestAnimationFrame(() => navigator.push({ setupEventPlayer: 1, player, event }))}>
                 <Text style={[styles.flexOne]}>
                   {player.name}
                 </Text>

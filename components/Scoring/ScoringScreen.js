@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, TouchableOpacity, Text, PickerIOS, StatusBar} from "react-native";
+import {View, TouchableOpacity, Text, PickerIOS, StatusBar, InteractionManager} from "react-native";
 
 import styles from '../../styles';
 import realm from '../../realm';
@@ -35,6 +35,7 @@ export default class ScoringScreen extends Component {
     StatusBar.setNetworkActivityIndicatorVisible(true);
     const { player, eventId, eventScore, sessionToken } = this.props;
     const { strokes, putts } = this.state;
+
     realm.write(() => {
       eventScore.strokes = strokes;
       eventScore.putts = putts;
@@ -45,13 +46,13 @@ export default class ScoringScreen extends Component {
       eventScore.isScored = true;
     });
 
-    requestAnimationFrame(() => {
+    requestAnimationFrame(() => this.props.closeScoreForm() );
+
+    InteractionManager.runAfterInteractions(() => {
       pushScoreToServer(eventId, player.id, eventScore, sessionToken).then(() => {
         StatusBar.setNetworkActivityIndicatorVisible(false);
-        this.props.closeScoreForm();
       }).catch((error) => {
         StatusBar.setNetworkActivityIndicatorVisible(false);
-        this.props.closeScoreForm();
         console.log('Error saving score', error);
       });
     });
