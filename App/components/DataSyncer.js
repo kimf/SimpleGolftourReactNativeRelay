@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {Dimensions, StatusBar, Text, View, Image} from "react-native";
 
-import realm from '../realm';
-import { fetchClubs, fetchEvents, fetchPlayers } from '../lib/ApiService';
+import realm from '../../lib/AppRealm';
+import { fetchClubs, fetchEvents, fetchPlayers } from '../../lib/ApiService';
 import styles from '../styles';
 
 const width = Dimensions.get('window').width;

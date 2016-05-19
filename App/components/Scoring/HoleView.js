@@ -3,7 +3,7 @@ import {View, Text, TouchableOpacity} from "react-native";
 import ScoringScreen from './ScoringScreen';
 import ScoreRow from './ScoreRow';
 import styles from '../../styles';
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 
 export default class HoleView extends Component {
   constructor(props) {

@@ -4,9 +4,9 @@ import {Alert, AppState, View, Text, TouchableOpacity, StyleSheet, ListView, Sta
 import NavigationBar from 'react-native-navbar';
 import ScoreRow from './ScoreRow';
 import styles from '../../styles';
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 
-import { fetchEventLeaderboard, deleteScoresFromServer } from '../../lib/ApiService';
+import { fetchEventLeaderboard, deleteScoresFromServer } from '../../../lib/ApiService';
 
 export default class Scorecard extends Component {
   constructor(props) {

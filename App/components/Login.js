@@ -1,8 +1,8 @@
 import React, {Component} from "react";
 import {Linking, Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
 
-import { apiUrl } from '../lib/ApiService';
-import realm from '../realm';
+import { apiUrl } from '../../lib/ApiService';
+import realm from '../../lib/AppRealm';
 
 const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;

@@ -14,7 +14,7 @@ import HoleView from './HoleView';
 import Loading from '../shared/Loading';
 
 import styles from '../../styles';
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 
 export default class ScoreEvent extends Component {
   constructor(props) {

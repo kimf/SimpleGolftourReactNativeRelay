@@ -3,7 +3,7 @@
 import React, {Component} from "react";
 import {Alert, Text, TouchableOpacity, View} from "react-native";
 import styles from '../../styles';
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 
 export default class ControlPanel extends Component {
   constructor(props) {

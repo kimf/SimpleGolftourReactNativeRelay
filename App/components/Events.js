@@ -7,9 +7,9 @@ import { ListView } from 'realm/react-native';
 
 import EventCard from './EventCard';
 
-import realm from '../realm';
+import realm from '../../lib/AppRealm';
 import styles from '../styles';
-import { fetchEvents } from '../lib/ApiService';
+import { fetchEvents } from '../../lib/ApiService';
 
 export default class Events extends Component {
   constructor(props) {

@@ -3,7 +3,7 @@
 import React from "react";
 import {AppRegistry} from "react-native";
 
-import wrapper from './wrapper'
+import Root from './App/Root'
 
 console.ignoredYellowBox = [
   'Warning: Failed propType: Invalid prop `date` of type `Number` supplied to `RCTDatePicker`',
@@ -12,4 +12,4 @@ console.ignoredYellowBox = [
   'Warning: Failed propType: Invalid prop `title` of type `object` supplied to `NavbarButton`'
 ];
 
-AppRegistry.registerComponent('SimpleGolftour', () => wrapper);
+AppRegistry.registerComponent('SimpleGolftour', () => Root);

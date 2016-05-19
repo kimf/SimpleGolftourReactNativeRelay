@@ -7,7 +7,7 @@ import { ListView } from 'realm/react-native';
 import NavigationBar from 'react-native-navbar';
 
 import styles from '../../styles';
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 
 export default class SetCourse extends Component {
   constructor(props) {

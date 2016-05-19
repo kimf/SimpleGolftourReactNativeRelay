@@ -2,9 +2,9 @@ import React, {Component} from "react";
 import {Alert, View, TouchableOpacity, Text, PickerIOS, StatusBar, InteractionManager} from "react-native";
 
 import styles from '../../styles';
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 
-import { pushScoreToServer } from '../../lib/ApiService';
+import { pushScoreToServer } from '../../../lib/ApiService';
 
 const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];

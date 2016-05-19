@@ -7,8 +7,8 @@ import NavigationBar from 'react-native-navbar';
 import moment from 'moment';
 
 import styles from '../../styles';
-import realm from '../../realm';
-import { saveEvent } from '../../lib/ApiService';
+import realm from '../../../lib/AppRealm';
+import { saveEvent } from '../../../lib/ApiService';
 
 export default class NewEvent extends Component {
   constructor(props) {

@@ -4,13 +4,13 @@ import React, {Component} from "react";
 import {StatusBar, Text, TouchableOpacity, View, RefreshControl} from "react-native";
 
 import styles from '../styles';
-import realm from '../realm';
+import realm from '../../lib/AppRealm';
 import { ListView } from 'realm/react-native';
 
 import NavigationBar from 'react-native-navbar';
 import moment from 'moment';
 
-import { fetchPlayers } from '../lib/ApiService';
+import { fetchPlayers } from '../../lib/ApiService';
 
 import LeaderboardCard from './LeaderboardCard';
 import Loading from './shared/Loading';

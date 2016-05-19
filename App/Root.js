@@ -11,16 +11,18 @@ import SGTNavigator from './components/SGTNavigator'
 import Events from './components/Events';
 
 
-import realm from './realm';
+import AppRealm from '../lib/AppRealm';
+import slowlog from 'react-native-slowlog';
 
-// import {whyDidYouUpdate} from 'why-did-you-update'
-// if(__DEV__) {
-//   whyDidYouUpdate(React, { exclude: /^YellowBox/ })
-// }
+import {whyDidYouUpdate} from 'why-did-you-update'
+if(__DEV__) {
+  whyDidYouUpdate(React, { exclude: /^YellowBox/ })
+}
 
-export default class Wrapper extends Component {
+export default class App extends Component {
   constructor(props){
     super(props);
+    slowlog(this, /.*/);
     this.currentUser = null;
     this.state = { component: null };
     this.onLogin = this.checkUserCreds.bind(this);
@@ -62,43 +64,12 @@ export default class Wrapper extends Component {
     }
   }
 
-  // ------------------------------------------------------------------------------
-  // TMP - FOR CLEARING THINGS UP
-  clearAllData(userDataTo = false){
-    const eventPlayers = realm.objects('EventPlayer');
-    const eventScores = realm.objects('EventScore');
-    const eventTeams = realm.objects('EventTeam');
-    const events = realm.objects('Event');
-    const players = realm.objects('Player');
-    const currentUser = realm.objects('CurrentUser')[0]
-
-    // const clubs = realm.objects('Club');
-    // const courses = realm.objects('Course');
-    // const holes = realm.objects('Hole');
-
-    realm.write(() => {
-      // realm.delete(clubs);
-      // realm.delete(courses);
-      // realm.delete(holes);
-      realm.delete(eventPlayers);
-      realm.delete(eventScores);
-      realm.delete(eventTeams);
-      realm.delete(events);
-      realm.delete(players);
-      currentUser.syncedTimestamp = null;
-      if(userDataTo) {
-        currentUser.isLoggedIn = false;
-        currentUser.sessionToken = '';
-      }
-    });
-  }
-
   goDefault() {
     this.setState({ component: 'Default' })
   }
 
   onLogout() {
-    realm.write(() => {
+    AppRealm.write(() => {
       this.currentUser.isLoggedIn = false;
       this.currentUser.sessionToken = '';
     })
@@ -106,16 +77,16 @@ export default class Wrapper extends Component {
   }
 
   checkUserCreds(synced = false) {
-    this.currentUser = realm.objects('CurrentUser')[0]
+    this.currentUser = AppRealm.objects('CurrentUser')[0]
 
-    if(this.currentUser && this.currentUser.isLoggedIn && this.currentUser.sessionToken) {
+    if(this.currentUser && this.currentUser.sessionToken) {
       const syncedRecently = moment(parseInt(this.currentUser.syncedTimestamp)).isSame(Date.now(), 'day');
       if(syncedRecently) {
         this.setState({ component: 'Default' });
       } else {
-        let clubs = realm.objects('Club');
-        let events = realm.objects('Event');
-        let players = realm.objects('Player');
+        let clubs = AppRealm.objects('Club');
+        let events = AppRealm.objects('Event');
+        let players = AppRealm.objects('Player');
         if(clubs.length === 0 || events.length === 0 || players.length === 0) {
           this.setState({ component: 'DataSyncer', needClubs: (clubs.length === 0) });
         } else {
@@ -150,5 +121,36 @@ export default class Wrapper extends Component {
     } else {
       return null;
     }
+  }
+
+  // ------------------------------------------------------------------------------
+  // TMP - FOR CLEARING THINGS UP
+  clearAllData(userDataTo = false){
+    const eventPlayers = AppRealm.objects('EventPlayer');
+    const eventScores = AppRealm.objects('EventScore');
+    const eventTeams = AppRealm.objects('EventTeam');
+    const events = AppRealm.objects('Event');
+    const players = AppRealm.objects('Player');
+    const currentUser = AppRealm.objects('CurrentUser')[0]
+
+    // const clubs = AppRealm.objects('Club');
+    // const courses = AppRealm.objects('Course');
+    // const holes = AppRealm.objects('Hole');
+
+    AppRealm.write(() => {
+      // AppRealm.delete(clubs);
+      // AppRealm.delete(courses);
+      // AppRealm.delete(holes);
+      AppRealm.delete(eventPlayers);
+      AppRealm.delete(eventScores);
+      AppRealm.delete(eventTeams);
+      AppRealm.delete(events);
+      AppRealm.delete(players);
+      currentUser.syncedTimestamp = null;
+      if(userDataTo) {
+        currentUser.isLoggedIn = false;
+        currentUser.sessionToken = '';
+      }
+    });
   }
 }

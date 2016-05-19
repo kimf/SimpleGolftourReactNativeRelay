@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {View, Text, TouchableOpacity} from "react-native";
 import styles from '../../styles';
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 
 export default class SaveRoundView extends Component {
   constructor(props) {

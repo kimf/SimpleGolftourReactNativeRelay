@@ -5,7 +5,7 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 
-import realm from '../../realm';
+import realm from '../../../lib/AppRealm';
 import styles from '../../styles';
 
 export default class EventSetup extends Component {
