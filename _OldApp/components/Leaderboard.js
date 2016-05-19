@@ -63,7 +63,7 @@ export default class Leaderboard extends Component {
       eventBanner = (
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => requestAnimationFrame(() => navigator.resetTo({ scoreEvent: 1, event: scoringEvent }))}>
+          onPress={() => navigator.resetTo({ scoreEvent: 1, event: scoringEvent })}>
           <Text style={styles.btnLabel}>ÅTERUPPTA SCOREFÖRING</Text>
         </TouchableOpacity>
       );

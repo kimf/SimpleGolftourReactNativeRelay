@@ -6,17 +6,18 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "immutable": "^3.8.1",
     "lodash.sumby": "^4.3.0",
     "moment": "^2.13.0",
     "react": "^15.0.2",
     "react-native": "^0.26.0",
     "react-native-code-push": "^1.11.0-beta",
-    "react-native-navbar": "^1.5.0",
+    "react-native-router-flux": "aksonov/react-native-router-flux#0.26-stable",
     "react-native-slowlog": "^1.0.1",
     "react-native-vector-icons": "^2.0.1",
-    "react-swipeable-views": "^0.6.2",
+    "react-redux": "^4.4.5",
     "realm": "0.13.0-rc",
-    "why-did-you-update": "0.0.8"
+    "redux": "^3.5.2"
   },
   "devDependencies": {
     "babel-cli": "^6.9.0",
@@ -26,6 +27,6 @@
     "eslint-config-airbnb": "^9.0.0",
     "eslint-plugin-react": "^5.0.1",
     "eslint-plugin-react-native": "^1.1.0-beta",
-    "rnpm-plugin-upgrade": "^0.26.0"
+    "why-did-you-update": "0.0.8"
   }
 }

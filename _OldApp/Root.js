@@ -8,16 +8,10 @@ import codePush from "react-native-code-push";
 import Login from './components/Login';
 import DataSyncer from './components/DataSyncer';
 import SGTNavigator from './components/SGTNavigator'
-import Events from './components/Events';
 
 
 import AppRealm from '../lib/AppRealm';
 import slowlog from 'react-native-slowlog';
-
-import {whyDidYouUpdate} from 'why-did-you-update'
-if(__DEV__) {
-  whyDidYouUpdate(React, { exclude: /^YellowBox/ })
-}
 
 export default class App extends Component {
   constructor(props){
@@ -78,21 +72,8 @@ export default class App extends Component {
 
   checkUserCreds(synced = false) {
     this.currentUser = AppRealm.objects('CurrentUser')[0]
-
-    if(this.currentUser && this.currentUser.sessionToken) {
-      const syncedRecently = moment(parseInt(this.currentUser.syncedTimestamp)).isSame(Date.now(), 'day');
-      if(syncedRecently) {
-        this.setState({ component: 'Default' });
-      } else {
-        let clubs = AppRealm.objects('Club');
-        let events = AppRealm.objects('Event');
-        let players = AppRealm.objects('Player');
-        if(clubs.length === 0 || events.length === 0 || players.length === 0) {
-          this.setState({ component: 'DataSyncer', needClubs: (clubs.length === 0) });
-        } else {
-          this.setState({ component: 'Default' });
-        }
-      }
+    if(this.currentUser && this.currentUser.isLoggedIn && this.currentUser.sessionToken) {
+      this.setState({ component: 'Default' });
     } else {
       this.setState({ component: 'Login' });
     }
@@ -101,11 +82,7 @@ export default class App extends Component {
   render() {
     const { component, needClubs } = this.state;
 
-    if(component === 'DataSyncer') {
-      return (
-        <DataSyncer onDone={this.syncIsDone} needClubs={needClubs} currentUser={this.currentUser}/>
-      );
-    } else if(component === 'Default') {
+    if(component === 'Default') {
       return (
         <View style={{ backgroundColor: '#fff', alignItems: 'stretch', flex: 1 }}>
           <StatusBar

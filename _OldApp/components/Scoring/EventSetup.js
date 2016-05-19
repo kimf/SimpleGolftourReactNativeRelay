@@ -36,9 +36,8 @@ export default class EventSetup extends Component {
       event.isScoring = true
       event.currentHole = 1
     });
-    requestAnimationFrame(() =>
-      navigator.resetTo({ scoreEvent: 1, event: event })
-    );
+
+    navigator.resetTo({ scoreEvent: 1, event: event })
   }
 
   abort() {
@@ -46,9 +45,8 @@ export default class EventSetup extends Component {
     realm.write(() => {
       realm.delete(event.eventPlayers);
     });
-    requestAnimationFrame(() =>
-      navigator.resetTo({ tab: 'events' })
-    );
+
+    navigator.resetTo({ tab: 'events' })
   }
 
   render() {

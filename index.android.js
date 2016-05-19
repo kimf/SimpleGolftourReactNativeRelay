@@ -1,7 +1,7 @@
 import React from "react";
 import {AppRegistry} from "react-native";
 
-import Root from './App/Root'
+import App from './src/App'
 
-AppRegistry.registerComponent('SimpleGolftour', () => Root);
+AppRegistry.registerComponent('SimpleGolftour', () => App);
 
