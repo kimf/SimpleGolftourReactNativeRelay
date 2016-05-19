@@ -46,7 +46,7 @@ export default class ScoringScreen extends Component {
     const { player, eventId, eventScore, sessionToken } = this.props;
     const { strokes, putts } = this.state;
 
-    if(strokes - putts < 0) {
+    if(strokes - putts <= 0) {
       Alert.alert('Du verkar ha angett fler puttar än slag!')
     } else {
       realm.write(() => {
@@ -59,15 +59,13 @@ export default class ScoringScreen extends Component {
         eventScore.isScored = true;
       });
 
-      requestAnimationFrame(() => this.props.closeScoreForm() );
-
-      InteractionManager.runAfterInteractions(() => {
-        pushScoreToServer(eventId, player.id, eventScore, sessionToken).then(() => {
-          StatusBar.setNetworkActivityIndicatorVisible(false);
-        }).catch((error) => {
-          StatusBar.setNetworkActivityIndicatorVisible(false);
-          console.log('Error saving score', error);
-        });
+      pushScoreToServer(eventId, player.id, eventScore, sessionToken).then(() => {
+        StatusBar.setNetworkActivityIndicatorVisible(false);
+        requestAnimationFrame(() => this.props.closeScoreForm() );
+      }).catch((error) => {
+        StatusBar.setNetworkActivityIndicatorVisible(false);
+        console.log('Error saving score', error);
+        requestAnimationFrame(() => this.props.closeScoreForm() );
       });
     }
   }
