@@ -5,7 +5,6 @@ import {
 
 import NavigationBar from 'react-native-navbar';
 import SwipeableViews from 'react-swipeable-views/lib/index.native.animated';
-//import SwipeableViews from 'react-swipeable-views/lib/index.native.scroll';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 

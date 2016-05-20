@@ -35,7 +35,7 @@ export default StyleSheet.create({
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.cellBorder,
     flexDirection: 'row',
-    padding: 20
+    padding: 10
   },
 
   bottomBar: {
@@ -372,6 +372,23 @@ export default StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
   },
+
+  sectionHeader: {
+    backgroundColor: '#eee',
+    padding: 10,
+  },
+
+  sectionHeaderText: {
+    color: '#777',
+    fontSize: 12
+  },
+  courserow: {
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: colors.cellBorder,
+    flexDirection: 'row',
+    padding: 20
+  }
+
 });
 
 

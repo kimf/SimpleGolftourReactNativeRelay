@@ -7,10 +7,10 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case REHYDRATE:
-      var incoming = action.payload.auth
-      if (incoming) return incoming
-      return state;
+    // case REHYDRATE:
+    //   var incoming = action.payload.auth
+    //   if (incoming) return incoming
+    //   return state;
 
     case "TRY_LOGIN":
       return {

@@ -6,19 +6,62 @@ import NavigationBar from 'react-native-navbar';
 
 import styles from '../../styles';
 
+import clubsJson from '../../../lib/clubs.json';
+
 export default class SetCourse extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.clubs = [];
+
+    const ds = new ListView.DataSource({
+      rowHasChanged           : (row1, row2) => row1 !== row2,
+      sectionHeaderHasChanged : (s1, s2) => s1 !== s2
+    })
+
+    this.sections = {}
+    clubsJson.clubs.map(c => {
+      let courses = {};
+      if(c.courses.length === 0) { return false };
+      c.courses.map((co) => {
+        courses[co.name] = co;
+      });
+      this.sections[c.name] = courses;
+    })
+
     this.state = {
-      dataSource: ds.cloneWithRows(this.clubs),
-      query: null
-    };
+      dataSource: ds.cloneWithRowsAndSections(this.sections),
+      query: ''
+    }
+
     this._renderRow = this._renderRow.bind(this);
-    this.setSearchQuery = this.setSearchQuery.bind(this);
     this.close = this.close.bind(this);
     this.chooseCourse = this.chooseCourse.bind(this);
+    this.setSearchQuery = this.setSearchQuery.bind(this);
+  }
+
+  _renderSectionHeader(sectionData, sectionID) {
+    return (
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionHeaderText}>{sectionID}</Text>
+      </View>
+    )
+  }
+
+  setSearchQuery(query) {
+    const { dataSource, sections } = this.state;
+    let newDataSource = null;
+    if(query !== null && query.length > 1) {
+      const q = query.toLowerCase();
+      const filtered = new Object();
+      for (let i in this.sections) {
+        if (i.toLowerCase().indexOf(q) !== -1) {
+          filtered[i] = this.sections[i];
+        }
+      }
+      newDataSource = dataSource.cloneWithRowsAndSections(filtered);
+    } else {
+      newDataSource = dataSource.cloneWithRowsAndSections(this.sections);
+    }
+    this.setState({ dataSource: newDataSource, query });
   }
 
   close() {
@@ -38,39 +81,21 @@ export default class SetCourse extends Component {
     }
   }
 
-  _renderRow(club) {
+  _renderRow(course, sectionID, rowID, highlightRow) {
     const { navigator } = this.props;
     return(
-      <View key={`club_row_${club.id}`} style={[styles.listrow, {flexDirection: 'column'}]}>
-        <Text>{club.name}</Text>
-        {club.courses.map((course) => {
-          return(
-            <TouchableOpacity
-              onPress={() => this.chooseCourse(course)}
-              key={`course_row_${course.id}`}>
-              <View style={styles.listrow}>
-                <Text>{course.name} {course.par}</Text>
-              </View>
-            </TouchableOpacity>
-          )
-        })}
-      </View>
+      <TouchableOpacity
+        onPress={() => this.chooseCourse(course)}
+        key={`course_row_${course.id}`}>
+        <View style={styles.courserow}>
+          <Text>{course.name} {course.par}</Text>
+        </View>
+      </TouchableOpacity>
     )
   }
 
-  setSearchQuery(query) {
-    let { dataSource } = this.state
-    if(query !== null && query.length > 1) {
-      const filtered = this.clubs.filtered(`name CONTAINS "${query}"`);
-      dataSource = dataSource.cloneWithRows(filtered);
-      this.setState({dataSource, query});
-    } else {
-      this.setState({query, dataSource});
-    }
-  }
-
   render() {
-    const { dataSource, query } = this.state;
+    const { query, dataSource } = this.state;
 
     const titleConfig = { title: 'Välj Bana', tintColor: 'white'  };
 
@@ -95,13 +120,15 @@ export default class SetCourse extends Component {
             autoCorrect={false}
             placeholder="Sök klubb"
             ref= "query"
+            returnKeyType="search"
             onChangeText={(query) => this.setSearchQuery(query)}
-            value={this.state.email}
+            value={query}
           />
         </View>
         <ListView
           dataSource={dataSource}
           renderRow={this._renderRow}
+          renderSectionHeader={this._renderSectionHeader}
         />
       </View>
     )

@@ -10,15 +10,13 @@ import SGTColors from '../colors';
 import Events from '../containers/Events';
 import Leaderboard from '../containers/Leaderboard';
 
-export default class SGTTabsView extends Component {
-  constructor(props) {
-    super(props);
-    this.onTabSelect = this.onTabSelect.bind(this);
-  }
+import { connect } from 'react-redux';
+import { changeTab } from '../actions';
 
+class SGTTabsView extends Component {
   onTabSelect(tab) {
     if (this.props.tab !== tab) {
-      this.props.changeTab(tab);
+      this.props.onTabSelect(tab);
     }
   }
 
@@ -46,3 +44,19 @@ export default class SGTTabsView extends Component {
     );
   }
 }
+
+
+const select = (store) => {
+  return {
+    tab: store.tabs.tab
+  };
+}
+
+const actions = (dispatch) => {
+  return {
+    onTabSelect: (tab) => dispatch(changeTab(tab)),
+  };
+}
+
+
+export default connect(select, actions)(SGTTabsView);

@@ -3,49 +3,32 @@
 import React, {Component} from "react";
 import {StatusBar, Text, View, RefreshControl, ListView} from "react-native";
 import NavigationBar from 'react-native-navbar';
+import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+import { fetchEventsIfNeeded } from '../actions/events';
+import styles from '../styles';
 
 import EventCard from '../components/EventCard';
-
-import styles from '../styles';
-import { fetchEvents } from '../../lib/ApiService';
 
 export default class Events extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = { refreshing: false, dataSource: ds.cloneWithRows([]) };
+    this.state = {
+      dataSource: ds.cloneWithRows(props.events.data)
+    }
+
     this.openNewEvent = this.openNewEvent.bind(this);
     this.setupEvent = this.setupEvent.bind(this);
     this.scoreEvent = this.scoreEvent.bind(this);
     this.followEvent = this.followEvent.bind(this);
     this.refreshEvents = this.refreshEvents.bind(this);
+    this.refreshEvents();
   }
 
-  componentWillMount() {
-    let events = realm.objects('Event').sorted('startsAt', true);
-    this.setEvents(events);
-    this.refreshEvents(events, false);
-  }
-
-  refreshEvents(events, setState = true) {
-    if(setState) {
-      this.setState({refreshing: true});
-    }
-
-    StatusBar.setNetworkActivityIndicatorVisible(true);
-    fetchEvents(this.props.sessionToken).then((events) => {
-      this.setEvents(events);
-      StatusBar.setNetworkActivityIndicatorVisible(false);
-    }).catch((error) => {
-      this.setState({refreshing: false});
-      StatusBar.setNetworkActivityIndicatorVisible(false);
-      console.log('Error retreiving data', error);
-    });
-  }
-
-  setEvents(events) {
-    const dataSource = this.state.dataSource.cloneWithRows(events);
-    this.setState({refreshing: false, dataSource});
+  refreshEvents() {
+    this.props.doFetch();
   }
 
   openNewEvent() {
@@ -64,12 +47,20 @@ export default class Events extends Component {
     requestAnimationFrame(() => this.props.navigator.push({ followEvent: 1, event: event }) );
   }
 
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.events.data !== this.props.events.data) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.events.data)
+      })
+    }
+  }
+
   render() {
-    const { dataSource, refreshing } = this.state;
+    const { events } = this.props;
 
     const titleConfig = { title: 'Rundor', tintColor: 'white'  };
     const rightButtonConfig = {
-      title: '+ Ny',
+      title: <Icon name="calendar-plus-o" size={20} />,
       handler: this.openNewEvent,
       tintColor: 'white'
     };
@@ -85,10 +76,10 @@ export default class Events extends Component {
 
         <ListView
           enableEmptySections
-          dataSource={dataSource}
+          dataSource={this.state.dataSource}
           refreshControl={
             <RefreshControl
-              refreshing={refreshing}
+              refreshing={events.isFetching}
               onRefresh={this.refreshEvents}
               tintColor="#477dca"
               title="Uppdaterar..."
@@ -108,3 +99,25 @@ export default class Events extends Component {
     )
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    events: state.events
+  }
+}
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    doFetch: () => {
+      dispatch(fetchEventsIfNeeded())
+    }
+  }
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Events)

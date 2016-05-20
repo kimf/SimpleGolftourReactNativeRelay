@@ -6,7 +6,8 @@ import NavigationBar from 'react-native-navbar';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { changeTab, logOutWithPrompt } from '../actions';
+import { logOutWithPrompt } from '../actions';
+import { fetchPlayersIfNeeded } from '../actions/players';
 import styles from '../styles';
 
 import LeaderboardCard from '../components/LeaderboardCard';
@@ -15,53 +16,38 @@ class Leaderboard extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = { refreshing: false, dataSource: ds.cloneWithRows([]) };
+    this.state = {
+      dataSource: ds.cloneWithRows(props.players.data)
+    }
+
     this.reloadLeaderboard = this.reloadLeaderboard.bind(this);
+    this.reloadLeaderboard();
   }
 
-  componentWillMount() {
-    let players = [] //realm.objects('Player').filtered('eventCount >= 1').sorted('position');
-    const scoringEvent = {} // realm.objects('Event').find(event => event.isScoring);
-    this.setDataState(players, scoringEvent);
+  reloadLeaderboard() {
+    this.props.doFetch();
   }
 
-  reloadLeaderboard(){
-
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.players.data !== this.props.players.data) {
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(nextProps.players.data)
+      })
+    }
   }
 
-  // reloadLeaderboard(players, setState = true) {
-  //   if(setState) {
-  //     this.setState({refreshing: true});
-  //   }
-
-  //   StatusBar.setNetworkActivityIndicatorVisible(true);
-  //   fetchPlayers(this.props.sessionToken).then((players) => {
-  //     this.setDataState(players);
-  //     StatusBar.setNetworkActivityIndicatorVisible(false);
-  //   }).catch((error) => {
-  //     this.setState({refreshing: false});
-  //     StatusBar.setNetworkActivityIndicatorVisible(false);
-  //     console.log('Error retreiving data', error);
-  //   });
-  // }
-
-  setDataState(players, scoringEvent) {
-    const dataSource = this.state.dataSource.cloneWithRows(players);
-    this.setState({refreshing: false, dataSource, scoringEvent});
-  }
 
   render() {
-    const { navigator, onLogout } = this.props;
-    const { dataSource, scoringEvent, refreshing } = this.state;
+    const { navigator, players, onLogout, currentUserId } = this.props;
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
-    const rightButtonConfig = {
+    const leftButtonConfig = {
       title: 'Logga ut',
       handler: () => onLogout(),
       tintColor: 'white'
     };
 
-    let eventBanner;
+    let eventBanner, scoringEvent;
     if(scoringEvent) {
       eventBanner = (
         <TouchableOpacity
@@ -78,16 +64,15 @@ class Leaderboard extends Component {
           style={styles.header}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           title={titleConfig}
-          rightButton={rightButtonConfig} />
-
-          {eventBanner}
+          leftButton={leftButtonConfig} />
 
           <ListView
-            enableEmptySections
-            dataSource={dataSource}
+            enableEmptySections={false}
+            initialListSize={8}
+            dataSource={this.state.dataSource}
             refreshControl={
               <RefreshControl
-                refreshing={refreshing}
+                refreshing={players.isFetching}
                 onRefresh={this.reloadLeaderboard}
                 tintColor="#477dca"
                 title="Uppdaterar..."
@@ -95,7 +80,7 @@ class Leaderboard extends Component {
                 progressBackgroundColor="#FF2179"
               />
             }
-            renderRow={(rowData) => <LeaderboardCard data={rowData} />}
+            renderRow={(rowData) => <LeaderboardCard currentUserId={currentUserId} data={rowData} />}
           />
       </View>
     )
@@ -105,13 +90,17 @@ class Leaderboard extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.auth.user
+    players: state.players,
+    currentUserId: state.auth.user.id
   }
 }
 
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    doFetch: () => {
+      dispatch(fetchPlayersIfNeeded())
+    },
     onLogout: () => {
       dispatch(logOutWithPrompt())
     }

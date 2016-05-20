@@ -3,9 +3,10 @@
 import React, { Component } from 'react';
 import { Navigator } from 'react-native';
 
-import SGTTabsView from '../components/SGTTabsView';
-import NewEvent from '../components/NewEvent/NewEvent';
+import SGTTabsView from './SGTTabsView';
+
 import SetCourse from '../components/NewEvent/SetCourse';
+import NewEvent from '../components/NewEvent/NewEvent';
 
 import EventSetup from '../components/Scoring/EventSetup';
 import ChoosePlayer from '../components/Scoring/ChoosePlayer';
@@ -14,8 +15,6 @@ import ScoreEvent from '../components/Scoring/ScoreEvent';
 import Scorecard from '../components/Scoring/Scorecard';
 
 import { connect } from 'react-redux';
-import { changeTab } from '../actions';
-
 
 class SGTNavigator extends Component {
   constructor(props) {
@@ -47,53 +46,35 @@ class SGTNavigator extends Component {
 
     console.log(route);
 
-    // if (route.showScorecard || route.followEvent) {
-    //   return <Scorecard
-    //             event={route.event}
-    //             sessionToken={currentUser.sessionToken}
-    //             navigator={navigator} />
-    // }
+    if (route.showScorecard || route.followEvent) {
+      return <Scorecard event={route.event} navigator={navigator} />
+    }
 
-    // if (route.scoreEvent) {
-    //   return <ScoreEvent
-    //             event={route.event}
-    //             sessionToken={currentUser.sessionToken}
-    //             navigator={navigator} />
-    // }
+    if (route.scoreEvent) {
+      return <ScoreEvent event={route.event} navigator={navigator} />
+    }
 
-    // if (route.setupEventPlayer) {
-    //   return <EventPlayerSetup
-    //             event={route.event}
-    //             player={route.player}
-    //             navigator={navigator}
-    //             needsSaving={route.needsSaving} />
-    // }
+    if (route.setupEventPlayer) {
+      return <EventPlayerSetup event={route.event} player={route.player} navigator={navigator} />
+    }
 
-    // if (route.selectPlayer) {
-    //   return <ChoosePlayer
-    //             event={route.event}
-    //             navigator={navigator} />
-    // }
+    if (route.selectPlayer) {
+      return <ChoosePlayer event={route.event} navigator={navigator} />
+    }
 
-    // if (route.setupEvent) {
-    //   return <EventSetup
-    //             event={route.event}
-    //             navigator={navigator}
-    //             currentUserId={currentUser.id} />
-    // }
+    if (route.setupEvent) {
+      return <EventSetup event={route.event} navigator={navigator} />
+    }
 
-    // if (route.setCourse) {
-    //   return <SetCourse navigator={navigator} />;
-    // }
+    if (route.setCourse) {
+      return <SetCourse navigator={navigator} />;
+    }
 
-    // if (route.newEvent) {
-    //   return <NewEvent
-    //             sessionToken={currentUser.sessionToken}
-    //             navigator={navigator}
-    //             course={route.course} />;
-    // }
+    if (route.newEvent) {
+      return <NewEvent navigator={navigator} course={route.course} />;
+    }
 
-    return <SGTTabsView navigator={navigator} tab={tab} changeTab={changeTab} />;
+    return <SGTTabsView navigator={navigator} />;
   }
 }
 

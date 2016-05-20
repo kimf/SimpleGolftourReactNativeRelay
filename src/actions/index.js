@@ -5,7 +5,6 @@ export function changeTab(tab) {
   return { type: 'CHANGE_TAB', tab: tab }
 }
 
-
 function tryLogin() {
   return { type: 'TRY_LOGIN' };
 }

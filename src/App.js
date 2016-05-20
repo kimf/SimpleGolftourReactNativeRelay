@@ -15,10 +15,6 @@ import SGTNavigator from './containers/SGTNavigator';
 // if(__DEV__) {
 //   whyDidYouUpdate(React)
 // }
-
-//TODO: Move to Master.js, with eventListeners on AppState.
-// import { loadLeaderboard, loadEvents } from './actions'
-
 class App extends Component {
   constructor(){
     super();
@@ -32,8 +28,6 @@ class App extends Component {
   componentDidMount() {
     this.updateCodePush();
     AppState.addEventListener('change', this.handleAppStateChange);
-    // this.props.dispatch(loadLeaderboard());
-    // this.props.dispatch(loadEvents());
   }
 
   componentWillUnmount() {
@@ -51,9 +45,9 @@ class App extends Component {
   }
 
   _handleAppStateChange(newState) {
-    newState === "active" && this.updateCodePush();
-    // this.props.dispatch(loadLeaderboard());
-    // this.props.dispatch(loadEvents());
+    if(newState === "active") {
+      this.updateCodePush();
+    }
   }
 
   render() {

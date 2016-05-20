@@ -5,6 +5,9 @@ export default function reducer(state = initialState, action = {}) {
     case "CHANGE_TAB":
       return { tab: action.tab }
 
+    case "LOGGED_OUT":
+      return initialState;
+
     default:
       return state;
   }
