@@ -1,4 +1,10 @@
+import { ActionSheetIOS } from 'react-native';
 import { loginUser } from '../../lib/ApiService';
+
+export function changeTab(tab) {
+  return { type: 'CHANGE_TAB', tab: tab }
+}
+
 
 function tryLogin() {
   return { type: 'TRY_LOGIN' };
@@ -10,6 +16,29 @@ function loginSuccessful(user) {
 
 function loginFailed(email, error) {
   return { type: 'LOGIN_FAILED', email, error };
+}
+
+function logOut() {
+  return { type: 'LOGGED_OUT' }
+}
+
+export function logOutWithPrompt() {
+  return (dispatch, getState) => {
+    let name = getState().auth.user.name || 'there';
+    ActionSheetIOS.showActionSheetWithOptions(
+      {
+        title: `Hej, ${name}`,
+        options: ['Logga ut', 'Avbryt'],
+        destructiveButtonIndex: 0,
+        cancelButtonIndex: 1,
+      },
+      (buttonIndex) => {
+        if (buttonIndex === 0) {
+          dispatch(logOut());
+        }
+      }
+    );
+  };
 }
 
 export function login(email, password) {

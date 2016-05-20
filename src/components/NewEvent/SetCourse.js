@@ -1,19 +1,16 @@
 'use strict';
 
 import React, {Component} from "react";
-import {Text, TextInput, TouchableOpacity, View} from "react-native";
-
-import { ListView } from 'realm/react-native';
+import {Text, TextInput, TouchableOpacity, View, ListView} from "react-native";
 import NavigationBar from 'react-native-navbar';
 
 import styles from '../../styles';
-import realm from '../../../lib/AppRealm';
 
 export default class SetCourse extends Component {
   constructor(props) {
     super(props);
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.clubs = realm.objects('Club').sorted('name');
+    this.clubs = [];
     this.state = {
       dataSource: ds.cloneWithRows(this.clubs),
       query: null

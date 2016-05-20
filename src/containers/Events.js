@@ -1,13 +1,11 @@
 'use strict';
 
 import React, {Component} from "react";
-import {StatusBar, Text, View, RefreshControl} from "react-native";
+import {StatusBar, Text, View, RefreshControl, ListView} from "react-native";
 import NavigationBar from 'react-native-navbar';
-import { ListView } from 'realm/react-native';
 
-import EventCard from './EventCard';
+import EventCard from '../components/EventCard';
 
-import realm from '../../lib/AppRealm';
 import styles from '../styles';
 import { fetchEvents } from '../../lib/ApiService';
 

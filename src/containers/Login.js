@@ -1,10 +1,9 @@
-import React, {Component} from "react";
+import React, {Component, PropTypes} from "react";
 import {Linking, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
-
-import { apiUrl } from '../../lib/ApiService';
 import { login } from '../actions';
+import { connect } from 'react-redux';
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props){
     super(props);
     const email = props.auth.user ? props.auth.user.email : '';
@@ -81,6 +80,23 @@ export default class Login extends Component {
     )
   }
 }
+
+
+Login.propTypes = {
+  auth: PropTypes.object.isRequired,
+  dispatch: PropTypes.func.isRequired
+}
+
+
+const mapStateToProps = (state) => {
+  return {
+    auth: state.auth
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(Login)
 
 
 let styles = StyleSheet.create({

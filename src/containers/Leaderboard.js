@@ -1,51 +1,49 @@
 'use strict';
-
 import React, {Component} from "react";
-import {StatusBar, Text, TouchableOpacity, View, RefreshControl} from "react-native";
-
-import styles from '../styles';
-import realm from '../../lib/AppRealm';
-import { ListView } from 'realm/react-native';
+import {StatusBar, Text, TouchableOpacity, View, RefreshControl, ListView} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 import moment from 'moment';
+import { connect } from 'react-redux';
 
-import { fetchPlayers } from '../../lib/ApiService';
+import { changeTab, logOutWithPrompt } from '../actions';
+import styles from '../styles';
 
-import LeaderboardCard from './LeaderboardCard';
-import Loading from './shared/Loading';
+import LeaderboardCard from '../components/LeaderboardCard';
 
-export default class Leaderboard extends Component {
+class Leaderboard extends Component {
   constructor(props) {
     super(props);
-    this.onLogout = this.props.onLogout;
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = { refreshing: false, dataSource: ds.cloneWithRows([]) };
     this.reloadLeaderboard = this.reloadLeaderboard.bind(this);
   }
 
   componentWillMount() {
-    let players = realm.objects('Player').filtered('eventCount >= 1').sorted('position');
-    const scoringEvent = realm.objects('Event').find(event => event.isScoring);
+    let players = [] //realm.objects('Player').filtered('eventCount >= 1').sorted('position');
+    const scoringEvent = {} // realm.objects('Event').find(event => event.isScoring);
     this.setDataState(players, scoringEvent);
-    this.reloadLeaderboard(players, false);
   }
 
-  reloadLeaderboard(players, setState = true) {
-    if(setState) {
-      this.setState({refreshing: true});
-    }
+  reloadLeaderboard(){
 
-    StatusBar.setNetworkActivityIndicatorVisible(true);
-    fetchPlayers(this.props.sessionToken).then((players) => {
-      this.setDataState(players);
-      StatusBar.setNetworkActivityIndicatorVisible(false);
-    }).catch((error) => {
-      this.setState({refreshing: false});
-      StatusBar.setNetworkActivityIndicatorVisible(false);
-      console.log('Error retreiving data', error);
-    });
   }
+
+  // reloadLeaderboard(players, setState = true) {
+  //   if(setState) {
+  //     this.setState({refreshing: true});
+  //   }
+
+  //   StatusBar.setNetworkActivityIndicatorVisible(true);
+  //   fetchPlayers(this.props.sessionToken).then((players) => {
+  //     this.setDataState(players);
+  //     StatusBar.setNetworkActivityIndicatorVisible(false);
+  //   }).catch((error) => {
+  //     this.setState({refreshing: false});
+  //     StatusBar.setNetworkActivityIndicatorVisible(false);
+  //     console.log('Error retreiving data', error);
+  //   });
+  // }
 
   setDataState(players, scoringEvent) {
     const dataSource = this.state.dataSource.cloneWithRows(players);
@@ -53,10 +51,15 @@ export default class Leaderboard extends Component {
   }
 
   render() {
-    const { navigator } = this.props;
+    const { navigator, onLogout } = this.props;
     const { dataSource, scoringEvent, refreshing } = this.state;
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
+    const rightButtonConfig = {
+      title: 'Logga ut',
+      handler: () => onLogout(),
+      tintColor: 'white'
+    };
 
     let eventBanner;
     if(scoringEvent) {
@@ -74,7 +77,8 @@ export default class Leaderboard extends Component {
         <NavigationBar
           style={styles.header}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
-          title={titleConfig}/>
+          title={titleConfig}
+          rightButton={rightButtonConfig} />
 
           {eventBanner}
 
@@ -97,3 +101,25 @@ export default class Leaderboard extends Component {
     )
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.auth.user
+  }
+}
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onLogout: () => {
+      dispatch(logOutWithPrompt())
+    }
+  }
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Leaderboard)

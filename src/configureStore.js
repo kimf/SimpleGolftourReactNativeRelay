@@ -4,23 +4,20 @@ import thunk from 'redux-thunk';
 import reducers from './reducers';
 import {persistStore, autoRehydrate} from 'redux-persist';
 import Reactotron from 'reactotron';
+import invariant from 'redux-immutable-state-invariant';
 
-const isDebuggingInChrome = __DEV__ && !!window.navigator.userAgent;
+const middleware = __DEV__
+                   ? [invariant(), Reactotron.reduxMiddleware, thunk]
+                   : [thunk];
 
-const middleware = [thunk, Reactotron.reduxMiddleware];
 const createSgtStore = applyMiddleware(...middleware)(createStore);
 
 const configureStore = (onComplete) => {
   const store = autoRehydrate()(createSgtStore)(reducers)
   persistStore(store, {storage: AsyncStorage}, onComplete);
-
   if(__DEV__) {
     Reactotron.addReduxStore(store)
   }
-  if(isDebuggingInChrome) {
-    window.store = store;
-  }
-
   return store;
 }
 

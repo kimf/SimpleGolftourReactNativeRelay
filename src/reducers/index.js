@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
-import routes from './routes';
+import tabs from './tabs';
 import auth from './auth';
 // ... other reducers
 
 export default combineReducers({
-  routes,
-  auth
+  auth,
+  tabs
   // ... other reducers
 });

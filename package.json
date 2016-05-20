@@ -14,10 +14,11 @@
     "react": "^15.0.2",
     "react-native": "^0.26.0",
     "react-native-code-push": "^1.11.0-beta",
-    "react-native-router-flux": "aksonov/react-native-router-flux#0.26-stable",
+    "react-native-navbar": "^1.5.0",
     "react-native-slowlog": "^1.0.1",
     "react-native-vector-icons": "^2.0.1",
     "react-redux": "^4.4.5",
+    "react-swipeable-views": "^0.6.2",
     "redux": "^3.5.2",
     "redux-persist": "^3.1.1",
     "redux-thunk": "^2.1.0"
@@ -31,6 +32,7 @@
     "eslint-plugin-react": "^5.0.1",
     "eslint-plugin-react-native": "^1.1.0-beta",
     "reactotron": "^0.6.1",
+    "redux-immutable-state-invariant": "^1.2.3",
     "why-did-you-update": "0.0.8"
   }
 }

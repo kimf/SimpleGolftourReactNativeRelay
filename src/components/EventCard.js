@@ -5,7 +5,7 @@ import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
 
 import moment from 'moment';
 import sv from 'moment/locale/sv';
-import colors from '../common/colors';
+import colors from '../colors';
 
 export default class EventCard extends Component {
   render() {

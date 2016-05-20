@@ -3,7 +3,10 @@
 import React from "react";
 import {AppRegistry} from "react-native";
 
-import App from './src/App'
+import Reactotron from 'reactotron';
+Reactotron.connect({enabled: __DEV__})
+
+import Root from './src/Root'
 
 console.ignoredYellowBox = [
   'Warning: Failed propType: Invalid prop `date` of type `Number` supplied to `RCTDatePicker`',
@@ -13,4 +16,4 @@ console.ignoredYellowBox = [
   'Warning: Failed propType: SceneView: prop type `sceneRendererProps` is invalid'
 ];
 
-AppRegistry.registerComponent('SimpleGolftour', () => App);
+AppRegistry.registerComponent('SimpleGolftour', () => Root);

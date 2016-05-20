@@ -1,7 +1,8 @@
 import {REHYDRATE} from 'redux-persist/constants';
 
 const initialState = {
-  user: false,
+  loggingIn: false,
+  user: {},
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -18,6 +19,8 @@ export default function reducer(state = initialState, action = {}) {
       };
 
     case "LOGIN_SUCCESS":
+      action.user.isLoggedIn = true;
+      action.user.error = false;
       return {
         loggingIn: false,
         user: action.user
@@ -27,6 +30,12 @@ export default function reducer(state = initialState, action = {}) {
       return {
         loggingIn: false,
         user: { email: action.email, error: action.error }
+      }
+
+    case "LOGGED_OUT":
+      return {
+        loggingIn: false,
+        user: { email: state.user.email }
       }
 
     default:
