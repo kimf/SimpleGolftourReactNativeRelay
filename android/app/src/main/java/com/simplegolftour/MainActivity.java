@@ -3,7 +3,6 @@ package com.simplegolftour;
 import com.facebook.react.ReactActivity;
 import com.microsoft.codepush.react.CodePush;
 import com.oblador.vectoricons.VectorIconsPackage;
-import io.realm.react.RealmReactPackage;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 
@@ -39,8 +38,7 @@ public class MainActivity extends ReactActivity {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
             new CodePush(null, this, BuildConfig.DEBUG),
-            new VectorIconsPackage(),
-            new RealmReactPackage()
+            new VectorIconsPackage()
         );
     }
 }

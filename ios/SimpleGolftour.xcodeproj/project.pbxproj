@@ -22,7 +22,6 @@
 		2A80AAB24C9947A2A6CBFE42 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BFAE2F77398488496F44C2F /* libRNVectorIcons.a */; };
 		401FD02BE45245CDA5FB4BA0 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 332BD772C0CF45229C5EE61F /* Octicons.ttf */; };
 		4ED5C02B8FF049229C1D1CAD /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1B6A932E609842AA8151E62D /* Zocial.ttf */; };
-		7177E16607824AF8918F4F22 /* libRealmReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BDA4C2997EFB4BBA8F4725D1 /* libRealmReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		8890FA49711D4ECA892ED918 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 820E159B638D414A9D8AED3A /* Entypo.ttf */; };
 		A865CD70D8C849A8BD9ADC72 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = BA4F2E20F1DA4843B9E341EF /* libz.tbd */; };
@@ -105,13 +104,6 @@
 			remoteGlobalIDString = 58B5119B1A9E6C1200147676;
 			remoteInfo = RCTText;
 		};
-		9773E6051CE9FC2F0059EE79 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 8E16376AD37340F7AB4AFC29 /* RealmReact.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F60690131CA2766F0003FB26;
-			remoteInfo = RealmReact;
-		};
 		9773E6081CE9FC2F0059EE79 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F2303A52BF4A4AEDB6AA6098 /* RNVectorIcons.xcodeproj */;
@@ -156,9 +148,7 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		820E159B638D414A9D8AED3A /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
-		8E16376AD37340F7AB4AFC29 /* RealmReact.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RealmReact.xcodeproj; path = "../node_modules/realm/react-native/ios/RealmReact.xcodeproj"; sourceTree = "<group>"; };
 		BA4F2E20F1DA4843B9E341EF /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		BDA4C2997EFB4BBA8F4725D1 /* libRealmReact.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRealmReact.a; sourceTree = "<group>"; };
 		F2303A52BF4A4AEDB6AA6098 /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
 		FB89524B02514B8BB338B739 /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -181,7 +171,6 @@
 				D7B40F371CD94773B91039BC /* libc++.tbd in Frameworks */,
 				A865CD70D8C849A8BD9ADC72 /* libz.tbd in Frameworks */,
 				2A80AAB24C9947A2A6CBFE42 /* libRNVectorIcons.a in Frameworks */,
-				7177E16607824AF8918F4F22 /* libRealmReact.a in Frameworks */,
 				D0D5FD4E1F2142B9B34E5FDF /* libCodePush.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -311,7 +300,6 @@
 				00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */,
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				F2303A52BF4A4AEDB6AA6098 /* RNVectorIcons.xcodeproj */,
-				8E16376AD37340F7AB4AFC29 /* RealmReact.xcodeproj */,
 				1F5A37AAD3A24E91A1820A34 /* CodePush.xcodeproj */,
 			);
 			name = Libraries;
@@ -342,14 +330,6 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* SimpleGolftour.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		9773E5F61CE9FC2F0059EE79 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				9773E6061CE9FC2F0059EE79 /* libRealmReact.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -462,10 +442,6 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = 9773E5F61CE9FC2F0059EE79 /* Products */;
-					ProjectRef = 8E16376AD37340F7AB4AFC29 /* RealmReact.xcodeproj */;
-				},
-				{
 					ProductGroup = 9773E5F81CE9FC2F0059EE79 /* Products */;
 					ProjectRef = F2303A52BF4A4AEDB6AA6098 /* RNVectorIcons.xcodeproj */;
 				},
@@ -548,13 +524,6 @@
 			remoteRef = 832341B41AAA6A8300B99B32 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		9773E6061CE9FC2F0059EE79 /* libRealmReact.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRealmReact.a;
-			remoteRef = 9773E6051CE9FC2F0059EE79 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		9773E6091CE9FC2F0059EE79 /* libRNVectorIcons.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -633,16 +602,12 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				INFOPLIST_FILE = SimpleGolftour/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/SimpleGolftour\"",
-					"\"$(SRCROOT)/SimpleGolftour\"",
-					"\"$(SRCROOT)/SimpleGolftour\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = se.calces.Tisdagsgolfen;
@@ -663,16 +628,12 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				INFOPLIST_FILE = SimpleGolftour/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/SimpleGolftour\"",
-					"\"$(SRCROOT)/SimpleGolftour\"",
-					"\"$(SRCROOT)/SimpleGolftour\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = se.calces.Tisdagsgolfen;
@@ -721,7 +682,6 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
@@ -764,7 +724,6 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
-					"$(SRCROOT)/../node_modules/realm/src/**",
 					"$(SRCROOT)/../node_modules/react-native-code-push/ios/CodePush/**",
 				);
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;

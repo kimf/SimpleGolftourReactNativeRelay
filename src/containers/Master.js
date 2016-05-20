@@ -1,19 +1,18 @@
 import React, { Component, PropTypes } from 'react';
-import { Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { connect } from 'react-redux';
 
-class Master extends Component {
-  static propTypes = {
-    routes: PropTypes.object,
-  };
+export default class Master extends Component {
 
   render () {
     return (
-      <Text>
-        The current scene is titled {this.props.routes.scene.title}.
-      </Text>
+      <View style={{flex: 1, backgroundColor: '#fff', alignItems: 'stretch'}}>
+        <View>
+          <Text>
+            MASTER
+          </Text>
+        </View>
+      </View>
     );
   }
 }
-
-export default connect(({routes}) => ({routes}))(Master);

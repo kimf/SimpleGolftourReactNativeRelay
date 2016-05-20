@@ -1,20 +1,14 @@
 'use strict';
 import React, { Component } from "react";
-import { AppState, View, StatusBar } from "react-native";
+import { AppState, View } from "react-native";
+import { Provider } from 'react-redux';
 
 import codePush from "react-native-code-push";
 import { Scene, Router } from 'react-native-router-flux';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware, compose } from 'redux';
-import { connect } from 'react-redux';
-
-const RouterWithRedux = connect()(Router);
-import reducers from './reducers';
-
 import moment from 'moment';
+import Reactotron from 'reactotron';
 
-import Master from './containers/Master';
-import Login from './containers/Login';
+import Routes from './routes';
 
 import slowlog from 'react-native-slowlog';
 // import {whyDidYouUpdate} from 'why-did-you-update'
@@ -22,37 +16,41 @@ import slowlog from 'react-native-slowlog';
 //   whyDidYouUpdate(React)
 // }
 
-// create store...
-const middleware = [/* ...your middleware (i.e. thunk) */];
-const store = compose(
-  applyMiddleware(...middleware)
-)(createStore)(reducers);
+//TODO: Move to Master.js, with eventListeners on AppState.
+// import { loadLeaderboard, loadEvents } from './actions'
 
+Reactotron.connect({enabled: __DEV__})
+import configureStore from './configureStore';
 
 export default class App extends Component {
-  constructor(props){
-    super(props);
+  constructor(){
+    super();
     slowlog(this, /.*/);
-    this.state = Object.assign({}, { user: false });
+
+    this.state = {
+      isLoading: true,
+      store: configureStore(() => this.setState({isLoading: false}))
+    }
 
     this.updateCodePush = this._updateCodePush.bind(this);
     this.handleAppStateChange = this._handleAppStateChange.bind(this);
   }
 
+
   componentDidMount() {
-    if(!__DEV__) {
-      this.updateCodePush();
-      AppState.addEventListener('change', this.handleAppStateChange);
-    }
+    this.updateCodePush();
+    AppState.addEventListener('change', this.handleAppStateChange);
+    // this.props.dispatch(loadLeaderboard());
+    // this.props.dispatch(loadEvents());
   }
 
   componentWillUnmount() {
-    if(!__DEV__) {
-      AppState.removeEventListener('change', this.handleAppStateChange);
-    }
+    AppState.removeEventListener('change', this.handleAppStateChange);
   }
 
   _updateCodePush() {
+    if(__DEV__) { return false; }
+
     codePush.sync({
       updateDialog: true,
       installMode: codePush.InstallMode.IMMEDIATE,
@@ -61,36 +59,18 @@ export default class App extends Component {
   }
 
   _handleAppStateChange(newState) {
-    if(!__DEV__) {
-      newState === "active" && this.updateCodePush();
-    }
+    newState === "active" && this.updateCodePush();
+    // this.props.dispatch(loadLeaderboard());
+    // this.props.dispatch(loadEvents());
   }
 
-
-  // _renderContent() {
-  //   //get routeStack ??
-  //   if(this.state.user.isLoggedIn()) {
-  //     return <Master ref="current" />;
-  //   } else {
-  //     return <Login ref="current" />;
-  //   }
-  // }
-
   render() {
-    //if(!this.state.user) { return null; }
+    if (this.state.isLoading) { return null; }
 
     return (
-      <View style={{ alignItems: 'stretch', backgroundColor: '#eee', flex: 1 }}>
-        <StatusBar translucent={true} barStyle="light-content" />
-        <Provider store={store}>
-          <RouterWithRedux>
-            <Scene key="root">
-              <Scene key="login" component={Login} title="Login" />
-              <Scene key="master" component={Master} title="Tisdagsgolfen" />
-            </Scene>
-          </RouterWithRedux>
-        </Provider>
-      </View>
+      <Provider store={store}>
+        <Routes />
+      </Provider>
     );
   }
 }

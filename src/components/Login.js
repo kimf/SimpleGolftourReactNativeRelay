@@ -1,66 +1,25 @@
 import React, {Component} from "react";
-import {Linking, Dimensions, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
+import {Linking, StyleSheet, Text, TextInput, TouchableOpacity, View, Image} from "react-native";
 
 import { apiUrl } from '../../lib/ApiService';
-import realm from '../../lib/AppRealm';
-
-const width = Dimensions.get('window').width;
-const height = Dimensions.get('window').height;
+import { login } from '../actions';
 
 export default class Login extends Component {
   constructor(props){
     super(props);
-    const currentUser = props.currentUser;
-    const email = currentUser ? currentUser.email : '';
-
+    const email = props.auth.user ? props.auth.user.email : '';
     this.state = {
-      loginError: false,
       email: email,
-      password: ''
-    };
+      password: '',
+    }
     this.onSubmit = this.onSubmit.bind(this);
     this.openPassword = this.openPassword.bind(this);
   }
 
   onSubmit(){
-    const { email, password } = this.state;
-    const url = apiUrl + '/sessions';
-
-    fetch(url, {
-      method: 'POST',
-      crossOrigin: true,
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        email, password
-      })
-    })
-    .then((response) => {
-      return response.json()
-    })
-    .then((user) => {
-      if(user.error){
-        this.setState({ loginError: true });
-      } else if (user.session_token && user.session_token !== '') {
-        user.isLoggedIn = true;
-        realm.write(() => {
-          realm.create('CurrentUser', {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            sessionToken: user.session_token,
-            isLoggedIn: true
-          }, true);
-        })
-        this.props.onLogin();
-      }
-    }).catch((error) => {
-      alert('Kunde inte logga in, Var god se över informationen');
-      console.log('Error retreiving data', error);
-      this.setState({ loginError: true });
-    })
+    const { dispatch } = this.props;
+    const { email, password } = this.state;
+    dispatch(login(email, password));
   }
 
   openPassword() {
@@ -69,10 +28,11 @@ export default class Login extends Component {
 
 
   render() {
-    const { email, password, loginError } = this.state;
+    const { auth, dispatch } = this.props;
+
     let showError;
-    if(loginError) {
-      showError = <Text style={{color: '#c00'}}>Något gick fel, se över infon</Text>;
+    if(auth.user.error) {
+      showError = <Text style={{color: '#c00', fontSize: 20}}>Något gick fel, se över infon</Text>;
     }
 
     return(
@@ -81,11 +41,8 @@ export default class Login extends Component {
         flexDirection: 'column',
         paddingTop: 60,
         backgroundColor: '#477dca',
-        alignItems: 'center',
-        width: width,
-        height: height
+        alignItems: 'center'
       }}>
-        <StatusBar barStyle="light-content" />
         <Image source={require('../images/logo.png')} />
 
         {showError}
@@ -112,7 +69,9 @@ export default class Login extends Component {
         />
 
         <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
-          <Text style={styles.btnLabel}> LOGGA IN </Text>
+          <Text style={styles.btnLabel}>
+            {auth.loggingIn ? 'JOBBAR' : 'LOGGA IN'}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity onPress={this.openPassword}>
