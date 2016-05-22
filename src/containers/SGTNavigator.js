@@ -8,9 +8,10 @@ import SGTTabsView from './SGTTabsView';
 import SetCourse from '../components/NewEvent/SetCourse';
 import NewEvent from '../components/NewEvent/NewEvent';
 
-import EventSetup from '../components/Scoring/EventSetup';
-import ChoosePlayer from '../components/Scoring/ChoosePlayer';
-import EventPlayerSetup from '../components/Scoring/EventPlayerSetup';
+import EventSetup from '../containers/EventSetup';
+import ChoosePlayer from '../containers/ChoosePlayer';
+import EventPlayerSetup from '../containers/EventPlayerSetup';
+
 import ScoreEvent from '../components/Scoring/ScoreEvent';
 import Scorecard from '../components/Scoring/Scorecard';
 

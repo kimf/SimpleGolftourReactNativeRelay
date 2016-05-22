@@ -107,7 +107,6 @@ export default class Scorecard extends Component {
   }
 
   refresh() {
-    console.log('refreshing');
     const { event } = this.props;
     StatusBar.setNetworkActivityIndicatorVisible(true);
     fetchEventLeaderboard(event.id, this.props.sessionToken).then((players) => {

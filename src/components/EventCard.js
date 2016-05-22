@@ -9,7 +9,7 @@ import colors from '../colors';
 
 export default class EventCard extends Component {
   render() {
-    const { event, setupEvent, scoreEvent, followEvent } = this.props;
+    const { event, setupEvent, scoreEvent, followEvent, scoringEvent } = this.props;
 
 
     let scoringBtn;
@@ -24,12 +24,32 @@ export default class EventCard extends Component {
       )
     }
 
-    if(event.isScoring) {
+    if(scoringEvent && event.id === scoringEvent.id) {
       scoringBtn = (
         <TouchableOpacity
-          onPress={() => scoreEvent(event)}
+          onPress={() => scoreEvent(scoringEvent)}
           style={s.scoringBtn}>
           <Text style={[s.eventCardBtn, {color: '#fff'}]}>FORTSÄTT</Text>
+        </TouchableOpacity>
+      )
+    }
+
+    let resultsBtn;
+    if(event.status === 'finished') {
+      resultsBtn = (
+        <TouchableOpacity
+          onPress={() => followEvent(event)}
+            style={s.followBtn}>
+          <Text style={[s.eventCardBtn, {color: '#777'}]}>SE RESULTAT</Text>
+        </TouchableOpacity>
+      )
+    } else if(event.is_scoring) {
+      console.log(event)
+      resultsBtn = (
+        <TouchableOpacity
+          onPress={() => followEvent(event)}
+            style={s.followBtn}>
+          <Text style={[s.eventCardBtn, {color: '#777'}]}>FÖLJ LIVE</Text>
         </TouchableOpacity>
       )
     }
@@ -54,11 +74,7 @@ export default class EventCard extends Component {
 
         <View style={[s.row, s.buttonRow]}>
           {scoringBtn}
-          <TouchableOpacity
-            onPress={() => followEvent(event)}
-              style={s.followBtn}>
-            <Text style={[s.eventCardBtn, {color: '#777'}]}>{event.status === 'planned' ? 'FÖLJ' : 'SE RESULTAT'}</Text>
-          </TouchableOpacity>
+          {resultsBtn}
         </View>
       </View>
     );
@@ -77,7 +93,7 @@ const s = StyleSheet.create({
     borderRadius: 5,
     borderColor: colors.cellBorder,
     borderWidth: StyleSheet.hairlineWidth,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
 
   row: {

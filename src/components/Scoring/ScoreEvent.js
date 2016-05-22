@@ -39,8 +39,6 @@ export default class ScoreEvent extends Component {
       tintColor: 'white'
     };
 
-    console.log(currentIndex);
-
     return(
       <View style={styles.container}>
         <NavigationBar

@@ -18,7 +18,6 @@ export default function reducer(state = initialState, action = {}) {
       }
 
     case "RECEIVE_EVENTS":
-      console.log(action);
       return {
         isFetching: false,
         data: sortEvents(action.events)

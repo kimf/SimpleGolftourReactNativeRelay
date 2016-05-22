@@ -121,15 +121,12 @@ class NewEvent extends Component {
   }
 }
 
-
 const mapStateToProps = (state) => {
   return {
     isSaving: state.events.isSaving,
     error: state.events.error
   }
 }
-
-
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -138,7 +135,6 @@ const mapDispatchToProps = (dispatch) => {
     }
   }
 }
-
 
 export default connect(
   mapStateToProps,

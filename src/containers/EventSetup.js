@@ -2,55 +2,32 @@
 
 import React, {Component} from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
-
 import NavigationBar from 'react-native-navbar';
 
-import realm from '../../../lib/AppRealm';
-import styles from '../../styles';
+import { connect } from 'react-redux';
 
-export default class EventSetup extends Component {
+import { abortEventSetup } from '../actions/event';
+import styles from '../styles';
+
+class EventSetup extends Component {
   componentWillMount() {
-    const { event, currentUserId } = this.props;
-    let eventPlayer = event.eventPlayers.filtered(`id == ${currentUserId}`);
-    if(eventPlayer.length === 0) {
-      const player = realm.objects('Player').find((p) => p.id === currentUserId);
-      realm.write(() => {
-        const eventPlayer = realm.create(
-          'EventPlayer', {
-            id: player.id,
-            name: player.name,
-            strokes: 0,
-            eventScores: []
-          }, true);
-        event.eventPlayers.push(eventPlayer);
-      });
-      this.forceUpdate();
-    }
-
-    this.abort = this.abort.bind(this);
+    this.goPlay = this._goPlay.bind(this);
+    this.abort = this._abort.bind(this);
   }
 
-  goPlay() {
+  _goPlay() {
     const { event, navigator } = this.props;
-    realm.write(() => {
-      event.isScoring = true
-      event.currentHole = 1
-    });
-
-    navigator.resetTo({ scoreEvent: 1, event: event })
+    navigator.resetTo({ scoreEvent: 1, event: event });
   }
 
-  abort() {
+  _abort() {
     const { event, navigator } = this.props;
-    realm.write(() => {
-      realm.delete(event.eventPlayers);
-    });
-
+    this.props.abortEventSetup();
     navigator.resetTo({ tab: 'events' })
   }
 
   render() {
-    const { event, navigator } = this.props;
+    const { event, isSaving, playing, navigator } = this.props;
     const titleConfig = { title: 'Scora', tintColor: 'white'  };
     const leftButtonConfig = {
       title: 'Avbryt',
@@ -82,7 +59,7 @@ export default class EventSetup extends Component {
         </View>
 
         <ScrollView>
-          {event.eventPlayers.map((player) => {
+          {playing.map((player) => {
             return (
               <TouchableOpacity
                 key={`setup_player_row_${player.id}`}
@@ -102,9 +79,30 @@ export default class EventSetup extends Component {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => this.goPlay()}>
-          <Text style={styles.btnLabel}>STARTA RUNDA</Text>
+          <Text style={styles.btnLabel}>{isSaving ? 'SPARAR...' : 'STARTA RUNDA'}</Text>
         </TouchableOpacity>
       </View>
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    event: state.event.event,
+    isSaving: state.event.isSaving,
+    playing: state.event.playing,
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    abortEventSetup: () => {
+      dispatch(abortEventSetup())
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EventSetup)

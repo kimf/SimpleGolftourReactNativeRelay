@@ -5,18 +5,17 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 
-import realm from '../../../lib/AppRealm';
-import styles from '../../styles';
+import { connect } from 'react-redux';
 
-export default class ChoosePlayer extends Component {
+import styles from '../styles';
+
+class ChoosePlayer extends Component {
   constructor(props) {
     super(props);
-    this.state = { players: realm.objects('Player').sorted('name') }
   }
 
   render() {
-    const { event, navigator } = this.props;
-    const { players } = this.state;
+    const { event, navigator, players, selectedPlayers } = this.props;
 
     const titleConfig = { title: 'Välj Spelare', tintColor: 'white'  };
     const leftButtonConfig = {
@@ -40,7 +39,7 @@ export default class ChoosePlayer extends Component {
         />
         <ScrollView>
           {players.map((player) => {
-            if(event.eventPlayers.find((p) => p.id === player.id)){
+            if(selectedPlayers.find((p) => p.id === player.id)){
               return null
             }
 
@@ -48,7 +47,7 @@ export default class ChoosePlayer extends Component {
               <TouchableOpacity
                 key={`choose_player_row_${player.id}`}
                 style={styles.listrow}
-                onPress={() => requestAnimationFrame(() => navigator.push({ setupEventPlayer: 1, needsSaving: true, player, event }))}>
+                onPress={() => requestAnimationFrame(() => navigator.push({ setupEventPlayer: 1, player, event }))}>
                 <Text style={[styles.flexOne]}>
                   {player.name}
                 </Text>
@@ -60,3 +59,20 @@ export default class ChoosePlayer extends Component {
     )
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    players: state.players.data.slice(0).sort((a, b) => a.name - b.name),
+    selectedPlayers: state.event.playing
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {}
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ChoosePlayer)

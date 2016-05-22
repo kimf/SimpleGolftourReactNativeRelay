@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import { fetchEventsIfNeeded } from '../actions/events';
+import { setupEvent } from '../actions/event';
 import styles from '../styles';
 
 import EventCard from '../components/EventCard';
@@ -35,6 +36,7 @@ export default class Events extends Component {
   }
 
   setupEvent(event) {
+    this.props.setupEvent(event);
     requestAnimationFrame(() => this.props.navigator.push({setupEvent: 1, event: event}) );
   }
 
@@ -55,7 +57,7 @@ export default class Events extends Component {
   }
 
   render() {
-    const { events } = this.props;
+    const { events, scoringEvent } = this.props;
 
     const titleConfig = { title: 'Rundor', tintColor: 'white'  };
     const rightButtonConfig = {
@@ -89,6 +91,7 @@ export default class Events extends Component {
           renderRow={
             (rowData) => <EventCard
                             event={rowData}
+                            scoringEvent={scoringEvent}
                             setupEvent={this.setupEvent}
                             scoreEvent={this.scoreEvent}
                             followEvent={this.followEvent} />
@@ -102,7 +105,8 @@ export default class Events extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    events: state.events
+    events: state.events,
+    scoringEvent: state.event.event
   }
 }
 
@@ -110,7 +114,10 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     doFetch: () => {
-      dispatch(fetchEventsIfNeeded())
+      dispatch(fetchEventsIfNeeded());
+    },
+    setupEvent: (event) => {
+      dispatch(setupEvent(event));
     }
   }
 }

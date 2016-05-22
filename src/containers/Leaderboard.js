@@ -36,7 +36,7 @@ class Leaderboard extends Component {
 
 
   render() {
-    const { navigator, players, onLogout, currentUserId } = this.props;
+    const { navigator, players, onLogout, currentUserId, scoringEvent } = this.props;
 
     const titleConfig = { title: 'Tisdagsgolfen', tintColor: 'white' };
     const leftButtonConfig = {
@@ -45,8 +45,8 @@ class Leaderboard extends Component {
       tintColor: 'white'
     };
 
-    let eventBanner, scoringEvent;
-    if(scoringEvent) {
+    let eventBanner;
+    if(scoringEvent && scoringEvent.id) {
       eventBanner = (
         <TouchableOpacity
           style={styles.btn}
@@ -64,8 +64,10 @@ class Leaderboard extends Component {
           title={titleConfig}
           leftButton={leftButtonConfig} />
 
+          {eventBanner}
+
           <ListView
-            enableEmptySections={false}
+            enableEmptySections={true}
             initialListSize={8}
             dataSource={this.state.dataSource}
             refreshControl={
@@ -89,7 +91,8 @@ class Leaderboard extends Component {
 const mapStateToProps = (state) => {
   return {
     players: state.players,
-    currentUserId: state.auth.user.id
+    currentUserId: state.auth.user.id,
+    scoringEvent: state.event.event
   }
 }
 

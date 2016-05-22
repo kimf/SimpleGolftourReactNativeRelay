@@ -2,35 +2,30 @@
 
 import React, {Component} from "react";
 import {Alert, Text, TextInput, TouchableOpacity, ListView, View} from "react-native";
-
 import NavigationBar from 'react-native-navbar';
 
-import styles from '../../styles';
-import realm from '../../../lib/AppRealm';
+import { connect } from 'react-redux';
 
-export default class EventPlayerSetup extends Component {
+import { addPlayerToEvent, changePlayerStrokes } from '../actions/event';
+
+import styles from '../styles';
+
+class EventPlayerSetup extends Component {
   constructor(props) {
     super(props);
     this.state = {strokes: (props.player.strokes || 0) };
   }
 
   confirm() {
-    const { event, needsSaving, player, navigator } = this.props;
+    const { event, player, navigator, addPlayerToEvent, changePlayerStrokes } = this.props;
     const strokes = parseInt(this.state.strokes);
 
     if(strokes < 37) {
-      realm.write(() => {
-        if(needsSaving) {
-          event.eventPlayers.push({
-            id: player.id,
-            name: player.name,
-            strokes: strokes,
-            eventScores: []
-          });
-        } else {
-          player.strokes = strokes;
-        }
-      });
+      if(player.strokes === undefined) {
+        this.props.addPlayerToEvent(player, strokes);
+      } else {
+        this.props.changePlayerStrokes(player, strokes);
+      }
       requestAnimationFrame(() => navigator.resetTo({ setupEvent: 1, event: event }));
     } else {
       Alert.alert('MAX 36 SLAG, SÅ DÅLIG ÄR HEN NOG INTE!');
@@ -85,3 +80,24 @@ export default class EventPlayerSetup extends Component {
     )
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {}
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    addPlayerToEvent: (player, strokes) => {
+      dispatch(addPlayerToEvent(player, strokes))
+    },
+    changePlayerStrokes: (player, strokes) => {
+      dispatch(changePlayerStrokes(player, strokes))
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EventPlayerSetup)

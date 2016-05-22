@@ -396,9 +396,6 @@ export default StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     backgroundColor: colors.actionText,
-    color: '#fff',
-    textAlign: 'center',
-    fontFamily: 'Avenir',
   },
 
   sectionHeader: {
