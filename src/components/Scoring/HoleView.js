@@ -23,15 +23,18 @@ export default class HoleView extends Component {
   }
 
   renderRows() {
-    const { event, hole } = this.props;
+    const { event, hole, holesCount, playing, createEventScore } = this.props;
     const rows = [];
-    event.eventPlayers.map((player) => {
+    playing.map((player) => {
+      const eventScore = player.eventScores.find(es => es.hole === hole.number);
       rows.push(
         <ScoreRow
           player={player}
           showScoreForm={this.showScoreForm}
           hole={hole}
-          holesCount={event.course.holes_count}
+          eventScore={eventScore}
+          holesCount={holesCount}
+          createEventScore={createEventScore}
           key={`player_score_row_${player.id}`}
         />
       )

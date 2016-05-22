@@ -11,8 +11,8 @@ import NewEvent from '../components/NewEvent/NewEvent';
 import EventSetup from '../containers/EventSetup';
 import ChoosePlayer from '../containers/ChoosePlayer';
 import EventPlayerSetup from '../containers/EventPlayerSetup';
+import ScoreEvent from '../containers/ScoreEvent';
 
-import ScoreEvent from '../components/Scoring/ScoreEvent';
 import Scorecard from '../components/Scoring/Scorecard';
 
 import { connect } from 'react-redux';

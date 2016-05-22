@@ -15,6 +15,14 @@
 //   }
 // }
 
+export function createEventScore(playerId, holeNr, data) {
+  return { type: 'CREATED_EVENT_SCORE', playerId, holeNr, data }
+}
+
+export function changeHole(holeNr) {
+ return { type: 'CHANGED_HOLE', holeNr }
+}
+
 export function setupEvent(event) {
   return (dispatch, getState) => {
     const player = getState().auth.user;

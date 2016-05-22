@@ -4,9 +4,9 @@ import styles from '../../styles';
 import realm from '../../../lib/AppRealm';
 
 export default class ScoreRow extends Component {
-  componentWillMount() {
-    const { player, holesCount, hole } = this.props;
-    let eventScore = player.eventScores.find(s => s.hole === hole.number);
+  constructor(props) {
+    super(props);
+    const { player, holesCount, hole, eventScore, createEventScore } = this.props;
 
     if(eventScore === undefined) {
       let extraStrokes = 0;
@@ -19,45 +19,42 @@ export default class ScoreRow extends Component {
         }
       }
 
-      realm.write(() => {
-        eventScore = realm.create('EventScore', {
-          extraStrokes: extraStrokes,
-          hole: hole.number,
-          index: hole.index,
-          isScored: false,
-          par: hole.par
-        });
-        player.eventScores.push(eventScore);
-      });
+      createEventScore(player.id, hole.number, {
+        extraStrokes: extraStrokes,
+        hole: hole.number,
+        index: hole.index,
+        isScored: false,
+        par: hole.par
+      })
     }
-
-    this.setState({eventScore: eventScore});
   }
 
+
   render() {
-    const {player, hole, showScoreForm } = this.props;
-    const { eventScore } = this.state;
-
-    let extraStrokes = '';
-    for(let i=0; i < eventScore.extraStrokes; i++){
-      extraStrokes = extraStrokes + '•';
-    }
-
+    const {player, hole, showScoreForm, eventScore } = this.props;
     let scores;
-    if(eventScore.isScored) {
-      scores = (
-        <View style={{flexDirection: 'row'}}>
-          <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.strokes}</Text>
-          <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.putts}</Text>
-          <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{eventScore.points}</Text>
-        </View>
-      );
-    } else {
-      scores = (
-        <Text style={[styles.inlineBtn, {backgroundColor: '#fff', color: '#777', padding: 0, margin: 0}]}>
-          LÄGG TILL SCORE
-        </Text>
-      );
+    let extraStrokes = '';
+
+    if(eventScore !== undefined) {
+      for(let i=0; i < eventScore.extraStrokes; i++){
+        extraStrokes = extraStrokes + '•';
+      }
+
+      if(eventScore.isScored) {
+        scores = (
+          <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.strokes}</Text>
+            <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.putts}</Text>
+            <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{eventScore.points}</Text>
+          </View>
+        );
+      } else {
+        scores = (
+          <Text style={[styles.inlineBtn, {backgroundColor: '#fff', color: '#777', padding: 0, margin: 0}]}>
+            LÄGG TILL SCORE
+          </Text>
+        );
+      }
     }
 
     return(

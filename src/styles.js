@@ -176,7 +176,6 @@ export default StyleSheet.create({
   },
 
   playerName: {
-    fontFamily: 'Avenir',
     flex: 2,
     paddingTop: 10
   },
@@ -347,8 +346,7 @@ export default StyleSheet.create({
   scoreHeaderRow: {
     backgroundColor: '#eee',
     flexDirection: 'row',
-    padding: 5,
-    fontFamily: 'Avenir',
+    padding: 5
   },
 
   scoreHeader: {
