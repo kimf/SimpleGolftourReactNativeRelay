@@ -2,7 +2,6 @@ import moment from 'moment';
 
 const initialState = {
   isFetching: false,
-  skipFetch: false,
   data: [],
 };
 
@@ -15,7 +14,6 @@ export default function reducer(state = initialState, action = {}) {
     case "REQUEST_EVENTS":
       return {
         isFetching: true,
-        skipFetch: false,
         data: state.data,
       }
 
@@ -52,9 +50,17 @@ export default function reducer(state = initialState, action = {}) {
       const data = sortEvents( [ ...state.data, action.event ] )
       return {
         isFetching: false,
-        skipFetch: true,
         data: data,
         isSaving: false,
+        justAddedAnEvent: true,
+      }
+
+    case "CLEAR_JUST_ADDED_FLAG":
+      return {
+        isFetching: false,
+        data: state.data,
+        isSaving: false,
+        justAddedAnEvent: false
       }
 
     case "LOGGED_OUT":

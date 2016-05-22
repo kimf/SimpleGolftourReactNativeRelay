@@ -27,10 +27,7 @@ export default class Events extends Component {
   }
 
   refreshEvents() {
-    const { skipFetch } = this.props.events;
-    if(!skipFetch) {
-      this.props.doFetch();
-    }
+    this.props.doFetch();
   }
 
   openNewEvent() {

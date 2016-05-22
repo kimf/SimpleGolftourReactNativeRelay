@@ -9,7 +9,7 @@ export function tryToSaveEvent(event, navigator) {
 
     return saveEvent(event, sessionToken).then((event) => {
       dispatch(savedEvent(event));
-      navigator.resetTo({ tab: 'events' });
+      requestAnimationFrame(() => navigator.resetTo({ tab: 'events' }) );
     }).catch((error) => {
       console.log('Error saving event', error);
       dispatch(failedToSaveEvent(error));
@@ -36,6 +36,9 @@ Fetching events
 export function fetchEventsIfNeeded() {
   return (dispatch, getState) => {
     const state = getState();
+    if(state.events.justAddedAnEvent) {
+      return dispatch({type: 'CLEAR_JUST_ADDED_FLAG'});
+    }
     if (shouldFetchEvents(state)) {
       // Dispatch a thunk from thunk!
       const sessionToken = state.auth.user.session_token;
@@ -48,13 +51,17 @@ export function fetchEventsIfNeeded() {
 }
 
 function shouldFetchEvents(state) {
-  return true;
   const events = state.events.data.length;
   if (events === 0) {
     return true;
-  } else if (state.events.isFetching) {
+  }
+
+  if (state.events.isFetching) {
     return false;
   }
+
+  return true;
+  // else if (latestEvent.updatedAt === 1 hour old) {}
 }
 
 function goFetchEvents(sessionToken) {
