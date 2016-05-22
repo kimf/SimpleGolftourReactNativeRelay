@@ -3,14 +3,15 @@ import {
   Switch, DatePickerIOS, Text, TouchableOpacity, View, StyleSheet
 } from "react-native";
 
+import { connect } from 'react-redux';
 import NavigationBar from 'react-native-navbar';
 import moment from 'moment';
 
-import styles from '../../styles';
-import realm from '../../../lib/AppRealm';
-import { saveEvent } from '../../../lib/ApiService';
+import { tryToSaveEvent } from '../../actions/events';
 
-export default class NewEvent extends Component {
+import styles from '../../styles';
+
+class NewEvent extends Component {
   constructor(props) {
     super(props);
 
@@ -30,15 +31,18 @@ export default class NewEvent extends Component {
 
   onSubmit(){
     const { isStrokes, teamEvent, date } = this.state;
-    const { course, sessionToken, navigator } = this.props;
+    const { course, navigator } = this.props;
 
-    const data = {course, date, isStrokes, teamEvent};
-    saveEvent(data, sessionToken).then(() => {
-      requestAnimationFrame(() => navigator.resetTo({ tab: 'events' }));
-    }).catch((error) => {
-      alert('Error....');
-      console.log('Error saving event', error);
-    });
+    const event = {
+      courseName: course.name,
+      clubName: course.clubName,
+      courseId: course.id,
+      teamEvent: teamEvent,
+      date: date,
+      scoringType: isStrokes ? 'strokes' : 'points'
+    };
+
+    this.props.saveEvent(event, navigator);
   }
 
   onDateChange(date) {
@@ -53,7 +57,7 @@ export default class NewEvent extends Component {
   }
 
   render() {
-    const { course, navigator } = this.props;
+    const { course, navigator, isSaving, error } = this.props;
     const { teamEvent, isStrokes, date, timeZoneOffsetInHours } = this.state;
 
     const titleConfig = { title: 'Ny Runda', tintColor: 'white'  };
@@ -62,6 +66,11 @@ export default class NewEvent extends Component {
       handler: this.close,
       tintColor: 'white'
     };
+
+    let showError;
+    if(error) {
+      showError = <Text style={{color: '#c00', fontSize: 20}}>Något gick fel med att spara, se över infon</Text>;
+    }
 
     return(
       <View style={[styles.container, {alignItems: 'stretch', flexDirection: 'column'}]}>
@@ -74,6 +83,8 @@ export default class NewEvent extends Component {
         <View style={styles.inlineHeader}>
           <Text style={styles.centerText}>{course.name}</Text>
         </View>
+
+        {showError}
 
         <View style={[styles.formRow, {flexDirection: 'row'}]}>
           <View style={[styles.formColumn, {borderRightWidth: StyleSheet.hairlineWidth, borderColor: '#cecece'}]}>
@@ -103,9 +114,33 @@ export default class NewEvent extends Component {
 
 
         <TouchableOpacity style={styles.btn} onPress={this.onSubmit}>
-          <Text style={styles.btnLabel}> SKAPA RUNDA </Text>
+          <Text style={styles.btnLabel}>{isSaving ? 'SPARAR...' : 'SKAPA RUNDA'}</Text>
         </TouchableOpacity>
       </View>
     );
   }
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    isSaving: state.events.isSaving,
+    error: state.events.error
+  }
+}
+
+
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    saveEvent: (event, navigator) => {
+      dispatch(tryToSaveEvent(event, navigator))
+    }
+  }
+}
+
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(NewEvent)

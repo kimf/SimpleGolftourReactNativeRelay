@@ -11,13 +11,12 @@ import styles from '../styles';
 
 import EventCard from '../components/EventCard';
 
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 export default class Events extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {
-      dataSource: ds.cloneWithRows(props.events.data)
-    }
+    this.state = { dataSource: ds.cloneWithRows(props.events.data) }
 
     this.openNewEvent = this.openNewEvent.bind(this);
     this.setupEvent = this.setupEvent.bind(this);
@@ -28,7 +27,10 @@ export default class Events extends Component {
   }
 
   refreshEvents() {
-    this.props.doFetch();
+    const { skipFetch } = this.props.events;
+    if(!skipFetch) {
+      this.props.doFetch();
+    }
   }
 
   openNewEvent() {

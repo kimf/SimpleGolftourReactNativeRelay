@@ -404,7 +404,6 @@ export default StyleSheet.create({
   sectionHeader: {
     backgroundColor: '#eee',
     padding: 10,
-    fontFamily: 'Avenir',
   },
 
   sectionHeaderText: {
@@ -417,7 +416,6 @@ export default StyleSheet.create({
     borderColor: colors.cellBorder,
     flexDirection: 'row',
     padding: 20,
-    fontFamily: 'Avenir',
   }
 });
 

@@ -3,6 +3,7 @@
 import React, {Component} from "react";
 import {Text, TextInput, TouchableOpacity, View, ListView} from "react-native";
 import NavigationBar from 'react-native-navbar';
+//import Search from 'react-native-search-bar';
 
 import styles from '../../styles';
 
@@ -18,10 +19,13 @@ export default class SetCourse extends Component {
     })
 
     this.sections = {}
+    let clubName = '';
     clubsJson.clubs.map(c => {
       let courses = {};
       if(c.courses.length === 0) { return false };
+      clubName = c.name;
       c.courses.map((co) => {
+        co.clubName = clubName;
         courses[co.name] = co;
       });
       this.sections[c.name] = courses;
@@ -32,7 +36,9 @@ export default class SetCourse extends Component {
       query: ''
     }
 
-    this._renderRow = this._renderRow.bind(this);
+    this.renderRow = this._renderRow.bind(this);
+    this.renderHeader = this._renderHeader.bind(this);
+    this.renderSectionHeader = this._renderSectionHeader.bind(this);
     this.close = this.close.bind(this);
     this.chooseCourse = this.chooseCourse.bind(this);
     this.setSearchQuery = this.setSearchQuery.bind(this);
@@ -94,6 +100,10 @@ export default class SetCourse extends Component {
     )
   }
 
+  _renderHeader() {
+
+  }
+
   render() {
     const { query, dataSource } = this.state;
 
@@ -127,8 +137,9 @@ export default class SetCourse extends Component {
         </View>
         <ListView
           dataSource={dataSource}
-          renderRow={this._renderRow}
-          renderSectionHeader={this._renderSectionHeader}
+          renderHeader={this.renderHeader}
+          renderRow={this.renderRow}
+          renderSectionHeader={this.renderSectionHeader}
         />
       </View>
     )

@@ -23,7 +23,6 @@ class SGTNavigator extends Component {
   }
 
   render() {
-    console.log(this.props);
     return (
       <Navigator
         ref="navigator"
@@ -43,8 +42,6 @@ class SGTNavigator extends Component {
 
   renderScene(route, navigator) {
     const { currentUser, tab, onLogoutClick } = this.props;
-
-    console.log(route);
 
     if (route.showScorecard || route.followEvent) {
       return <Scorecard event={route.event} navigator={navigator} />

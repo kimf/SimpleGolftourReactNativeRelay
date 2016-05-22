@@ -37,18 +37,18 @@ export default class EventCard extends Component {
     return (
       <View style={[s.eventCard]}>
         <Text style={[s.row, s.date]}>
-          {moment(event.startsAt).format('llll')}
+          {moment(event.starts_at).format('llll')}
         </Text>
 
         <View style={s.row}>
           <View style={{flex: 3}}>
             <Text style={s.gametype}>
-              {event.teamEvent ? 'Lag' : 'Individuellt'}
+              {event.team_event ? 'Lag' : 'Individuellt'}
               {` | `}
-              {event.scoringType === 'points' ? 'Poäng' : 'Slag'}
+              {event.scoring_type === 'points' ? 'Poäng' : 'Slag'}
             </Text>
-            <Text style={{fontSize: 16, lineHeight: 25}}>{event.course ? event.course.club : null}</Text>
-            <Text style={{fontSize: 16, lineHeight: 25}}>{event.course ? event.course.name : 'No Course set'}</Text>
+            <Text style={{fontSize: 16, lineHeight: 25}}>{event.club}</Text>
+            <Text style={{fontSize: 16, lineHeight: 25}}>{event.course}</Text>
           </View>
         </View>
 

@@ -9,7 +9,6 @@ export default class LeaderboardCard extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
     const { data: player, currentUserId } = props;
     if(player.position < player.prev_position) {
       this.up_or_down = <Text style={{color: 'green'}}>⇡{player.position - player.prev_position}</Text>;
