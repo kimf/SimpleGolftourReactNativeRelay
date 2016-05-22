@@ -14,6 +14,10 @@
 //     })
 //   }
 // }
+export function saveEventScore(playerId, holeNr, strokes, putts, points) {
+  return { type: 'SAVED_EVENT_SCORE', playerId, holeNr, strokes, putts, points }
+}
+
 
 export function createEventScore(playerId, holeNr, data) {
   return { type: 'CREATED_EVENT_SCORE', playerId, holeNr, data }

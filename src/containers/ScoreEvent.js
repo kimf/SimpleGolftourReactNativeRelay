@@ -9,10 +9,9 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import SaveRoundView from '../components/Scoring/SaveRoundView';
 import HoleView from '../components/Scoring/HoleView';
 
-import { createEventScore, changeHole } from '../actions/event';
+import { saveEventScore, createEventScore, changeHole } from '../actions/event';
 
 import styles from '../styles';
 import clubsJson from '../../lib/clubs.json';
@@ -34,7 +33,7 @@ class ScoreEvent extends Component {
   }
 
   render() {
-    const { event, playing, navigator, createEventScore, currentHole } = this.props;
+    const { event, playing, navigator, saveEventScore, createEventScore, currentHole } = this.props;
 
     const titleConfig = { title: event.course, tintColor: 'white'  };
     const rightButtonConfig = {
@@ -56,7 +55,6 @@ class ScoreEvent extends Component {
           index={currentHole - 1}
           onChangeIndex={this.changeHole}
           autoplay={false}
-
           resistance>
           {this.holes.map((hole) => {
             return(
@@ -67,6 +65,7 @@ class ScoreEvent extends Component {
                 holesCount={this.holes.length}
                 event={event}
                 createEventScore={createEventScore}
+                saveEventScore={saveEventScore}
               />
             )
           })}
@@ -104,6 +103,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    saveEventScore: (playerId, holeNr, strokes, putts, points) => {
+      dispatch(saveEventScore(playerId, holeNr, strokes, putts, points))
+    },
     createEventScore: (playerId, holeNr, data) => {
       dispatch(createEventScore(playerId, holeNr, data))
     },

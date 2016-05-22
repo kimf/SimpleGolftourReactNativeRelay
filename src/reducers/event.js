@@ -46,6 +46,31 @@ export default function reducer(state = initialState, action = {}) {
         currentHole: state.currentHole
       }
 
+    case "SAVED_EVENT_SCORE":
+      //playerId, holeNr, strokes, putts, points
+      const savingPlayers = state.playing.map((player) => {
+        if (player.id === action.playerId) {
+          const eventScores = player.eventScores.map((es) => {
+            if (es.hole === action.holeNr) {
+              return Object.assign(
+                {},
+                es,
+                { strokes: action.strokes, putts: action.putts, points: action.points, isScored: true  }
+              )
+            }
+            return es;
+          })
+          return Object.assign({}, player, { eventScores })
+        }
+        return player
+      })
+
+      return {
+        event: state.event,
+        playing: savingPlayers,
+        currentHole: state.currentHole
+      }
+
     // case "SAVING_EVENT":
     //   return {
     //     event: state.event,

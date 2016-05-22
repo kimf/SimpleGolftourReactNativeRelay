@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {Alert, View, TouchableOpacity, Text, PickerIOS, StatusBar, InteractionManager} from "react-native";
 
 import styles from '../../styles';
-import realm from '../../../lib/AppRealm';
 
 import { pushScoreToServer } from '../../../lib/ApiService';
 
@@ -38,35 +37,20 @@ export default class ScoringScreen extends Component {
       strokes: props.eventScore.strokes || props.par,
       putts: props.eventScore.putts || 2,
     }
-    this.closeScoreForm = this.closeScoreForm.bind(this);
+    this.onCloseScoreForm = this._onCloseScoreForm.bind(this);
   }
 
-  closeScoreForm() {
-    StatusBar.setNetworkActivityIndicatorVisible(true);
-    const { player, eventId, eventScore, sessionToken } = this.props;
+  _onCloseScoreForm() {
+    const { player, eventId, eventScore, closeScoreForm } = this.props;
     const { strokes, putts } = this.state;
 
     if(strokes - putts <= 0) {
       Alert.alert('Du verkar ha angett fler puttar än slag!')
     } else {
-      realm.write(() => {
-        eventScore.strokes = strokes;
-        eventScore.putts = putts;
-
-        const strokeSum = strokes - eventScore.extraStrokes;
-        const testSum = strokeSum - eventScore.par;
-        eventScore.points = parseInt(pointsArray[testSum], 10);
-        eventScore.isScored = true;
-      });
-
-      pushScoreToServer(eventId, player.id, eventScore, sessionToken).then(() => {
-        StatusBar.setNetworkActivityIndicatorVisible(false);
-        requestAnimationFrame(() => this.props.closeScoreForm() );
-      }).catch((error) => {
-        StatusBar.setNetworkActivityIndicatorVisible(false);
-        console.log('Error saving score', error);
-        requestAnimationFrame(() => this.props.closeScoreForm() );
-      });
+      const strokeSum = strokes - eventScore.extraStrokes;
+      const testSum = strokeSum - eventScore.par;
+      const points = parseInt(pointsArray[testSum], 10);
+      closeScoreForm(strokes, putts, points);
     }
   }
 
@@ -105,7 +89,7 @@ export default class ScoringScreen extends Component {
               ))}
             </PickerIOS>
           </View>
-          <TouchableOpacity onPress={() => this.closeScoreForm()}>
+          <TouchableOpacity onPress={() => this.onCloseScoreForm()}>
             <Text style={[styles.inlineBtn, {backgroundColor: 'green'}]}>SPARA SCORE</Text>
           </TouchableOpacity>
         </View>

@@ -3,22 +3,23 @@ import {View, Text, TouchableOpacity} from "react-native";
 import ScoringScreen from './ScoringScreen';
 import ScoreRow from './ScoreRow';
 import styles from '../../styles';
-import realm from '../../../lib/AppRealm';
 
 export default class HoleView extends Component {
   constructor(props) {
     super(props);
     this.state = { scoringPlayer: null }
-    this.showScoreForm = this.showScoreForm.bind(this);
-    this.closeScoreForm = this.closeScoreForm.bind(this);
+    this.showScoreForm = this._showScoreForm.bind(this);
+    this.closeScoreForm = this._closeScoreForm.bind(this);
     this.renderRows = this.renderRows.bind(this);
   }
 
-  showScoreForm(player, eventScore) {
+  _showScoreForm(player, eventScore) {
     this.setState({ scoringPlayer: player, scoringEventScore: eventScore  });
   }
 
-  closeScoreForm() {
+  _closeScoreForm(strokes, putts, points) {
+    const { scoringPlayer, scoringEventScore } = this.state;
+    this.props.saveEventScore(scoringPlayer.id, scoringEventScore.hole, strokes, putts, points);
     this.setState({ scoringPlayer: null, scoringEventScore: null });
   }
 
@@ -54,11 +55,7 @@ export default class HoleView extends Component {
           player={scoringPlayer}
           eventScore={scoringEventScore}
           eventId={event.id}
-          holesCount={event.course.holes_count}
-          holeNr={hole.number}
           par={hole.par}
-          index={hole.index}
-          sessionToken={sessionToken}
           key={`player_scoring_screen_${scoringPlayer.id}`}
         />
       )

@@ -4,7 +4,6 @@ import {Alert, AppState, View, Text, TouchableOpacity, StyleSheet, ListView, Sta
 import NavigationBar from 'react-native-navbar';
 import ScoreRow from './ScoreRow';
 import styles from '../../styles';
-import realm from '../../../lib/AppRealm';
 
 import { fetchEventLeaderboard, deleteScoresFromServer } from '../../../lib/ApiService';
 
@@ -36,22 +35,6 @@ export default class Scorecard extends Component {
     const { event, navigator, sessionToken } = this.props;
     StatusBar.setNetworkActivityIndicatorVisible(true);
 
-    let scoreIds = [];
-    realm.write(() => {
-      for (let player of event.eventPlayers) {
-        for (let score of player.eventScores) {
-          if(score.externalId !== null) {
-            scoreIds.push(score.externalId);
-          }
-        }
-        realm.delete(player.eventScores);
-      }
-      realm.delete(event.eventPlayers);
-      event.isScoring = false;
-      event.currentHole = 0;
-      event.eventPlayers = [];
-    });
-
     deleteScoresFromServer(event.id, scoreIds, sessionToken).then(() => {
       StatusBar.setNetworkActivityIndicatorVisible(false);
       requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
@@ -75,10 +58,8 @@ export default class Scorecard extends Component {
 
   reallySaveScoring() {
     const { event, navigator } = this.props;
-    realm.write(() => {
-      event.isScoring = false;
-      event.status = 'finished';
-    });
+    event.isScoring = false;
+    event.status = 'finished';
 
     requestAnimationFrame(() => navigator.resetTo({ tab: 'leaderboard' }));
   }
