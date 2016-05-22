@@ -1,42 +1,102 @@
 'use strict';
 
 import React, {Component} from "react";
-import {Text, View} from "react-native";
+import { Text, View, LayoutAnimation, TouchableOpacity } from "react-native";
 
 import styles from '../styles';
 
 export default class LeaderboardCard extends Component {
-  render() {
-    const { data, currentUserId } = this.props;
-    if(data.num_events < 1) {
-      return false;
+  constructor(props) {
+    super(props);
+
+    console.log(props);
+    const { data: player, currentUserId } = props;
+    if(player.position < player.prev_position) {
+      this.up_or_down = <Text style={{color: 'green'}}>⇡{player.position - player.prev_position}</Text>;
+    } else if(player.position > player.prev_position) {
+      this.up_or_down = <Text style={{color: 'red'}}>⇣ {player.prev_position - player.position}</Text>;
     }
 
-    const down = <Text style={{color: 'red', flex: 1, fontSize: 6, marginTop: 5}}>⇣</Text>;
-    const up = <Text style={{color: 'green', flex: 1, fontSize: 6, marginTop: 5}}>⇡</Text>;
-    const level = <Text style={{color: '#777', flex: 1, fontSize: 6, marginTop: 5}}>-</Text>;
+    this.currentUserStyle = player.id === currentUserId ? {backgroundColor: '#feb'} : null;
 
-    let up_or_down;
-    if(data.position < data.prev_position) {
-      up_or_down = <Text style={{color: 'green'}}>⇡{data.position - data.prev_position}</Text>;
-    } else if(data.position > data.prev_position) {
-      up_or_down = <Text style={{color: 'red'}}>⇣ {data.prev_position - data.position}</Text>;
-    }
+    this.state = { open: false };
+    this.onPressCard = this._onPressCard.bind(this);
+    this.renderContentClosed = this._renderContentClosed.bind(this);
+    this.renderContentOpen = this._renderContentOpen.bind(this);
+  }
 
-    const currentUserStyle = data.id === currentUserId ? {backgroundColor: '#feb'} : null;
+  _onPressCard() {
+    const config = animations.layout.easeInEaseOut
+    LayoutAnimation.configureNext(config)
+    this.setState({ open: !this.state.open });
+  }
 
+  _renderContentClosed() {
+    const data = this.props.data;
     return(
-      <View key={data.id} style={[styles.listrow, currentUserStyle]}>
-        <View style={styles.position}>
-          <Text style={{flex: 1, fontWeight: 'bold', color: '#777'}}>{data.position}</Text>
-           {up_or_down}
+      <TouchableOpacity onPress={this.onPressCard} activeOpacity={0.7}>
+        <View key={data.id} style={[styles.listrow, this.currentUserStyle]}>
+          <View style={styles.position}>
+            <Text style={{flex: 1, fontWeight: 'bold', color: '#777'}}>{data.position}</Text>
+             {this.up_or_down}
+          </View>
+          <View style={styles.cardTitle}>
+            <Text style={styles.name}>{data.name}</Text>
+            <Text style={styles.meta}>{data.num_events} Rundor - Genomsnitt: {data.average} poäng</Text>
+          </View>
+          <Text style={styles.points}>{parseInt(data.total_points, 10)} p</Text>
         </View>
-        <View style={styles.cardTitle}>
-          <Text style={styles.name}>{data.name}</Text>
-          <Text style={styles.meta}>{data.num_events} Rundor - Genomsnitt: {data.average} poäng</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  _renderContentOpen() {
+    const data = this.props.data;
+    return(
+      <TouchableOpacity onPress={this.onPressCard} activeOpacity={0.7}>
+        <View key={data.id} style={[styles.listrow, this.currentUserStyle]}>
+          <View style={styles.position}>
+            <Text style={{flex: 1, fontWeight: 'bold', color: '#000', fontSize: 20}}>{data.position}</Text>
+             {this.up_or_down}
+          </View>
+          <View style={styles.cardTitle}>
+            <Text style={styles.name}>{data.name}</Text>
+            <Text style={styles.meta}>{data.num_events} Rundor - Genomsnitt: {data.average} poäng</Text>
+          </View>
+          <Text style={styles.points}>{parseInt(data.total_points, 10)} p</Text>
+          <View style={styles.cardTitle}>
+            <Text style={styles.largeText}>...HÄR KOMMER MER INFO SNART...</Text>
+          </View>
         </View>
-        <Text style={styles.points}>{parseInt(data.total_points, 10)} p</Text>
-      </View>
+      </TouchableOpacity>
     );
   }
+
+  render() {
+    const { data } = this.props;
+    if(data.num_events < 1) {
+      return null;
+    } else if (this.state.open) {
+      return this.renderContentOpen();
+    } else {
+      return this.renderContentClosed();
+    }
+  }
+}
+
+
+const animations = {
+  layout: {
+    easeInEaseOut: {
+      duration: 260,
+      create: {
+        type: LayoutAnimation.Types.easeInEaseOut,
+        property: LayoutAnimation.Properties.scaleXY,
+      },
+      update: {
+        delay: 30,
+        type: LayoutAnimation.Types.easeInEaseOut,
+      },
+    },
+  },
 }

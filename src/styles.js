@@ -96,10 +96,12 @@ export default StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     color: 'white',
+    fontFamily: 'Avenir',
     fontWeight: 'bold',
   },
 
   points: {
+    fontFamily: 'Avenir',
     fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'right',
@@ -118,6 +120,7 @@ export default StyleSheet.create({
   },
 
   meta: {
+    fontFamily: 'Avenir',
     color: '#777',
     flex: 1,
     fontSize: 12,
@@ -125,12 +128,14 @@ export default StyleSheet.create({
   },
 
   name: {
+    fontFamily: 'Avenir',
     fontWeight: 'bold',
     flex: 1,
     fontSize: 14,
   },
 
   label: {
+    fontFamily: 'Avenir',
     marginTop: 10,
     marginLeft: 10,
     color: '#444',
@@ -138,6 +143,7 @@ export default StyleSheet.create({
   },
 
   inputField: {
+    fontFamily: 'Avenir',
     padding: 5,
     margin: 10,
     height: 40,
@@ -170,11 +176,13 @@ export default StyleSheet.create({
   },
 
   playerName: {
+    fontFamily: 'Avenir',
     flex: 2,
     paddingTop: 10
   },
 
   playerHoleData: {
+    fontFamily: 'Avenir',
     flex: 1,
     flexDirection: 'row',
     color: '#ccc',
@@ -194,7 +202,8 @@ export default StyleSheet.create({
   },
 
   scorecardRowPoints: {
-    color: '#000'
+    color: '#000',
+    fontFamily: 'Avenir',
   },
 
   centerText: {
@@ -222,21 +231,25 @@ export default StyleSheet.create({
     borderWidth: StyleSheet.hairlineWidth,
     fontSize: 14,
     flex: 1,
+    fontFamily: 'Avenir',
   },
 
   checkmark: {
     fontSize: 20,
     fontWeight: 'bold',
     marginRight: 10,
+    fontFamily: 'Avenir',
   },
 
   strokeInfo: {
     flex: 1,
-    textAlign: 'right'
+    textAlign: 'right',
+    fontFamily: 'Avenir',
   },
 
   smallLabel: {
-    fontSize: 10
+    fontSize: 10,
+    fontFamily: 'Avenir',
   },
 
   scoredEventBtn: {
@@ -244,7 +257,8 @@ export default StyleSheet.create({
     marginTop: 10,
     padding: 5,
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Avenir',
   },
 
   todayBtn: {
@@ -254,16 +268,19 @@ export default StyleSheet.create({
     marginBottom: 10,
     color: '#fff',
     textAlign: 'center',
+    fontFamily: 'Avenir',
   },
 
   holeHeaderText: {
     color: 'black',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Avenir',
   },
 
   inlineButton: {
     padding: 10,
-    backgroundColor: '#feb'
+    backgroundColor: '#feb',
+    fontFamily: 'Avenir',
   },
 
   holeSwitchButton: {
@@ -277,6 +294,7 @@ export default StyleSheet.create({
   holeSwitchButtonLabel: {
     textAlign: 'center',
     color: '#444',
+    fontFamily: 'Avenir',
   },
 
   cellStyle: {
@@ -290,6 +308,7 @@ export default StyleSheet.create({
     height: 30,
     width: 60,
     textAlign: 'center',
+    fontFamily: 'Avenir',
   },
 
   cellStyleScore: {
@@ -302,13 +321,15 @@ export default StyleSheet.create({
     color: '#444',
     backgroundColor: '#eee',
     fontSize: 12,
+    fontFamily: 'Avenir',
   },
 
   playerHeaderCellStyle: {
     height: 30,
     textAlign: 'center',
     backgroundColor: '#eee',
-    marginTop: 5
+    marginTop: 5,
+    fontFamily: 'Avenir',
   },
 
   emptyCellStyle: {
@@ -319,29 +340,34 @@ export default StyleSheet.create({
   },
 
   playerNameCell: {
-    fontSize: 10
+    fontSize: 10,
+    fontFamily: 'Avenir',
   },
 
   scoreHeaderRow: {
     backgroundColor: '#eee',
     flexDirection: 'row',
     padding: 5,
+    fontFamily: 'Avenir',
   },
 
   scoreHeader: {
     width: 70,
     textAlign: 'right',
     padding: 5,
-    color: '#ccc'
+    color: '#ccc',
+    fontFamily: 'Avenir',
   },
 
   scoreHeaderPlayer: {
     flex: 3,
     padding: 5,
-    color: '#ccc'
+    color: '#ccc',
+    fontFamily: 'Avenir',
   },
 
   largeText: {
+    fontFamily: 'Avenir',
     fontSize: 28
   },
 
@@ -361,7 +387,8 @@ export default StyleSheet.create({
 
   holePickerText: {
     textAlign: 'center',
-    color: '#fff'
+    color: '#fff',
+    fontFamily: 'Avenir',
   },
 
   addPlayerButton: {
@@ -371,24 +398,27 @@ export default StyleSheet.create({
     backgroundColor: colors.actionText,
     color: '#fff',
     textAlign: 'center',
+    fontFamily: 'Avenir',
   },
 
   sectionHeader: {
     backgroundColor: '#eee',
     padding: 10,
+    fontFamily: 'Avenir',
   },
 
   sectionHeaderText: {
     color: '#777',
-    fontSize: 12
+    fontSize: 12,
+    fontFamily: 'Avenir',
   },
   courserow: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: colors.cellBorder,
     flexDirection: 'row',
-    padding: 20
+    padding: 20,
+    fontFamily: 'Avenir',
   }
-
 });
 
 

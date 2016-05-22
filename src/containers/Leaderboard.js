@@ -12,14 +12,12 @@ import styles from '../styles';
 
 import LeaderboardCard from '../components/LeaderboardCard';
 
+const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
 class Leaderboard extends Component {
   constructor(props) {
     super(props);
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.state = {
-      dataSource: ds.cloneWithRows(props.players.data)
-    }
-
+    this.state = { dataSource: ds.cloneWithRows(props.players.data) }
     this.reloadLeaderboard = this.reloadLeaderboard.bind(this);
     this.reloadLeaderboard();
   }
