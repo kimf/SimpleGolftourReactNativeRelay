@@ -6,7 +6,6 @@ export default function reducer(state = initialState, action = {}) {
       return state;
 
     case "RECEIVED_SCORECARD":
-      console.log(action);
       return { players: action.players }
 
     case "CANCELED_SCORING":

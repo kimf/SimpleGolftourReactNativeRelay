@@ -6,7 +6,6 @@ export function refreshScorecard(eventId) {
 
     const sessionToken = getState().auth.user.session_token;
     return fetchEventLeaderboard(eventId, sessionToken).then((response) => {
-      console.log('response', response);
       dispatch(receivedScorecard(response));
     })
     .catch((error) => {

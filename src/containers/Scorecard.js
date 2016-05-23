@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {Alert, AppState, View, Text, TouchableOpacity, StyleSheet, ListView, StatusBar} from "react-native";
+import {Alert, AppState, View, Text, TouchableOpacity, StyleSheet} from "react-native";
 
 import NavigationBar from 'react-native-navbar';
 import ScoreRow from '../components/Scoring/ScoreRow';
@@ -9,23 +9,19 @@ import { connect } from 'react-redux';
 import { saveScoring, cancelScoring } from '../actions/event';
 import { refreshScorecard } from '../actions/scorecard';
 
-const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
 class Scorecard extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
-    this.state = { dataSource: ds.cloneWithRows(props.players) };
 
-    this.refresh = this.refresh.bind(this);
-    this._handleAppStateChange = this._handleAppStateChange.bind(this);
-    this.cancelScoring = this.cancelScoring.bind(this);
-    this.reallyCancelScoring = this.reallyCancelScoring.bind(this);
-    this.saveScoring = this.saveScoring.bind(this);
-    this.reallySaveScoring = this.reallySaveScoring.bind(this);
+    this.refresh = this._refresh.bind(this);
+    this.handleAppStateChange = this._handleAppStateChange.bind(this);
+    this.cancelScoring = this._cancelScoring.bind(this);
+    this.reallyCancelScoring = this._reallyCancelScoring.bind(this);
+    this.saveScoring = this._saveScoring.bind(this);
+    this.reallySaveScoring = this._reallySaveScoring.bind(this);
   }
 
-  cancelScoring() {
+  _cancelScoring() {
     Alert.alert(
       'Avsluta rundan och radera allt du matat in?',
       'Är du riktigt säker?, riktigt riktigt säker?',
@@ -36,13 +32,12 @@ class Scorecard extends Component {
     )
   }
 
-  reallyCancelScoring() {
+  _reallyCancelScoring() {
     this.props.cancelScoring(this.props.event.id);
     requestAnimationFrame(() => this.props.navigator.resetTo({ tab: 'leaderboard' }));
-    StatusBar.setNetworkActivityIndicatorVisible(true);
   }
 
-  saveScoring() {
+  _saveScoring() {
     Alert.alert(
       'Avsluta rundan och Lämna scoreföringen?',
       'Stämmer alla siffror? På riktigt?',
@@ -53,25 +48,9 @@ class Scorecard extends Component {
     )
   }
 
-  reallySaveScoring() {
+  _reallySaveScoring() {
     this.props.saveScoring(this.props.event.id);
     requestAnimationFrame(() => this.props.navigator.resetTo({ tab: 'leaderboard' }));
-  }
-
-  componentWillMount() {
-    this.refresh();
-  }
-
-  componentDidMount() {
-    AppState.addEventListener('change', this._handleAppStateChange);
-    this.timer = setTimeout(() => {
-      this.refresh();
-    }, 60000);
-  }
-
-  componentWillUnmount() {
-    clearTimeout(this.timer);
-    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
   _handleAppStateChange(currentAppState) {
@@ -81,13 +60,28 @@ class Scorecard extends Component {
     }
   }
 
-  refresh() {
+  _refresh() {
     this.props.refreshScorecard(this.props.event.id);
   }
 
+  componentWillMount() {
+    this.refresh();
+  }
+
+  componentDidMount() {
+    AppState.addEventListener('change', this.handleAppStateChange);
+    this.timer = setTimeout(() => {
+      this.refresh();
+    }, 60000);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+    AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
   render(){
-    const { navigator, event } = this.props;
-    const { dataSource } = this.state;
+    const { navigator, event, players } = this.props;
 
     const titleConfig = { title: 'Scorekort', tintColor: 'white'  };
     const lefButtonConfig = {
@@ -128,26 +122,25 @@ class Scorecard extends Component {
             <Text style={s.scoreHeader}>🍺</Text>
             <Text style={s.scoreHeader}>KR</Text>
             <Text style={s.scoreHeader}>HÅL</Text>
-            <Text style={s.scoreHeader}>{event.scoringType === 'points' ? 'POÄNG' : 'SLAG'}</Text>
+            <Text style={s.scoreHeader}>SLAG</Text>
+            <Text style={s.scoreHeader}>{event.scoring_type === 'strokes' ? 'NETTO' : 'POÄNG'}</Text>
           </View>
 
-        <ListView
-          enableEmptySections
-          dataSource={dataSource}
-          renderRow={
-            (player) => <View style={s.listrow} key={`scorecard_player_row_${player.id}`}>
-                          <View style={{flexDirection: 'row'}}>
-                            <Text style={s.scoreHeaderPos}>{player.position}</Text>
-                            <Text style={s.scoreHeaderPlayer}>{player.name.split(' ')[0]}</Text>
-                            <Text style={s.scoreHeader}>{player.beers}</Text>
-                            <Text style={s.scoreHeader}>{player.total_kr}</Text>
-                            <Text style={s.scoreHeader}>{player.through}</Text>
-                            <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{player.total_points}</Text>
-                          </View>
-                        </View>
-          }
-        />
-
+        {players.map(player => {
+          return (
+            <View style={s.listrow} key={`scorecard_player_row_${player.id}`}>
+              <View style={{flexDirection: 'row'}}>
+                <Text style={s.scoreHeaderPos}>{player.position}</Text>
+                <Text style={s.scoreHeaderPlayer}>{player.name.split(' ')[0]}</Text>
+                <Text style={s.scoreHeader}>{player.beers}</Text>
+                <Text style={s.scoreHeader}>{player.total_kr}</Text>
+                <Text style={s.scoreHeader}>{player.through}</Text>
+                <Text style={s.scoreHeader}>{player.total_strokes}</Text>
+                <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{player.total_points}</Text>
+              </View>
+            </View>
+          )
+        })}
         {cancelBtn}
       </View>
     )
