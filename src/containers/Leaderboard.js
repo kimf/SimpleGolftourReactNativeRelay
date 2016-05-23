@@ -60,7 +60,7 @@ class Leaderboard extends Component {
       <View style={styles.container}>
         <NavigationBar
           style={styles.header}
-          statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          statusBar={{style: 'light-content', tintColor: '#0091e5'}}
           title={titleConfig}
           leftButton={leftButtonConfig} />
 
@@ -74,9 +74,9 @@ class Leaderboard extends Component {
               <RefreshControl
                 refreshing={players.isFetching}
                 onRefresh={this.reloadLeaderboard}
-                tintColor="#477dca"
+                tintColor="#0091e5"
                 title="Uppdaterar..."
-                titleColor="#477dca"
+                titleColor="#0091e5"
                 progressBackgroundColor="#FF2179"
               />
             }

@@ -39,7 +39,7 @@ class Login extends Component {
         flex: 1,
         flexDirection: 'column',
         paddingTop: 60,
-        backgroundColor: '#477dca',
+        backgroundColor: '#0091e5',
         alignItems: 'center'
       }}>
         <Image source={require('../images/logo.png')} />

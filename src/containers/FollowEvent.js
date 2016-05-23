@@ -9,7 +9,9 @@ import { connect } from 'react-redux';
 import { saveScoring, cancelScoring } from '../actions/event';
 import { refreshScorecard } from '../actions/scorecard';
 
-class Scorecard extends Component {
+const timer = null;
+
+class FollowEvent extends Component {
   constructor(props) {
     super(props);
 
@@ -19,6 +21,7 @@ class Scorecard extends Component {
     this.reallyCancelScoring = this._reallyCancelScoring.bind(this);
     this.saveScoring = this._saveScoring.bind(this);
     this.reallySaveScoring = this._reallySaveScoring.bind(this);
+    this.timer = this._timer.bind(this);
   }
 
   _cancelScoring() {
@@ -70,14 +73,20 @@ class Scorecard extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
-    this.timer = setTimeout(() => {
-      this.refresh();
-    }, 60000);
+    this.timer();
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timer);
+    clearTimeout(timer);
     AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
+  _timer() {
+    timer = setTimeout(() => {
+      console.log('refreshing via setTimeout')
+      this.refresh();
+      this.timer();
+    }, 6000);
   }
 
   render(){
@@ -92,21 +101,6 @@ class Scorecard extends Component {
       handler: () => requestAnimationFrame(() => navigator.pop()),
       tintColor: 'white'
     };
-
-    const cancelBtn = (
-      <View style={styles.bottomBar}>
-        <TouchableOpacity
-          style={[styles.bottomBarBtn, styles.success]}
-          onPress={this.saveScoring}>
-            <Text style={styles.btnLabel}>SPARA & AVSLUTA</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.bottomBarBtn, styles.danger]}
-          onPress={this.cancelScoring}>
-            <Text style={styles.btnLabel}>RADERA SCORER</Text>
-        </TouchableOpacity>
-      </View>
-    )
 
     return(
       <View style={styles.container}>
@@ -141,7 +135,6 @@ class Scorecard extends Component {
             </View>
           )
         })}
-        {cancelBtn}
       </View>
     )
   }
@@ -195,7 +188,6 @@ const s = StyleSheet.create({
 
 const mapStateToProps = (state) => {
   return {
-    event: state.event.event,
     players: state.scorecard.players
   }
 }
@@ -217,4 +209,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Scorecard)
+)(FollowEvent)

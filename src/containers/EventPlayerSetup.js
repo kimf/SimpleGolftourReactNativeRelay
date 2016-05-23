@@ -54,7 +54,7 @@ class EventPlayerSetup extends Component {
         <NavigationBar
           style={styles.header}
           title={titleConfig}
-          statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          statusBar={{style: 'light-content', tintColor: '#0091e5'}}
           leftButton={leftButtonConfig}
           rightButton={rightButtonConfig}
         />

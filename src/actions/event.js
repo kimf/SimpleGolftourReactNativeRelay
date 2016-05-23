@@ -37,7 +37,7 @@ export function cancelScoring() {
 }
 
 export function saveScoring() {
-  return { type: 'SAVE_SCORING' }
+  return { type: 'FINISHED_SCORING' }
 }
 
 

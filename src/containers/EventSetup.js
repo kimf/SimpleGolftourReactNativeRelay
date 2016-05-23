@@ -17,7 +17,7 @@ class EventSetup extends Component {
 
   _goPlay() {
     const { event, navigator } = this.props;
-    navigator.resetTo({ scoreEvent: 1, event: event });
+    requestAnimationFrame(() => navigator.resetTo({ scoreEvent: 1, event: event }) );
   }
 
   _abort() {
@@ -49,7 +49,7 @@ class EventSetup extends Component {
         <NavigationBar
           style={styles.header}
           title={titleConfig}
-          statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          statusBar={{style: 'light-content', tintColor: '#0091e5'}}
           leftButton={leftButtonConfig}
         />
 

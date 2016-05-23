@@ -71,7 +71,7 @@ export default class Events extends Component {
         <NavigationBar
           style={styles.header}
           title={titleConfig}
-          statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          statusBar={{style: 'light-content', tintColor: '#0091e5'}}
           rightButton={rightButtonConfig}
         />
 
@@ -82,9 +82,9 @@ export default class Events extends Component {
             <RefreshControl
               refreshing={events.isFetching}
               onRefresh={this.refreshEvents}
-              tintColor="#477dca"
+              tintColor="#0091e5"
               title="Uppdaterar..."
-              titleColor="#477dca"
+              titleColor="#0091e5"
               progressBackgroundColor="#ffff00"
             />
           }

@@ -13,6 +13,7 @@ import ChoosePlayer from '../containers/ChoosePlayer';
 import EventPlayerSetup from '../containers/EventPlayerSetup';
 import ScoreEvent from '../containers/ScoreEvent';
 import Scorecard from '../containers/Scorecard';
+import FollowEvent from '../containers/FollowEvent';
 
 import { connect } from 'react-redux';
 
@@ -43,12 +44,17 @@ class SGTNavigator extends Component {
   renderScene(route, navigator) {
     const { currentUser, tab, onLogoutClick } = this.props;
 
-    if (route.showScorecard || route.followEvent) {
-      return <Scorecard event={route.event} navigator={navigator} />
+    if (route.followEvent) {
+      return <FollowEvent navigator={navigator} event={route.event} />
+    }
+
+    if (route.showScorecard) {
+      return <Scorecard navigator={navigator} />
     }
 
     if (route.scoreEvent) {
-      return <ScoreEvent event={route.event} navigator={navigator} />
+      console.log(route.event);
+      return <ScoreEvent navigator={navigator} event={route.event} />
     }
 
     if (route.setupEventPlayer) {

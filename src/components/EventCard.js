@@ -1,13 +1,23 @@
 'use strict';
 
 import React, {Component} from "react";
-import {Text, TouchableOpacity, View, StyleSheet} from "react-native";
+import {Text, TouchableOpacity, View, StyleSheet, Linking} from "react-native";
 
 import moment from 'moment';
 import sv from 'moment/locale/sv';
 import colors from '../colors';
 
 export default class EventCard extends Component {
+  constructor(props) {
+    super(props);
+
+    this.seeLeaderboard = this._seeLeaderboard.bind(this);
+  }
+
+  _seeLeaderboard(eventId) {
+    Linking.openURL(`https://www.simplegolftour.com/tours/1/events/${eventId}`);
+  }
+
   render() {
     const { event, setupEvent, scoreEvent, followEvent, scoringEvent } = this.props;
 
@@ -38,7 +48,7 @@ export default class EventCard extends Component {
     if(event.status === 'finished') {
       resultsBtn = (
         <TouchableOpacity
-          onPress={() => followEvent(event)}
+          onPress={() => this.seeLeaderboard(event.id)}
             style={s.followBtn}>
           <Text style={[s.eventCardBtn, {color: '#777'}]}>SE RESULTAT</Text>
         </TouchableOpacity>

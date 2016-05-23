@@ -21,7 +21,6 @@ class ScoreEvent extends Component {
   constructor(props) {
     super(props);
     this.changeHole = this._changeHole.bind(this);
-    this.holes = props.event.courseData.holes.sort((a, b) => a.number - b.number).slice(0)
   }
 
   _changeHole(holeNr) {
@@ -52,7 +51,7 @@ class ScoreEvent extends Component {
 
     let holeItems = [];
     let footerItems = []
-    this.holes.map(hole => {
+    event.courseData.holes.map(hole => {
       const holeNr = hole.number;
 
       holeItems.push(
@@ -66,16 +65,6 @@ class ScoreEvent extends Component {
           saveEventScore={saveEventScore}
         />
       )
-
-      let activeStyle;
-      if(holeNr === currentHole){
-        activeStyle = {color: '#fff', backgroundColor: '#444', fontWeight: 'bold'}
-      }
-      footerItems.push(
-        <TouchableOpacity key={`hole_footer_button_${holeNr}`} style={[{flex: 1, backgroundColor: '#eee'}]} onPress={() => this.changeHole(holeNr)}>
-          <Text style={[{fontSize: 8, padding: 4, color: '#444', textAlign: 'center'}, activeStyle]}>{holeNr}</Text>
-        </TouchableOpacity>
-      )
     })
 
     return(
@@ -83,20 +72,16 @@ class ScoreEvent extends Component {
         <NavigationBar
           style={styles.header}
           title={titleConfig}
-          statusBar={{style: 'light-content', tintColor: '#477dca'}}
+          statusBar={{style: 'light-content', tintColor: '#0091e5'}}
           rightButton={rightButtonConfig} />
 
         <ScrollView
           ref={(scrollView) => { _scrollView = scrollView; }}
           showsHorizontalScrollIndicator={false}
-          scrollEnabled={false}
+          scrollEnabled={true}
           horizontal paging bounces pagingEnabled removeClippedSubviews>
           {holeItems}
         </ScrollView>
-
-        <View style={{height: 20, flexDirection: 'row', alignItems: 'stretch'}}>
-          {footerItems}
-        </View>
       </View>
     );
   }

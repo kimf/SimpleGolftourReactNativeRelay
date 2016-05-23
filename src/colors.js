@@ -4,7 +4,7 @@ function colorForScore(score, par) {
 }
 
 module.exports = {
-  blue: '#477dca',
+  blue: '#0091e5',
   white: '#fff',
   actionText: '#3FB4CF',
   inactiveText: '#9B9B9B',
