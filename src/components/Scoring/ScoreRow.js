@@ -30,7 +30,7 @@ export default class ScoreRow extends Component {
 
 
   render() {
-    const {player, hole, showScoreForm, eventScore } = this.props;
+    const {player, hole, showScoreForm, eventScore, scoringType } = this.props;
     let scores;
     let extraStrokes = '';
 
@@ -42,10 +42,34 @@ export default class ScoreRow extends Component {
       if(eventScore.isScored) {
         scores = (
           <View style={{flexDirection: 'row'}}>
-            <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.strokes}</Text>
+            <Text style={[styles.scoreHeader, styles.largeText, (scoringType === 'strokes' ? styles.scorecardRowPoints : null)]}>
+              {eventScore.strokes}
+            </Text>
             <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.putts}</Text>
-            <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints]}>{eventScore.points}</Text>
+            <Text style={[styles.scoreHeader, styles.largeText, (scoringType === 'points' ? styles.scorecardRowPoints : null)]}>
+              {eventScore.points}
+            </Text>
           </View>
+        );
+      } else if (eventScore.isBeingSaved){
+        scores = (
+          <View style={{flexDirection: 'row', opacity: 0.5}}>
+            <Text style={[styles.scoreHeader, styles.largeText, {color: '#feb'}]}>
+              {eventScore.strokes}
+            </Text>
+            <Text style={[styles.scoreHeader, styles.largeText, {color: '#feb'}]}>
+              {eventScore.putts}
+            </Text>
+            <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints, {color: '#feb'}]}>
+              {eventScore.points}
+            </Text>
+          </View>
+        )
+      } else if (eventScore.hasError) {
+        scores = (
+          <Text style={[styles.inlineBtn, {backgroundColor: '#fff', color: '#c00', padding: 0, margin: 0}]}>
+            NÅGOT GICK FEL, PRÖVA IGEN!
+          </Text>
         );
       } else {
         scores = (

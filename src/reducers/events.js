@@ -1,12 +1,32 @@
 import moment from 'moment';
+import clubsJson from '../../lib/clubs.json';
 
 const initialState = {
   isFetching: false,
   data: [],
 };
 
+let coursesArray = {};
+clubsJson.clubs.map(c => {
+  let courses = {};
+  if(c.courses.length === 0) { return false };
+  clubName = c.name;
+  c.courses.map((co) => {
+    co.clubName = clubName;
+    courses[co.name] = co;
+    coursesArray[co.id] = co;
+  });
+})
+
+
 function sortEvents(events) {
-  return events.sort((a, b) => moment(b.starts_at) - moment(a.starts_at)).slice();
+  const coursedEvents = events.map(e => {
+    if(e.courseData !== undefined || e.course_id === null) {
+      return e;
+    }
+    return Object.assign({}, e, {courseData: coursesArray[e.course_id]})
+  });
+  return coursedEvents.sort((a, b) => moment(b.starts_at) - moment(a.starts_at)).slice();
 }
 
 export default function reducer(state = initialState, action = {}) {

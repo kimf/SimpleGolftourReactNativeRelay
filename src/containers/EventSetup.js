@@ -21,13 +21,12 @@ class EventSetup extends Component {
   }
 
   _abort() {
-    const { event, navigator } = this.props;
+    this.props.navigator.resetTo({ tab: 'events' })
     this.props.abortEventSetup();
-    navigator.resetTo({ tab: 'events' })
   }
 
   render() {
-    const { event, isSaving, playing, navigator } = this.props;
+    const { event, playing, navigator } = this.props;
     const titleConfig = { title: 'Scora', tintColor: 'white'  };
     const leftButtonConfig = {
       title: 'Avbryt',
@@ -79,7 +78,7 @@ class EventSetup extends Component {
         <TouchableOpacity
           style={styles.btn}
           onPress={() => this.goPlay()}>
-          <Text style={styles.btnLabel}>{isSaving ? 'SPARAR...' : 'STARTA RUNDA'}</Text>
+          <Text style={styles.btnLabel}>STARTA RUNDA</Text>
         </TouchableOpacity>
       </View>
     )
@@ -89,7 +88,6 @@ class EventSetup extends Component {
 const mapStateToProps = (state) => {
   return {
     event: state.event.event,
-    isSaving: state.event.isSaving,
     playing: state.event.playing,
   }
 }

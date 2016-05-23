@@ -1,10 +1,10 @@
 import React, {Component} from "react";
 import {
-  Alert, View, Text, TouchableOpacity, ScrollView, StatusBar, InteractionManager
+  Alert, View, Text, TouchableOpacity, ScrollView, StatusBar, InteractionManager, Dimensions
 } from "react-native";
+const width = Dimensions.get('window').width; //full width
 
 import NavigationBar from 'react-native-navbar';
-import SwipeableViews from 'react-swipeable-views/lib/index.native.animated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
 import { connect } from 'react-redux';
@@ -14,22 +14,30 @@ import HoleView from '../components/Scoring/HoleView';
 import { saveEventScore, createEventScore, changeHole } from '../actions/event';
 
 import styles from '../styles';
-import clubsJson from '../../lib/clubs.json';
+
+let _scrollView;
 
 class ScoreEvent extends Component {
   constructor(props) {
     super(props);
-    const club = clubsJson.clubs.find(c => c.name === props.event.club);
-    this.course = club.courses.find(c => c.id === props.event.course_id);
-    this.holes = this.course.holes.sort((a, b) => a.number - b.number);
-    this.holeNumbers = this.holes.map(val => val.number);
-
     this.changeHole = this._changeHole.bind(this);
+    this.holes = props.event.courseData.holes.sort((a, b) => a.number - b.number).slice(0)
   }
 
-  _changeHole(index) {
+  _changeHole(holeNr) {
     const { event, changeHole } = this.props;
-    changeHole(index + 1);
+    changeHole(holeNr);
+    //_scrollView.scrollTo({x: (holeNr * width) - width, animated: false});
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.currentHole !== this.props.currentHole) {
+      _scrollView.scrollTo({x: (nextProps.currentHole * width) - width, animated: true});
+    }
+  }
+
+  componentDidMount() {
+    _scrollView.scrollTo({x: (this.props.currentHole * width) - width, animated: false});
   }
 
   render() {
@@ -38,54 +46,56 @@ class ScoreEvent extends Component {
     const titleConfig = { title: event.course, tintColor: 'white'  };
     const rightButtonConfig = {
       title: <Icon name="list-ol" size={20} />,
-      handler: () => requestAnimationFrame(() => navigator.push({showScorecard: 1, event})),
+      handler: () => requestAnimationFrame(() => navigator.push({showScorecard: 1})),
       tintColor: 'white'
     };
 
+    let holeItems = [];
+    let footerItems = []
+    this.holes.map(hole => {
+      const holeNr = hole.number;
+
+      holeItems.push(
+        <HoleView
+          key={`hole_view_${hole.id}`}
+          hole={hole}
+          playing={playing}
+          holesCount={event.courseData.holes_count}
+          event={event}
+          createEventScore={createEventScore}
+          saveEventScore={saveEventScore}
+        />
+      )
+
+      let activeStyle;
+      if(holeNr === currentHole){
+        activeStyle = {color: '#fff', backgroundColor: '#444', fontWeight: 'bold'}
+      }
+      footerItems.push(
+        <TouchableOpacity key={`hole_footer_button_${holeNr}`} style={[{flex: 1, backgroundColor: '#eee'}]} onPress={() => this.changeHole(holeNr)}>
+          <Text style={[{fontSize: 8, padding: 4, color: '#444', textAlign: 'center'}, activeStyle]}>{holeNr}</Text>
+        </TouchableOpacity>
+      )
+    })
+
     return(
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: '#F9F9F9'}]}>
         <NavigationBar
           style={styles.header}
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#477dca'}}
           rightButton={rightButtonConfig} />
 
-        <SwipeableViews
-          style={styles.slideContainer}
-          index={currentHole - 1}
-          onChangeIndex={this.changeHole}
-          autoplay={false}
-          resistance>
-          {this.holes.map((hole) => {
-            return(
-              <HoleView
-                key={`hole_view_${hole.id}`}
-                hole={hole}
-                playing={playing}
-                holesCount={this.holes.length}
-                event={event}
-                createEventScore={createEventScore}
-                saveEventScore={saveEventScore}
-              />
-            )
-          })}
-        </SwipeableViews>
+        <ScrollView
+          ref={(scrollView) => { _scrollView = scrollView; }}
+          showsHorizontalScrollIndicator={false}
+          scrollEnabled={false}
+          horizontal paging bounces pagingEnabled removeClippedSubviews>
+          {holeItems}
+        </ScrollView>
 
-        <View style={{height: 20}}>
-          <View style={{flexDirection: 'row', flex: 1, alignItems: 'flex-start'}}>
-          {this.holeNumbers.map((hole) => {
-            let activeStyle;
-            if(hole === currentHole){
-              activeStyle = {color: '#fff', backgroundColor: '#444'}
-            }
-
-            return (
-              <TouchableOpacity key={`hole_footer_button_${hole}`} style={[{flex: 1}]} onPress={() => this.changeHole(hole - 1)}>
-                <Text style={[activeStyle, {fontSize: 10, padding: 3, color: '#ccc', textAlign: 'center'}]}>{hole}</Text>
-              </TouchableOpacity>
-            )
-          })}
-          </View>
+        <View style={{height: 20, flexDirection: 'row', alignItems: 'stretch'}}>
+          {footerItems}
         </View>
       </View>
     );
@@ -103,8 +113,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    saveEventScore: (playerId, holeNr, strokes, putts, points) => {
-      dispatch(saveEventScore(playerId, holeNr, strokes, putts, points))
+    saveEventScore: (eventId, playerId, eventScore, strokes, putts, points) => {
+      dispatch(saveEventScore(eventId, playerId, eventScore, strokes, putts, points))
     },
     createEventScore: (playerId, holeNr, data) => {
       dispatch(createEventScore(playerId, holeNr, data))

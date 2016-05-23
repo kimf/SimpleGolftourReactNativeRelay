@@ -44,7 +44,6 @@ export default class EventCard extends Component {
         </TouchableOpacity>
       )
     } else if(event.is_scoring) {
-      console.log(event)
       resultsBtn = (
         <TouchableOpacity
           onPress={() => followEvent(event)}

@@ -6,14 +6,13 @@ import { Navigator } from 'react-native';
 import SGTTabsView from './SGTTabsView';
 
 import SetCourse from '../components/NewEvent/SetCourse';
-import NewEvent from '../components/NewEvent/NewEvent';
 
+import NewEvent from '../containers/NewEvent';
 import EventSetup from '../containers/EventSetup';
 import ChoosePlayer from '../containers/ChoosePlayer';
 import EventPlayerSetup from '../containers/EventPlayerSetup';
 import ScoreEvent from '../containers/ScoreEvent';
-
-import Scorecard from '../components/Scoring/Scorecard';
+import Scorecard from '../containers/Scorecard';
 
 import { connect } from 'react-redux';
 

@@ -41,7 +41,7 @@ export default class ScoringScreen extends Component {
   }
 
   _onCloseScoreForm() {
-    const { player, eventId, eventScore, closeScoreForm } = this.props;
+    const { eventScore, closeScoreForm } = this.props;
     const { strokes, putts } = this.state;
 
     if(strokes - putts <= 0) {

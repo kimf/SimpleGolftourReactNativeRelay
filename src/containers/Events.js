@@ -32,20 +32,20 @@ export default class Events extends Component {
   }
 
   openNewEvent() {
-    requestAnimationFrame(() => this.props.navigator.push({setCourse: 1}));
+    this.props.navigator.push({setCourse: 1})
   }
 
   setupEvent(event) {
     this.props.setupEvent(event);
-    requestAnimationFrame(() => this.props.navigator.push({setupEvent: 1, event: event}) );
+    this.props.navigator.push({setupEvent: 1, event: event})
   }
 
   scoreEvent(event) {
-    requestAnimationFrame(() => this.props.navigator.resetTo({ scoreEvent: 1, event: event }) );
+    this.props.navigator.resetTo({ scoreEvent: 1, event: event })
   }
 
   followEvent(event) {
-    requestAnimationFrame(() => this.props.navigator.push({ followEvent: 1, event: event }) );
+    this.props.navigator.push({ followEvent: 1, event: event })
   }
 
   componentWillReceiveProps (nextProps) {

@@ -1,21 +1,43 @@
-//import { saveScore } from '../../lib/ApiService';
+import { pushScoreToServer, deleteScoresFromServer } from '../../lib/ApiService';
 
+export function saveEventScore(eventId, playerId, eventScore, strokes, putts, points) {
+  return (dispatch, getState) => {
+    dispatch(pushingScore(playerId, eventScore.hole, strokes, putts, points));
 
-// export function saveScore(event, navigator) {
-//   return (dispatch, getState) => {
-//     dispatch(savingEvent());
-//     const sessionToken = getState().auth.user.session_token;
-//     return startScoring(event.id, sessionToken).then((response) => {
-//       dispatch(eventWasSaved(response));
-//     })
-//     .catch((error) => {
-//       console.log('Could not save event', error);
-//       dispatch(saveFailed(error));
-//     })
-//   }
-// }
-export function saveEventScore(playerId, holeNr, strokes, putts, points) {
-  return { type: 'SAVED_EVENT_SCORE', playerId, holeNr, strokes, putts, points }
+    const sessionToken = getState().auth.user.session_token;
+    return pushScoreToServer(eventId, playerId, eventScore, strokes, putts, points, sessionToken).then((response) => {
+      dispatch(scoreWasSaved(playerId, eventScore.hole, response));
+    })
+    .catch((error) => {
+      console.log('Error saving score', error);
+      dispatch(failedToSaveScore(playerId, eventScore.hole, error));
+    })
+  };
+}
+
+export function cancelScoring() {
+  return (dispatch, getState) => {
+    const state = getState();
+    const eventId = state.event.event.id;
+    const sessionToken = state.auth.user.session_token;
+    const scoreIds = [];
+    const players = state.event.playing.map((player) => {
+      const eventScores = player.eventScores.map((es) => {
+        scoreIds.push(es.externalId);
+      });
+    });
+    deleteScoresFromServer(eventId, scoreIds, sessionToken).then((response) => {
+      dispatch({ type: 'CANCELED_SCORING' })
+    })
+    .catch((error) => {
+      console.log('Error deleting scores... bummer', error)
+      dispatch({ type: 'CANCELED_SCORING' })
+    })
+  }
+}
+
+export function saveScoring() {
+  return { type: 'SAVE_SCORING' }
 }
 
 
@@ -50,15 +72,14 @@ function settingUpEvent(event, player) {
   return { type: 'BEGIN_SCORING_SETUP', event, player }
 }
 
+function pushingScore(playerId, holeNr, strokes, putts, points) {
+  return { type: 'PUSHING_SCORE', playerId, holeNr, strokes, putts, points }
+}
 
-// function savingEvent() {
-//   return { type: 'SAVING_EVENT' }
-// }
+function scoreWasSaved(playerId, holeNr, response) {
+  return { type: 'SCORE_WAS_SAVED', playerId, holeNr, response }
+}
 
-// function eventWasSaved(response) {
-//   return { type: 'EVENT_WAS_SAVED', response: response }
-// }
-
-// function saveFailed(error) {
-//   return { type: 'EVENT_SAVE_FAILED', error }
-// }
+function failedToSaveScore(playerId, holeNr, error) {
+  return { type: 'FAILED_TO_SAVE_SCORE', playerId, holeNr, error }
+}

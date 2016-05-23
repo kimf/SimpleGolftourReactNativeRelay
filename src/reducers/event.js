@@ -1,14 +1,23 @@
-const initialState = { event: null, playing: [], isSaving: false, currentHole: 1 };
-
+const initialState = { event: null, playing: [], currentHole: 1 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case "BEGIN_SCORING_SETUP":
-      const currentPlayer = Object.assign({}, action.player, {strokes: 0, eventScores: []});
+      const currentPlayer = Object.assign({}, {
+        id: action.player.id,
+        name: action.player.name,
+        strokes: 0,
+        eventScores: []
+      });
       return { event: action.event, playing: [currentPlayer] }
 
     case "ADDED_PLAYER_TO_EVENT":
-      const addedPlayer = Object.assign({}, action.player, { strokes: action.strokes, eventScores: []});
+      const addedPlayer = Object.assign({}, {
+        id: action.player.id,
+        name: action.player.name,
+        strokes: action.strokes,
+        eventScores: []
+      });
       return { event: state.event, playing: [ ...state.playing, addedPlayer ] }
 
     case "CHANGED_PLAYER_STROKES":
@@ -46,8 +55,38 @@ export default function reducer(state = initialState, action = {}) {
         currentHole: state.currentHole
       }
 
-    case "SAVED_EVENT_SCORE":
-      //playerId, holeNr, strokes, putts, points
+    case "PUSHING_SCORE":
+      const pushingPlayers = state.playing.map((player) => {
+        if (player.id === action.playerId) {
+          const eventScores = player.eventScores.map((es) => {
+            if (es.hole === action.holeNr) {
+              return Object.assign(
+                {},
+                es,
+                {
+                  isBeingSaved: true,
+                  isScored: false,
+                  strokes: action.strokes,
+                  putts: action.putts,
+                  points: action.points
+                }
+              )
+            }
+            return es;
+          })
+          return Object.assign({}, player, { eventScores })
+        }
+        return player
+      })
+
+      return {
+        event: state.event,
+        playing: pushingPlayers,
+        currentHole: state.currentHole,
+      }
+
+    case "SCORE_WAS_SAVED":
+      // add externalId from response.id!!!!
       const savingPlayers = state.playing.map((player) => {
         if (player.id === action.playerId) {
           const eventScores = player.eventScores.map((es) => {
@@ -55,7 +94,11 @@ export default function reducer(state = initialState, action = {}) {
               return Object.assign(
                 {},
                 es,
-                { strokes: action.strokes, putts: action.putts, points: action.points, isScored: true  }
+                {
+                  isBeingSaved: false,
+                  isScored: true,
+                  externalId: action.response.id
+                }
               )
             }
             return es;
@@ -71,30 +114,39 @@ export default function reducer(state = initialState, action = {}) {
         currentHole: state.currentHole
       }
 
-    // case "SAVING_EVENT":
-    //   return {
-    //     event: state.event,
-    //     playing: state.playing,
-    //     isSaving: true
-    //   }
+    case "FAILED_TO_SAVE_SCORE":
+      const erroredPlayers = state.playing.map((player) => {
+        if (player.id === action.playerId) {
+          const eventScores = player.eventScores.map((es) => {
+            if (es.hole === action.holeNr) {
+              return Object.assign(
+                {},
+                es,
+                {
+                  isBeingSaved: false,
+                  isScored: false,
+                  hasError: true,
+                  error: action.error
+                }
+              )
+            }
+            return es;
+          })
+          return Object.assign({}, player, { eventScores })
+        }
+        return player
+      })
 
-    // case "EVENT_WAS_SAVED":
-    //   //action.response
-    //   return {
-    //     event: state.event,
-    //     playing: state.playing,
-    //     isSaving: false
-    //   }
-
-    // case "EVENT_SAVE_FAILED":
-    //   return {
-    //     event: state.event,
-    //     playing: state.playing,
-    //     isSaving: false,
-    //     error: action.error
-    //   }
+      return {
+        event: state.event,
+        playing: erroredPlayers,
+        currentHole: state.currentHole
+      }
 
     case "LOGGED_OUT":
+      return initialState;
+
+    case "CANCELED_SCORING":
       return initialState;
 
     case "ABORT_EVENT_SETUP":

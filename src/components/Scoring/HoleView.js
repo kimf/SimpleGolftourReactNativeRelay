@@ -1,8 +1,10 @@
 import React, {Component} from "react";
-import {View, Text, TouchableOpacity} from "react-native";
+import {View, Text, TouchableOpacity, Dimensions} from "react-native";
 import ScoringScreen from './ScoringScreen';
 import ScoreRow from './ScoreRow';
 import styles from '../../styles';
+
+const width = Dimensions.get('window').width; //full width
 
 export default class HoleView extends Component {
   constructor(props) {
@@ -18,8 +20,9 @@ export default class HoleView extends Component {
   }
 
   _closeScoreForm(strokes, putts, points) {
-    const { scoringPlayer, scoringEventScore } = this.state;
-    this.props.saveEventScore(scoringPlayer.id, scoringEventScore.hole, strokes, putts, points);
+    const { event } = this.props;
+    const { scoringPlayer, scoringEventScore } = this.state;
+    this.props.saveEventScore(event.id, scoringPlayer.id, scoringEventScore, strokes, putts, points);
     this.setState({ scoringPlayer: null, scoringEventScore: null });
   }
 
@@ -35,6 +38,7 @@ export default class HoleView extends Component {
           hole={hole}
           eventScore={eventScore}
           holesCount={holesCount}
+          scoringType={event.scoring_type}
           createEventScore={createEventScore}
           key={`player_score_row_${player.id}`}
         />
@@ -64,9 +68,9 @@ export default class HoleView extends Component {
     }
 
     return(
-      <View>
-        <View style={styles.inlineHeader}>
-          <Text style={[styles.holeHeaderText]}>
+      <View style={{width: width, padding: 5, backgroundColor: '#fff'}}>
+        <View style={[styles.inlineHeader, {backgroundColor: '#3C3C3C'}]}>
+          <Text style={[styles.holeHeaderText, {color: '#fff', fontFamily: 'Avenir', fontWeight: 'bold'}]}>
             {`Hål ${hole.number} - Par ${hole.par} - Index: ${hole.index}`}
           </Text>
         </View>

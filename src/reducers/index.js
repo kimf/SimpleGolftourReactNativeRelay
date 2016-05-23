@@ -4,6 +4,7 @@ import auth from './auth';
 import players from './players';
 import events from './events';
 import event from './event';
+import scorecard from './scorecard';
 
 export default combineReducers({
   auth,
@@ -11,4 +12,5 @@ export default combineReducers({
   players,
   events,
   event,
+  scorecard
 });

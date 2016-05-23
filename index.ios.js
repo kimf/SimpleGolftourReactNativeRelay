@@ -3,12 +3,6 @@
 import React from "react";
 import {AppRegistry} from "react-native";
 
-Raven = require('raven-js');
-require('raven-js/plugins/react-native')(Raven);
-Raven
-  .config('https://<key>@app.getsentry.com/<project>', { release: '1.0-beta2' })
-  .install();
-
 import Reactotron from 'reactotron';
 Reactotron.connect({enabled: __DEV__})
 

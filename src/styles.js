@@ -353,14 +353,14 @@ export default StyleSheet.create({
     width: 70,
     textAlign: 'right',
     padding: 5,
-    color: '#ccc',
+    color: '#787878',
     fontFamily: 'Avenir',
   },
 
   scoreHeaderPlayer: {
     flex: 3,
     padding: 5,
-    color: '#ccc',
+    color: '#787878',
     fontFamily: 'Avenir',
   },
 
