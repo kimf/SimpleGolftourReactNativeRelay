@@ -35,7 +35,7 @@ export default class ScoringScreen extends Component {
     super(props);
     this.state = {
       strokes: props.eventScore.strokes || props.par,
-      putts: props.eventScore.putts || 2,
+      putts: props.eventScore.putts || (props.teamEvent ? 0 : 2),
     }
     this.onCloseScoreForm = this._onCloseScoreForm.bind(this);
   }

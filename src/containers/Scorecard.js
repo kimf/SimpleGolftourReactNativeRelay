@@ -110,7 +110,7 @@ class Scorecard extends Component {
       <View style={s.listrow} key={`scorecard_player_row_${index}`}>
         <View style={{flexDirection: 'row'}}>
           <Text style={s.scoreHeaderPos}>{team.position}</Text>
-          <Text style={s.scoreHeaderPlayer}>{team.name}</Text>
+          <Text style={[s.scoreHeaderPlayer, {flex: 5}]}>{team.name}</Text>
           <Text style={s.scoreHeader}>{team.through}</Text>
           <Text style={s.scoreHeader}>{team.total_strokes}</Text>
           <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{team.total_points}</Text>
@@ -164,8 +164,8 @@ class Scorecard extends Component {
           leftButton={lefButtonConfig} />
 
           <View style={s.scoreHeaderRow}>
-            <Text style={s.scoreHeaderPos}>POS</Text>
-            <Text style={s.scoreHeaderPlayer}>NAMN</Text>
+            <Text style={s.scoreHeaderPos}>#</Text>
+            <Text style={[s.scoreHeaderPlayer, event.team_event ? {flex: 5} : null]}>NAMN</Text>
             {beerHeader}
             {krHeader}
             <Text style={s.scoreHeader}>HÅL</Text>
