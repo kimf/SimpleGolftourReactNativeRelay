@@ -9,6 +9,8 @@ import { connect } from 'react-redux';
 import { saveScoring, cancelScoring } from '../actions/event';
 import { refreshScorecard } from '../actions/scorecard';
 
+const timer = null;
+
 class Scorecard extends Component {
   constructor(props) {
     super(props);
@@ -19,6 +21,7 @@ class Scorecard extends Component {
     this.reallyCancelScoring = this._reallyCancelScoring.bind(this);
     this.saveScoring = this._saveScoring.bind(this);
     this.reallySaveScoring = this._reallySaveScoring.bind(this);
+    this.timer = this._timer.bind(this);
   }
 
   _cancelScoring() {
@@ -70,14 +73,50 @@ class Scorecard extends Component {
 
   componentDidMount() {
     AppState.addEventListener('change', this.handleAppStateChange);
-    this.timer = setTimeout(() => {
-      this.refresh();
-    }, 60000);
+    this.timer();
   }
 
   componentWillUnmount() {
-    clearTimeout(this.timer);
+    clearTimeout(timer);
     AppState.removeEventListener('change', this.handleAppStateChange);
+  }
+
+  _timer() {
+    timer = setTimeout(() => {
+      console.log('refreshing via setTimeout')
+      this.refresh();
+      this.timer();
+    }, 6000);
+  }
+
+  individualRow(player, index) {
+    return (
+      <View style={s.listrow} key={`scorecard_player_row_${index}`}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={s.scoreHeaderPos}>{player.position}</Text>
+          <Text style={s.scoreHeaderPlayer}>{player.name.split(' ')[0]}</Text>
+          <Text style={s.scoreHeader}>{player.beers}</Text>
+          <Text style={s.scoreHeader}>{player.total_kr}</Text>
+          <Text style={s.scoreHeader}>{player.through}</Text>
+          <Text style={s.scoreHeader}>{player.total_strokes}</Text>
+          <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{player.total_points}</Text>
+        </View>
+      </View>
+    )
+  }
+
+  teamEventRow(team, index) {
+    return (
+      <View style={s.listrow} key={`scorecard_player_row_${index}`}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={s.scoreHeaderPos}>{team.position}</Text>
+          <Text style={s.scoreHeaderPlayer}>{team.name}</Text>
+          <Text style={s.scoreHeader}>{team.through}</Text>
+          <Text style={s.scoreHeader}>{team.total_strokes}</Text>
+          <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{team.total_points}</Text>
+        </View>
+      </View>
+    )
   }
 
   render(){
@@ -108,6 +147,14 @@ class Scorecard extends Component {
       </View>
     )
 
+    const beerHeader = event.team_event ? null : (
+      <Text style={s.scoreHeader}>🍺</Text>
+    )
+
+    const krHeader = event.team_event ? null : (
+      <Text style={s.scoreHeader}>KR</Text>
+    )
+
     return(
       <View style={styles.container}>
         <NavigationBar
@@ -119,27 +166,15 @@ class Scorecard extends Component {
           <View style={s.scoreHeaderRow}>
             <Text style={s.scoreHeaderPos}>POS</Text>
             <Text style={s.scoreHeaderPlayer}>NAMN</Text>
-            <Text style={s.scoreHeader}>🍺</Text>
-            <Text style={s.scoreHeader}>KR</Text>
+            {beerHeader}
+            {krHeader}
             <Text style={s.scoreHeader}>HÅL</Text>
             <Text style={s.scoreHeader}>SLAG</Text>
             <Text style={s.scoreHeader}>{event.scoring_type === 'strokes' ? 'NETTO' : 'POÄNG'}</Text>
           </View>
 
-        {players.map(player => {
-          return (
-            <View style={s.listrow} key={`scorecard_player_row_${player.id}`}>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={s.scoreHeaderPos}>{player.position}</Text>
-                <Text style={s.scoreHeaderPlayer}>{player.name.split(' ')[0]}</Text>
-                <Text style={s.scoreHeader}>{player.beers}</Text>
-                <Text style={s.scoreHeader}>{player.total_kr}</Text>
-                <Text style={s.scoreHeader}>{player.through}</Text>
-                <Text style={s.scoreHeader}>{player.total_strokes}</Text>
-                <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{player.total_points}</Text>
-              </View>
-            </View>
-          )
+        {players.map((player, index) => {
+          return event.team_event ? this.teamEventRow(player, index) : this.individualRow(player, index)
         })}
         {cancelBtn}
       </View>

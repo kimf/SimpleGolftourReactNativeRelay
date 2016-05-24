@@ -4,13 +4,75 @@ const initialState = Immutable({ event: null, playing: [], currentHole: 1 });
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case "BEGIN_SCORING_SETUP":
-      const currentPlayer = Immutable({
-        id: action.player.id,
-        name: action.player.name,
+      let firstItem;
+      if(action.event.team_event) {
+        firstItem = Immutable({
+          id: 0,
+          players: [{id: action.player.id, name: action.player.name}],
+          strokes: 0,
+          eventScores: []
+        })
+      } else {
+        firstItem = Immutable({
+          id: action.player.id,
+          name: action.player.name,
+          strokes: 0,
+          eventScores: []
+        });
+      }
+
+      return Immutable({
+        event: action.event,
+        playing: Immutable([firstItem]),
+        currentHole: state.currentHole
+      })
+
+    case "ADDED_EVENT_TEAM":
+      const newItem = Immutable({
+        id: state.playing.length,
+        players: [],
         strokes: 0,
         eventScores: []
+      })
+      return Immutable({
+        event: state.event,
+        playing: Immutable(state.playing).concat(newItem),
+        currentHole: state.currentHole
+      })
+
+    case "ADDED_PLAYER_TO_TEAM":
+      const newPlayer = Immutable({
+        id: action.player.id,
+        name: action.player.name
+      })
+
+      const enhancedTeams = state.playing.map((t, index) => {
+        if(index !== action.teamIndex) {
+          return t;
+        }
+        let players = t.players.concat(newPlayer)
+        return Immutable(t).merge({players: players});
       });
-      return Immutable({ event: action.event, playing: [currentPlayer] })
+
+      return Immutable({
+        event: state.event,
+        playing: Immutable(enhancedTeams),
+        currentHole: state.currentHole
+      })
+
+    case "CHANGED_TEAM_STROKES":
+      const strokedTeams = state.playing.map((t, index) => {
+        if(index !== action.teamIndex) {
+          return t;
+        }
+        return Immutable(t).merge({strokes: action.strokes});
+      });
+
+      return Immutable({
+        event: state.event,
+        playing: Immutable(strokedTeams),
+        currentHole: state.currentHole
+      })
 
     case "ADDED_PLAYER_TO_EVENT":
       const addedPlayer = Immutable({

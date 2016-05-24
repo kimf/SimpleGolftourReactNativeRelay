@@ -98,8 +98,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    saveEventScore: (eventId, playerId, eventScore, strokes, putts, points) => {
-      dispatch(saveEventScore(eventId, playerId, eventScore, strokes, putts, points))
+    saveEventScore: (eventId, item, eventScore, strokes, putts, points) => {
+      dispatch(saveEventScore(eventId, item, eventScore, strokes, putts, points))
     },
     createEventScore: (playerId, holeNr, data) => {
       dispatch(createEventScore(playerId, holeNr, data))

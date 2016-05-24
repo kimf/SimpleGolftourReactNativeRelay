@@ -1,17 +1,29 @@
-import { pushScoreToServer, deleteScoresFromServer } from '../../lib/ApiService';
+import { pushScoreToServer, pushTeamScoreToServer, deleteScoresFromServer } from '../../lib/ApiService';
 
-export function saveEventScore(eventId, playerId, eventScore, strokes, putts, points) {
+export function saveEventScore(eventId, item, eventScore, strokes, putts, points) {
   return (dispatch, getState) => {
-    dispatch(pushingScore(playerId, eventScore.hole, strokes, putts, points));
+    dispatch(pushingScore(item.id, eventScore.hole, strokes, putts, points));
 
     const sessionToken = getState().auth.user.session_token;
-    return pushScoreToServer(eventId, playerId, eventScore, strokes, putts, points, sessionToken).then((response) => {
-      dispatch(scoreWasSaved(playerId, eventScore.hole, response));
-    })
-    .catch((error) => {
-      console.log('Error saving score', error);
-      dispatch(failedToSaveScore(playerId, eventScore.hole, error));
-    })
+
+    if(getState().event.event.team_event) {
+      const playerIds = item.players.map(p => {return p.id});
+      return pushTeamScoreToServer(eventId, item.id, playerIds, eventScore, strokes, putts, points, sessionToken).then((response) => {
+        dispatch(scoreWasSaved(item.id, eventScore.hole, response));
+      })
+      .catch((error) => {
+        console.log('Error saving score', error);
+        dispatch(failedToSaveScore(item.id, eventScore.hole, error));
+      })
+    } else {
+      return pushScoreToServer(eventId, item.id, eventScore, strokes, putts, points, sessionToken).then((response) => {
+        dispatch(scoreWasSaved(item.id, eventScore.hole, response));
+      })
+      .catch((error) => {
+        console.log('Error saving score', error);
+        dispatch(failedToSaveScore(item.id, eventScore.hole, error));
+      })
+    }
   };
 }
 
@@ -27,11 +39,11 @@ export function cancelScoring() {
       });
     });
     deleteScoresFromServer(eventId, scoreIds, sessionToken).then((response) => {
-      dispatch({ type: 'CANCELED_SCORING' })
+      dispatch({ type: 'CANCELED_SCORING', eventId })
     })
     .catch((error) => {
       console.log('Error deleting scores... bummer', error)
-      dispatch({ type: 'CANCELED_SCORING' })
+      dispatch({ type: 'CANCELED_SCORING', eventId })
     })
   }
 }
@@ -82,4 +94,16 @@ function scoreWasSaved(playerId, holeNr, response) {
 
 function failedToSaveScore(playerId, holeNr, error) {
   return { type: 'FAILED_TO_SAVE_SCORE', playerId, holeNr, error }
+}
+
+export function addEventTeam(event) {
+  return { type: 'ADDED_EVENT_TEAM', event }
+}
+
+export function addEventPlayer(player, teamIndex, event) {
+  return { type: 'ADDED_PLAYER_TO_TEAM', player, teamIndex, event }
+}
+
+export function changeTeamStrokes(teamIndex, strokes) {
+  return { type: 'CHANGED_TEAM_STROKES', teamIndex, strokes }
 }

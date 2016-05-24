@@ -89,11 +89,50 @@ class FollowEvent extends Component {
     }, 6000);
   }
 
+  individualRow(player, index) {
+    return (
+      <View style={s.listrow} key={`scorecard_player_row_${index}`}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={s.scoreHeaderPos}>{player.position}</Text>
+          <Text style={s.scoreHeaderPlayer}>{player.name.split(' ')[0]}</Text>
+          <Text style={s.scoreHeader}>{player.beers}</Text>
+          <Text style={s.scoreHeader}>{player.total_kr}</Text>
+          <Text style={s.scoreHeader}>{player.through}</Text>
+          <Text style={s.scoreHeader}>{player.total_strokes}</Text>
+          <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{player.total_points}</Text>
+        </View>
+      </View>
+    )
+  }
+
+  teamEventRow(team, index) {
+    return (
+      <View style={s.listrow} key={`scorecard_player_row_${index}`}>
+        <View style={{flexDirection: 'row'}}>
+          <Text style={s.scoreHeaderPos}>{team.position}</Text>
+          <Text style={s.scoreHeaderPlayer}>{team.name}</Text>
+          <Text style={s.scoreHeader}>{team.through}</Text>
+          <Text style={s.scoreHeader}>{team.total_strokes}</Text>
+          <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{team.total_points}</Text>
+        </View>
+      </View>
+    )
+  }
+
   render(){
     const { navigator, event, players } = this.props;
     if(!event) {
       return null;
     }
+
+    const beerHeader = event.team_event ? null : (
+      <Text style={s.scoreHeader}>🍺</Text>
+    )
+
+    const krHeader = event.team_event ? null : (
+      <Text style={s.scoreHeader}>KR</Text>
+    )
+
 
     const titleConfig = { title: 'Scorekort', tintColor: 'white'  };
     const lefButtonConfig = {
@@ -113,27 +152,15 @@ class FollowEvent extends Component {
           <View style={s.scoreHeaderRow}>
             <Text style={s.scoreHeaderPos}>POS</Text>
             <Text style={s.scoreHeaderPlayer}>NAMN</Text>
-            <Text style={s.scoreHeader}>🍺</Text>
-            <Text style={s.scoreHeader}>KR</Text>
+            {beerHeader}
+            {krHeader}
             <Text style={s.scoreHeader}>HÅL</Text>
             <Text style={s.scoreHeader}>SLAG</Text>
             <Text style={s.scoreHeader}>{event.scoring_type === 'strokes' ? 'NETTO' : 'POÄNG'}</Text>
           </View>
 
-        {players.map(player => {
-          return (
-            <View style={s.listrow} key={`scorecard_player_row_${player.id}`}>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={s.scoreHeaderPos}>{player.position}</Text>
-                <Text style={s.scoreHeaderPlayer}>{player.name.split(' ')[0]}</Text>
-                <Text style={s.scoreHeader}>{player.beers}</Text>
-                <Text style={s.scoreHeader}>{player.total_kr}</Text>
-                <Text style={s.scoreHeader}>{player.through}</Text>
-                <Text style={s.scoreHeader}>{player.total_strokes}</Text>
-                <Text style={[s.scoreHeader, s.scorecardRowPoints]}>{player.total_points}</Text>
-              </View>
-            </View>
-          )
+        {players.map((player, index) => {
+          return event.team_event ? this.teamEventRow(player, index) : this.individualRow(player, index)
         })}
       </View>
     )

@@ -6,12 +6,38 @@ import { ScrollView, Text, TouchableOpacity, View } from "react-native";
 import NavigationBar from 'react-native-navbar';
 
 import { connect } from 'react-redux';
-
+import { addEventPlayer } from '../actions/event';
 import styles from '../styles';
 
 class ChoosePlayer extends Component {
   constructor(props) {
     super(props);
+    console.log(props);
+    this.findInselectedPlayers = this._findInselectedPlayers.bind(this)
+    this.selectPlayer = this._selectPlayer.bind(this)
+  }
+
+  _findInselectedPlayers(player) {
+    const { event, selectedPlayers } = this.props;
+    if(event.team_event) {
+      for(let team of selectedPlayers) {
+        if(team.players.find(p => p.id === player.id) !== undefined){
+          return true;
+        }
+      }
+    } else {
+      return selectedPlayers.find((p) => p.id === player.id) !== undefined;
+    }
+  }
+
+  _selectPlayer(player) {
+    const { event, teamIndex, navigator } = this.props;
+    if(event.team_event) {
+      this.props.addEventPlayer(player, teamIndex, event);
+      requestAnimationFrame(() => navigator.pop());
+    } else {
+      requestAnimationFrame(() => navigator.push({ setupEventPlayer: 1, player, event }))
+    }
   }
 
   render() {
@@ -39,15 +65,15 @@ class ChoosePlayer extends Component {
         />
         <ScrollView>
           {players.map((player) => {
-            if(selectedPlayers.find((p) => p.id === player.id)){
-              return null
+            if(this.findInselectedPlayers(player)){
+              return null;
             }
 
             return (
               <TouchableOpacity
                 key={`choose_player_row_${player.id}`}
                 style={styles.listrow}
-                onPress={() => requestAnimationFrame(() => navigator.push({ setupEventPlayer: 1, player, event }))}>
+                onPress={() => this.selectPlayer(player) }>
                 <Text style={[styles.flexOne]}>
                   {player.name}
                 </Text>
@@ -69,7 +95,11 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {}
+  return {
+    addEventPlayer: (player, teamIndex, event) => {
+      dispatch(addEventPlayer(player, teamIndex, event));
+    }
+  }
 }
 
 export default connect(

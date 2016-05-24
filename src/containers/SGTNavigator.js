@@ -9,6 +9,8 @@ import SetCourse from '../components/NewEvent/SetCourse';
 
 import NewEvent from '../containers/NewEvent';
 import EventSetup from '../containers/EventSetup';
+import TeamEventSetup from '../containers/TeamEventSetup';
+import EventTeamSetup from '../containers/EventTeamSetup';
 import ChoosePlayer from '../containers/ChoosePlayer';
 import EventPlayerSetup from '../containers/EventPlayerSetup';
 import ScoreEvent from '../containers/ScoreEvent';
@@ -29,7 +31,7 @@ class SGTNavigator extends Component {
         ref="navigator"
         style={{flex: 1, alignItems: 'stretch', backgroundColor: '#feb'}}
         configureScene={(route) => {
-          if (route.newEvent || route.selectPlayer || route.setupEventPlayer || route.showScorecard) {
+          if (route.newEvent || route.selectPlayer || route.setupEventPlayer || route.setupEventTeam || route.showScorecard) {
              return Navigator.SceneConfigs.FloatFromRight;
            } else {
              return Navigator.SceneConfigs.FloatFromBottom;
@@ -53,8 +55,11 @@ class SGTNavigator extends Component {
     }
 
     if (route.scoreEvent) {
-      console.log(route.event);
       return <ScoreEvent navigator={navigator} event={route.event} />
+    }
+
+    if (route.setupEventTeam) {
+      return <EventTeamSetup event={route.event} teamIndex={route.teamIndex} navigator={navigator} />
     }
 
     if (route.setupEventPlayer) {
@@ -62,11 +67,15 @@ class SGTNavigator extends Component {
     }
 
     if (route.selectPlayer) {
-      return <ChoosePlayer event={route.event} navigator={navigator} />
+      return <ChoosePlayer event={route.event} teamIndex={route.teamIndex} navigator={navigator} />
     }
 
     if (route.setupEvent) {
       return <EventSetup event={route.event} navigator={navigator} />
+    }
+
+    if (route.setupTeamEvent) {
+     return <TeamEventSetup event={route.event}  navigator={navigator} />
     }
 
     if (route.setCourse) {

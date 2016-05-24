@@ -19,32 +19,36 @@ export default class Events extends Component {
     super(props);
     this.state = { dataSource: ds.cloneWithRows(props.events.data) }
 
-    this.openNewEvent = this.openNewEvent.bind(this);
-    this.setupEvent = this.setupEvent.bind(this);
-    this.scoreEvent = this.scoreEvent.bind(this);
-    this.followEvent = this.followEvent.bind(this);
-    this.refreshEvents = this.refreshEvents.bind(this);
+    this.openNewEvent = this._openNewEvent.bind(this);
+    this.setupEvent = this._setupEvent.bind(this);
+    this.scoreEvent = this._scoreEvent.bind(this);
+    this.followEvent = this._followEvent.bind(this);
+    this.refreshEvents = this._refreshEvents.bind(this);
     this.refreshEvents();
   }
 
-  refreshEvents() {
+  _refreshEvents() {
     this.props.doFetch();
   }
 
-  openNewEvent() {
+  _openNewEvent() {
     this.props.navigator.push({setCourse: 1})
   }
 
-  setupEvent(event) {
+  _setupEvent(event) {
     this.props.setupEvent(event);
-    this.props.navigator.push({setupEvent: 1, event: event})
+    if(event.team_event) {
+      this.props.navigator.push({setupTeamEvent: 1, event: event})
+    } else {
+      this.props.navigator.push({setupEvent: 1, event: event})
+    }
   }
 
-  scoreEvent(event) {
+  _scoreEvent(event) {
     this.props.navigator.resetTo({ scoreEvent: 1, event: event })
   }
 
-  followEvent(event) {
+  _followEvent(event) {
     this.props.navigator.push({ followEvent: 1, event: event })
   }
 
@@ -93,6 +97,7 @@ export default class Events extends Component {
                             event={rowData}
                             scoringEvent={scoringEvent}
                             setupEvent={this.setupEvent}
+                            setupTeamEvent={this.setupTeamEvent}
                             scoreEvent={this.scoreEvent}
                             followEvent={this.followEvent} />
           }
@@ -118,6 +123,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     setupEvent: (event) => {
       dispatch(setupEvent(event));
+    },
+    setupTeamEvent: (event) => {
+      dispatch(setupTeamEvent(event));
     }
   }
 }

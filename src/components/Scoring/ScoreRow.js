@@ -30,7 +30,7 @@ export default class ScoreRow extends Component {
 
 
   render() {
-    const {player, hole, showScoreForm, eventScore, scoringType } = this.props;
+    const {teamEvent, player, hole, showScoreForm, eventScore, scoringType } = this.props;
     let scores;
     let extraStrokes = '';
 
@@ -80,6 +80,13 @@ export default class ScoreRow extends Component {
       }
     }
 
+    let playerNames = null;
+    if(teamEvent) {
+      playerNames = player.players.map(p => {
+        return <Text key={`team_player_name_${p.id}`} style={styles.meta}>{p.name}</Text>
+      })
+    }
+
     return(
       <TouchableOpacity
         key={`scoreRowDeluxe_${hole.id}_${player.id}`}
@@ -88,7 +95,10 @@ export default class ScoreRow extends Component {
         <View style={styles.listrow} key={`scoring_player_row_${player.id}`}>
 
           <View style={styles.playerName}>
-            <Text style={styles.flexOne}>{player.name}</Text>
+            <Text style={styles.flexOne}>
+              {teamEvent ? `Lag ${player.id+1}` : player.name}
+            </Text>
+            {playerNames}
             <Text style={styles.flexOne}>{extraStrokes}</Text>
           </View>
 

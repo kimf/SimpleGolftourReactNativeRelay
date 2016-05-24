@@ -9,38 +9,39 @@ const width = Dimensions.get('window').width; //full width
 export default class HoleView extends Component {
   constructor(props) {
     super(props);
-    this.state = { scoringPlayer: null }
+    this.state = { scoringItem: null }
     this.showScoreForm = this._showScoreForm.bind(this);
     this.closeScoreForm = this._closeScoreForm.bind(this);
     this.renderRows = this.renderRows.bind(this);
   }
 
-  _showScoreForm(player, eventScore) {
-    this.setState({ scoringPlayer: player, scoringEventScore: eventScore  });
+  _showScoreForm(item, eventScore) {
+    this.setState({ scoringItem: item, scoringEventScore: eventScore  });
   }
 
   _closeScoreForm(strokes, putts, points) {
     const { event } = this.props;
-    const { scoringPlayer, scoringEventScore } = this.state;
-    this.props.saveEventScore(event.id, scoringPlayer.id, scoringEventScore, strokes, putts, points);
-    this.setState({ scoringPlayer: null, scoringEventScore: null });
+    const { scoringItem, scoringEventScore } = this.state;
+    this.props.saveEventScore(event.id, scoringItem, scoringEventScore, strokes, putts, points);
+    this.setState({ scoringItem: null, scoringEventScore: null });
   }
 
   renderRows() {
     const { event, hole, holesCount, playing, createEventScore } = this.props;
     const rows = [];
-    playing.map((player) => {
-      const eventScore = player.eventScores.find(es => es.hole === hole.number);
+    playing.map((item) => {
+      const eventScore = item.eventScores.find(es => es.hole === hole.number);
       rows.push(
         <ScoreRow
-          player={player}
+          player={item}
           showScoreForm={this.showScoreForm}
           hole={hole}
           eventScore={eventScore}
           holesCount={holesCount}
           scoringType={event.scoring_type}
+          teamEvent={event.team_event}
           createEventScore={createEventScore}
-          key={`player_score_row_${player.id}`}
+          key={`player_score_row_${item.id}`}
         />
       )
     })
@@ -49,18 +50,18 @@ export default class HoleView extends Component {
 
   render(){
     const { event, hole, sessionToken } = this.props;
-    const { scoringPlayer, scoringEventScore } = this.state;
+    const { scoringItem, scoringEventScore } = this.state;
 
     let content;
-    if(scoringPlayer) {
+    if(scoringItem) {
       content = (
         <ScoringScreen
           closeScoreForm={this.closeScoreForm}
-          player={scoringPlayer}
+          player={scoringItem}
           eventScore={scoringEventScore}
           eventId={event.id}
           par={hole.par}
-          key={`player_scoring_screen_${scoringPlayer.id}`}
+          key={`player_scoring_screen_${scoringItem.id}`}
         />
       )
     } else {
@@ -69,9 +70,15 @@ export default class HoleView extends Component {
 
     return(
       <View style={{width: width, padding: 5, backgroundColor: '#fff'}}>
-        <View style={[styles.inlineHeader, {backgroundColor: '#3C3C3C'}]}>
-          <Text style={[styles.holeHeaderText, {color: '#fff', fontFamily: 'Avenir', fontWeight: 'bold'}]}>
-            {`Hål ${hole.number} - Par ${hole.par} - Index: ${hole.index}`}
+        <View style={[styles.inlineHeader, {paddingTop: 10, paddingBottom: 10, flex: 1, flexDirection: 'row', alignItems: 'stretch', backgroundColor: '#3C3C3C'}]}>
+          <Text style={[styles.holeHeaderText, {lineHeight: 30, flex: 1, color: '#fff', fontWeight: 'bold'}]}>
+            Par {hole.par}
+          </Text>
+          <Text style={[styles.holeHeaderText, {flex: 1, fontSize: 25, color: '#fff', fontWeight: 'bold'}]}>
+            {hole.number}
+          </Text>
+          <Text style={[styles.holeHeaderText, {lineHeight: 30, flex: 1, color: '#fff', fontWeight: 'bold'}]}>
+            Index: {hole.index}
           </Text>
         </View>
 
