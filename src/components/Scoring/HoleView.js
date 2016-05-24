@@ -60,6 +60,7 @@ export default class HoleView extends Component {
           player={scoringItem}
           eventScore={scoringEventScore}
           eventId={event.id}
+          teamEvent={event.team_event}
           par={hole.par}
           key={`player_scoring_screen_${scoringItem.id}`}
         />
@@ -67,6 +68,10 @@ export default class HoleView extends Component {
     } else {
       content = this.renderRows();
     }
+
+    const puttsHeader = event.team_event ? null : (
+      <Text style={styles.scoreHeader}>PUTTAR</Text>
+    )
 
     return(
       <View style={{width: width, padding: 5, backgroundColor: '#fff'}}>
@@ -85,7 +90,7 @@ export default class HoleView extends Component {
         <View style={styles.scoreHeaderRow}>
           <Text style={styles.scoreHeaderPlayer}>SPELARE</Text>
           <Text style={styles.scoreHeader}>SLAG</Text>
-          <Text style={styles.scoreHeader}>PUTTAR</Text>
+          {puttsHeader}
           <Text style={[styles.scoreHeader]}>POÄNG</Text>
         </View>
 

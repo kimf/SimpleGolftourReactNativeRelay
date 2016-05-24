@@ -17,8 +17,18 @@ class TeamEventSetup extends Component {
   }
 
   _goPlay() {
-    const { event, navigator } = this.props;
-    requestAnimationFrame(() => navigator.resetTo({ scoreEvent: 1, event: event }) );
+    const { event, navigator, playing} = this.props;
+    const emptyTeams = playing.filter((p) => {
+      if(p.players.length === 0){
+        return 1;
+      }
+    });
+
+    if(emptyTeams.length !== 0) {
+      alert('TOMMA LAG');
+    } else {
+      requestAnimationFrame(() => navigator.resetTo({ scoreEvent: 1, event: event }) );
+    }
   }
 
   _abort() {

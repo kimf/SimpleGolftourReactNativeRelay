@@ -39,13 +39,23 @@ export default class ScoreRow extends Component {
         extraStrokes = extraStrokes + '•';
       }
 
+      const puttsBeingSaved = teamEvent ? null : (
+        <Text style={[styles.scoreHeader, styles.largeText, {color: '#feb'}]}>
+          {eventScore.putts}
+        </Text>
+      )
+
+      const eventPutts = teamEvent ? null : (
+        <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.putts}</Text>
+      )
+
       if(eventScore.isScored) {
         scores = (
           <View style={{flexDirection: 'row'}}>
             <Text style={[styles.scoreHeader, styles.largeText, (scoringType === 'strokes' ? styles.scorecardRowPoints : null)]}>
               {eventScore.strokes}
             </Text>
-            <Text style={[styles.scoreHeader, styles.largeText]}>{eventScore.putts}</Text>
+            {eventPutts}
             <Text style={[styles.scoreHeader, styles.largeText, (scoringType === 'points' ? styles.scorecardRowPoints : null)]}>
               {eventScore.points}
             </Text>
@@ -57,9 +67,7 @@ export default class ScoreRow extends Component {
             <Text style={[styles.scoreHeader, styles.largeText, {color: '#feb'}]}>
               {eventScore.strokes}
             </Text>
-            <Text style={[styles.scoreHeader, styles.largeText, {color: '#feb'}]}>
-              {eventScore.putts}
-            </Text>
+            {puttsBeingSaved}
             <Text style={[styles.scoreHeader, styles.largeText, styles.scorecardRowPoints, {color: '#feb'}]}>
               {eventScore.points}
             </Text>

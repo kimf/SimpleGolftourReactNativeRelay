@@ -56,7 +56,22 @@ export default class ScoringScreen extends Component {
 
 
   render() {
-    const { player, eventScore } = this.props;
+    const { player, eventScore, teamEvent } = this.props;
+
+    const putsPicker = teamEvent ? null : (
+      <PickerIOS
+        style={styles.picker}
+        selectedValue={this.state.putts}
+        onValueChange={(putts) => this.setState({putts})}>
+        {PUTT_VALUES.map((val) => (
+          <PickerIOS.Item
+            key={val}
+            value={val}
+            label={`${val} puttar`}
+          />
+        ))}
+      </PickerIOS>
+    )
 
     return (
       <View style={styles.scoring}>
@@ -76,18 +91,7 @@ export default class ScoringScreen extends Component {
               ))}
             </PickerIOS>
 
-            <PickerIOS
-              style={styles.picker}
-              selectedValue={this.state.putts}
-              onValueChange={(putts) => this.setState({putts})}>
-              {PUTT_VALUES.map((val) => (
-                <PickerIOS.Item
-                  key={val}
-                  value={val}
-                  label={`${val} puttar`}
-                />
-              ))}
-            </PickerIOS>
+            {putsPicker}
           </View>
           <TouchableOpacity onPress={() => this.onCloseScoreForm()}>
             <Text style={[styles.inlineBtn, {backgroundColor: 'green'}]}>SPARA SCORE</Text>
