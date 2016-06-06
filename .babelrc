@@ -1,15 +1,17 @@
 {
-  "env": {
-    "development": {
-      "passPerPreset": true,
-      "presets": [
-        "react-native-stage-0"
+  passPerPreset: true,
+  presets: [
+    'react-native'
+  ],
+  env: {
+    development: {
+      plugins: [
+        'transform-react-constant-elements',
       ]
     },
-    "production": {
-      "passPerPreset": true,
-      "presets": [
-        "react-native-stage-0"
+    production: {
+      plugins: [
+        'transform-react-constant-elements'
       ]
     }
   }

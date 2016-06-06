@@ -2,6 +2,7 @@
 
 import React, { Component } from "react";
 import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import SearchBar from 'react-native-search-bar';
 
 import NavigationBar from 'react-native-navbar';
 
@@ -15,6 +16,8 @@ class ChoosePlayer extends Component {
     console.log(props);
     this.findInselectedPlayers = this._findInselectedPlayers.bind(this)
     this.selectPlayer = this._selectPlayer.bind(this)
+    this.search = this._search.bind(this);
+    this.cancelsearch = this._cancelSearch.bind(this);
   }
 
   _findInselectedPlayers(player) {
@@ -40,6 +43,10 @@ class ChoosePlayer extends Component {
     }
   }
 
+  componentDidMount() {
+    this.refs.searchBar.focus()
+  }
+
   render() {
     const { event, navigator, players, selectedPlayers } = this.props;
 
@@ -62,6 +69,13 @@ class ChoosePlayer extends Component {
           title={titleConfig}
           statusBar={{style: 'light-content', tintColor: '#0091e5'}}
           leftButton={leftButtonConfig}
+        />
+        <SearchBar
+          ref='searchBar'
+          placeholder='Sök spelare...'
+          onChangeText={this.search}
+          onSearchButtonPress={this.search}
+          onCancelButtonPress={this.cancelsearch}
         />
         <ScrollView>
           {players.map((player) => {
