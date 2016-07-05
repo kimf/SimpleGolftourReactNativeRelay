@@ -63,6 +63,15 @@ export default class EventCard extends Component {
       )
     }
 
+    let gametypeName = '';
+    if(event.scoring_type === 'modified_points') {
+      gametypeName = 'Modifierad Poäng';
+    } else if(event.scoring_type === 'points') {
+      gametypeName = 'Poäng';
+    } else {
+      gametypeName = 'Slag';
+    }
+
     return (
       <View style={[s.eventCard]}>
         <Text style={[s.row, s.date]}>
@@ -74,7 +83,7 @@ export default class EventCard extends Component {
             <Text style={s.gametype}>
               {event.team_event ? 'Lag' : 'Individuellt'}
               {` | `}
-              {event.scoring_type === 'points' ? 'Poäng' : 'Slag'}
+              {gametypeName}
             </Text>
             <Text style={{fontSize: 16, lineHeight: 25}}>{event.club}</Text>
             <Text style={{fontSize: 16, lineHeight: 25}}>{event.course}</Text>
