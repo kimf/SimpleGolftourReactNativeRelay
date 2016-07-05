@@ -60,6 +60,7 @@ export default class HoleView extends Component {
           player={scoringItem}
           eventScore={scoringEventScore}
           eventId={event.id}
+          modifiedPoints={event.scoring_type === 'modified_points'}
           teamEvent={event.team_event}
           par={hole.par}
           key={`player_scoring_screen_${scoringItem.id}`}

@@ -8,7 +8,7 @@ import { pushScoreToServer } from '../../../lib/ApiService';
 const STROKE_VALUES = [1,2,3,4,5,6,7,8,9,10];
 const PUTT_VALUES = [0,1,2,3,4,5,6,7,8,9,10];
 const BEER_VALUES = [0,1,2,3,4,5];
-const pointsArray = []
+const pointsArray = [];
 pointsArray[-8] = 10;
 pointsArray[-7] = 9;
 pointsArray[-6] = 8;
@@ -29,6 +29,27 @@ pointsArray[8] = 0;
 pointsArray[9] = 0;
 pointsArray[10] = 0;
 
+const modifiedPointsArray = [];
+modifiedPointsArray[-8] = 35;
+modifiedPointsArray[-7] = 30;
+modifiedPointsArray[-6] = 25;
+modifiedPointsArray[-5] = 20;
+modifiedPointsArray[-4] = 15;
+modifiedPointsArray[-3] = 8;
+modifiedPointsArray[-2] = 5;
+modifiedPointsArray[-1] = 2;
+modifiedPointsArray[0] = 0;
+modifiedPointsArray[1] = -1;
+modifiedPointsArray[2] = -3;
+modifiedPointsArray[3] = -3;
+modifiedPointsArray[4] = -3;
+modifiedPointsArray[5] = -3;
+modifiedPointsArray[6] = -3;
+modifiedPointsArray[7] = -3;
+modifiedPointsArray[8] = -3;
+modifiedPointsArray[9] = -3;
+modifiedPointsArray[10] = -3;
+
 
 export default class ScoringScreen extends Component {
   constructor(props) {
@@ -41,15 +62,20 @@ export default class ScoringScreen extends Component {
   }
 
   _onCloseScoreForm() {
-    const { eventScore, closeScoreForm } = this.props;
+    const { eventScore, closeScoreForm, modifiedPoints } = this.props;
     const { strokes, putts } = this.state;
+
+    console.log(modifiedPoints);
 
     if(strokes - putts <= 0) {
       Alert.alert('Du verkar ha angett fler puttar än slag!')
     } else {
       const strokeSum = strokes - eventScore.extraStrokes;
       const testSum = strokeSum - eventScore.par;
-      const points = parseInt(pointsArray[testSum], 10);
+
+      const points = modifiedPoints
+                     ? parseInt(modifiedPointsArray[testSum], 10)
+                     : parseInt(pointsArray[testSum], 10);
       closeScoreForm(strokes, putts, points);
     }
   }
