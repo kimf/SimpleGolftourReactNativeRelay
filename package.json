@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "packager": "node node_modules/react-native/local-cli/cli.js start",
-    "ios": "react-native run-ios",
-    "tron": "reactotron"
+    "ios": "react-native run-ios"
   },
   "dependencies": {
     "lodash.sumby": "^4.3.0",
@@ -31,7 +30,6 @@
     "eslint-config-airbnb": "^9.0.0",
     "eslint-plugin-react": "^5.0.1",
     "eslint-plugin-react-native": "^1.1.0-beta",
-    "reactotron": "^0.6.1",
     "redux-immutable-state-invariant": "^1.2.3",
     "why-did-you-update": "0.0.8"
   }

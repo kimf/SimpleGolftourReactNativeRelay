@@ -14,7 +14,7 @@ import EventCard from '../components/EventCard';
 
 const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-export default class Events extends Component {
+class Events extends Component {
   constructor(props) {
     super(props);
     this.state = { dataSource: ds.cloneWithRows(props.events.data) }

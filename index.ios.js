@@ -3,9 +3,6 @@
 import React from "react";
 import {AppRegistry} from "react-native";
 
-import Reactotron from 'reactotron';
-Reactotron.connect({enabled: __DEV__})
-
 import Root from './src/Root'
 
 console.ignoredYellowBox = [
